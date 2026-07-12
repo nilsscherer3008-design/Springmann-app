@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<title>Springmann · Bestellerfassung</title>
+
+<!-- ===== PWA-Grundlagen ===== -->
+<!-- Manifest macht die Seite auf Android/Chrome "installierbar" -->
+<link rel="manifest" href="./manifest.json" />
+<meta name="theme-color" content="#fbfaf9" />
+
+<!-- iOS-spezifische Meta-Tags: Safari kennt kein manifest.json-Icon-Handling,
+     deshalb müssen Icon & "Standalone-Modus" hier separat gesetzt werden. -->
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Springmann" />
+<link rel="apple-touch-icon" href="./icons/icon-192.png" />
+<link rel="icon" href="./icons/icon-192.png" />
+
+<!-- Schriften: elegante Schreibschrift fürs Logo + klare, gut lesbare Arbeitsschrift -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Parisienne&family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<!-- OCR-Bibliothek (Tesseract.js) – läuft komplett im Browser, keine eigene Server-Anbindung nötig -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.1.0/tesseract.min.js"></script>
+<!-- JSZip: bündelt CSV + Fotos in eine ZIP-Datei beim Export -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+<style>
+  /* ============================================================
+     DESIGN-TOKENS
+     Anthrazit + Weiß als Grundfarben, dazu die echten
+     Springmann-Markenfarben Rot & Dunkelgrün aus dem Logo.
+     ============================================================ */
+  :root{
+    --anthrazit:      #1e1e22;
+    --anthrazit-soft: #2a2a30;
+    --anthrazit-line: #3a3a42;
+    --weiss:          #fbfaf9;
+    --weiss-dim:      #f1eef4;
+    --text-dunkel:    #232326;
+    --text-mute:      #75757e;
+    --marken-rot:        #c8003c;  /* Rot aus dem Springmann-Blütensymbol */
+    --marken-rot-hell:   #e35c81;  /* hellere Variante für Akzente auf Dunkel */
+    --marken-flaeche:    #fbe9ee;  /* sehr helles Rosé für Flächen/Badges */
+    --marken-gruen:      #00593f;  /* Dunkelgrün aus dem Schriftzug/Blattansatz */
+    --erfolg:         #4c9a6a;
+    --gefahr:         #c0524a;
+    --radius-l: 20px;
+    --radius-m: 14px;
+    --radius-s: 9px;
+    --schatten: 0 10px 30px rgba(20,16,24,0.14);
+    --font-logo: 'Parisienne', cursive;
+    --font-display: 'Playfair Display', serif;
+    --font-body: 'Inter', sans-serif;
+  }
+
+  *{ box-sizing: border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    font-family: var(--font-body);
+    background: var(--anthrazit);
+    color: var(--text-dunkel);
+    -webkit-tap-highlight-color: transparent;
+    min-height: 100vh;
+    padding-bottom: 40px;
+  }
+
+  /* Zentrierter "Handy-Rahmen"-Look, damit die App auf großen Screens
+     nicht ausfranst, auf dem Smartphone aber volle Breite nutzt */
+  .app-shell{
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background: var(--weiss);
+    position: relative;
+    box-shadow: var(--schatten);
+  }
+
+  /* ---------- Header / Branding ---------- */
+  /* Heller Hintergrund, damit das echte Springmann-Logo (dunkelgrüne
+     Schrift, rotes Blütensymbol) optimal lesbar bleibt. */
+  header.top{
+    background: var(--weiss);
+    border-bottom: 1px solid #eee2e6;
+    padding: 12px 22px;
+    display:flex;
+    align-items:center;
+    gap:14px;
+    position: sticky;
+    top:0;
+    z-index: 20;
+  }
+  .logo-mark{ height:68px; width:auto; flex:none; display:block; }
+  .brand-text{ display:flex; flex-direction:column; line-height:1; }
+  .brand-text .sub{
+    font-family: var(--font-body);
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--text-mute);
+    margin-top: 2px;
+  }
+
+  main{ padding: 18px 16px 10px; }
+
+  /* ---------- Tab-Navigation ---------- */
+  .tabbar{
+    display:flex;
+    gap:6px;
+    padding: 10px 16px 0;
+    position: sticky;
+    top: 92px;
+    background: var(--weiss);
+    z-index: 15;
+  }
+  .tab-btn{
+    flex:1;
+    font-family: var(--font-body);
+    font-weight:600;
+    font-size:13.5px;
+    padding: 11px 8px;
+    border: none;
+    border-radius: var(--radius-s) var(--radius-s) 0 0;
+    background: var(--weiss-dim);
+    color: var(--text-mute);
+    cursor:pointer;
+    border-bottom: 2.5px solid transparent;
+  }
+  .tab-btn.active{
+    background: var(--marken-flaeche);
+    color: var(--marken-rot);
+    border-bottom-color: var(--marken-rot);
+  }
+
+  /* ---------- Kundenportal ---------- */
+  .search-input{
+    width:100%;
+    font-family: var(--font-body);
+    font-size: 15.5px;
+    padding: 13px 14px;
+    border-radius: var(--radius-s);
+    border: 1.5px solid #e3dee8;
+    background: var(--weiss);
+    outline:none;
+  }
+  .search-input:focus{ border-color: var(--marken-rot); }
+
+  .such-row{ display:flex; gap:8px; }
+  .such-row .search-input{ flex:1; }
+  .such-row .btn{ width:48px; font-size:20px; padding:0; flex:none; }
+
+  .neuer-kunde-form{
+    margin-top: 12px;
+    padding: 12px;
+    background: var(--marken-flaeche);
+    border-radius: var(--radius-m);
+  }
+  .neuer-kunde-form input{
+    width:100%;
+    font-family: var(--font-body);
+    font-size: 15.5px;
+    padding: 11px 12px;
+    border-radius: var(--radius-s);
+    border: 1.5px solid #e3dee8;
+    background: var(--weiss);
+    outline:none;
+  }
+  .neuer-kunde-form input:focus{ border-color: var(--marken-rot); }
+
+  .alpha-heading{
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight:700;
+    color: var(--marken-rot);
+    margin: 16px 2px 6px;
+  }
+  .alpha-heading:first-child{ margin-top:2px; }
+
+  .kunde-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding: 13px 12px;
+    background: var(--weiss-dim);
+    border-radius: var(--radius-m);
+    margin-bottom: 8px;
+    cursor:pointer;
+  }
+  .kunde-row .kunde-name{ font-weight:600; font-size:14.5px; }
+  .kunde-row .kunde-badge{
+    font-size:11.5px; color: var(--marken-rot); background: var(--marken-flaeche);
+    border-radius: 20px; padding: 3px 9px; flex:none;
+  }
+  .kunde-row .chevron{ color:#b9b3bf; font-size:13px; transition: transform .2s ease; flex:none; }
+  .kunde-row.open .chevron{ transform: rotate(90deg); }
+
+  .kunde-detail{
+    display:none;
+    padding: 2px 4px 12px;
+    margin-top: -4px;
+    margin-bottom: 10px;
+  }
+  .kunde-detail.open{ display:block; }
+  .kunde-detail .entry{ margin-bottom:8px; }
+  .kunde-detail .keine{ font-size:12.5px; color: var(--text-mute); padding: 6px 4px; }
+
+
+  .card{
+    background: var(--weiss);
+    border: 1px solid #ece7ef;
+    border-radius: var(--radius-l);
+    padding: 18px 16px 20px;
+    margin-bottom: 18px;
+    box-shadow: 0 2px 10px rgba(30,30,34,0.05);
+  }
+  .card h2{
+    font-family: var(--font-display);
+    font-size: 18px;
+    margin: 0 0 4px;
+    color: var(--text-dunkel);
+  }
+  .card .hint{
+    font-size: 12.5px;
+    color: var(--text-mute);
+    margin: 0 0 16px;
+  }
+
+  /* ---------- Scanner / "Signature-Element": Sucherrahmen ---------- */
+  .scan-zone{
+    position: relative;
+    border-radius: var(--radius-m);
+    background: var(--anthrazit);
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom: 12px;
+  }
+  .scan-zone img{
+    width:100%; height:100%; object-fit: cover; display:block;
+  }
+  .scan-zone .placeholder{
+    color: #8d8792;
+    font-size: 13px;
+    text-align:center;
+    padding: 0 30px;
+  }
+  /* Eckmarkierungen wie bei einem Kamera-Sucher – visuelles Leitmotiv,
+     das das Scannen von Etiketten aufgreift */
+  .scan-zone .corner{
+    position:absolute;
+    width: 26px; height: 26px;
+    border: 3px solid var(--marken-rot-hell);
+    opacity: .9;
+  }
+  .scan-zone .corner.tl{ top:12px; left:12px; border-right:none; border-bottom:none; border-top-left-radius:6px; }
+  .scan-zone .corner.tr{ top:12px; right:12px; border-left:none; border-bottom:none; border-top-right-radius:6px; }
+  .scan-zone .corner.bl{ bottom:12px; left:12px; border-right:none; border-top:none; border-bottom-left-radius:6px; }
+  .scan-zone .corner.br{ bottom:12px; right:12px; border-left:none; border-top:none; border-bottom-right-radius:6px; }
+  .scan-zone .scan-line{
+    position:absolute; left:8%; right:8%; height:2px;
+    background: linear-gradient(90deg, transparent, var(--marken-rot-hell), transparent);
+    animation: scanmove 1.6s ease-in-out infinite;
+    display:none;
+  }
+  .scan-zone.busy .scan-line{ display:block; }
+  @keyframes scanmove{
+    0%{ top:14%; } 50%{ top:86%; } 100%{ top:14%; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .scan-zone .scan-line{ animation: none; top:50%; }
+  }
+
+  .btn-row{ display:flex; gap:10px; margin-bottom:6px; }
+  input[type="file"]{ display:none; }
+
+  .btn{
+    font-family: var(--font-body);
+    font-weight:600;
+    font-size: 14.5px;
+    border: none;
+    border-radius: var(--radius-s);
+    padding: 12px 16px;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    transition: transform .06s ease, opacity .15s ease;
+  }
+  .btn:active{ transform: scale(.97); }
+  .btn-primary{ background: var(--marken-rot); color:#fff; flex:1; }
+  .btn-primary:disabled{ opacity:.5; cursor:default; }
+  .btn-outline{ background:transparent; color: var(--marken-rot); border:1.5px solid var(--marken-rot); flex:1; }
+  .btn-ghost{ background: var(--marken-flaeche); color: var(--marken-rot); }
+  .btn-block{ width:100%; }
+  .btn-success{ background: var(--erfolg); color:#fff; }
+
+  .ocr-status{
+    font-size: 12.5px;
+    color: var(--marken-rot);
+    min-height: 16px;
+    margin: 6px 2px 2px;
+  }
+
+  /* ---------- Formularfelder ---------- */
+  label.field-label{
+    display:block;
+    font-size: 12.5px;
+    font-weight:600;
+    color: var(--text-mute);
+    margin: 14px 0 6px;
+  }
+  input[type="text"], input[type="number"], select{
+    width:100%;
+    font-family: var(--font-body);
+    font-size: 15.5px;
+    padding: 12px 13px;
+    border-radius: var(--radius-s);
+    border: 1.5px solid #e3dee8;
+    background: var(--weiss);
+    color: var(--text-dunkel);
+    outline: none;
+  }
+  input:focus, select:focus{ border-color: var(--marken-rot); }
+  input.filled-by-ocr{ border-color: var(--erfolg); background: #f3faf5; }
+  input.filled-by-ocr-unsicher{ border-color: #d99a2b; background: #fdf6e8; }
+
+  .qty-row{ display:flex; align-items:stretch; gap:8px; }
+  .qty-row input{ text-align:center; flex:1; }
+  .qty-btn{
+    width:44px; border-radius: var(--radius-s); border:1.5px solid #e3dee8;
+    background: var(--marken-flaeche); color: var(--marken-rot); font-size:20px; font-weight:700;
+  }
+
+  /* ---------- Liste erfasster Ware ---------- */
+  .entry-list{ display:flex; flex-direction:column; gap:10px; }
+  .entry{
+    display:flex; align-items:center; gap:12px;
+    background: var(--weiss-dim);
+    border-radius: var(--radius-m);
+    padding: 10px 12px;
+  }
+  .entry .thumb{
+    width:46px; height:46px; border-radius:10px; object-fit:cover;
+    background: var(--anthrazit); flex:none;
+  }
+  .entry .info{ flex:1; min-width:0; }
+  .entry .art{ font-weight:700; font-size:14.5px; color: var(--text-dunkel); }
+  .entry .meta{ font-size:12px; color: var(--text-mute); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .entry .del{
+    border:none; background:none; color:#b9b3bf; font-size:19px; cursor:pointer; padding:4px 8px;
+  }
+  .entry .del:hover{ color: var(--gefahr); }
+
+  .empty-state{
+    text-align:center; padding: 22px 10px; color: var(--text-mute); font-size:13.5px;
+  }
+
+  footer.list-actions{ display:flex; gap:10px; margin-top:14px; }
+
+  .footnote{ text-align:center; font-size:11.5px; color:#9d97a5; margin-top:10px; padding: 0 30px; }
+
+  /* ============================================================
+     INSTALLATIONS-BANNER (Pop-up)
+     ============================================================ */
+  .install-banner{
+    position: fixed;
+    left: 12px; right:12px; bottom: 14px;
+    max-width: 456px;
+    margin: 0 auto;
+    background: var(--anthrazit);
+    color: var(--weiss);
+    border-radius: var(--radius-m);
+    padding: 14px 14px 14px 16px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    box-shadow: 0 14px 34px rgba(0,0,0,0.35);
+    z-index: 50;
+    transform: translateY(140%);
+    transition: transform .35s cubic-bezier(.2,.9,.3,1.2);
+  }
+  .install-banner.show{ transform: translateY(0); }
+  .install-banner .ib-icon{
+    width:38px; height:38px; border-radius:10px; background: var(--marken-flaeche);
+    display:flex; align-items:center; justify-content:center; flex:none;
+  }
+  .install-banner .ib-text{ flex:1; }
+  .install-banner .ib-title{ font-weight:700; font-size:14px; }
+  .install-banner .ib-sub{ font-size:11.5px; color:#c7c1cf; margin-top:2px; }
+  .install-banner .ib-actions{ display:flex; flex-direction:column; gap:6px; align-items:flex-end; }
+  .install-banner button.ib-install{
+    background: var(--marken-rot); color:#fff; border:none; border-radius:8px;
+    font-size:12.5px; font-weight:700; padding:8px 12px; cursor:pointer; white-space:nowrap;
+  }
+  .install-banner button.ib-close{
+    background:none; border:none; color:#9d97a5; font-size:11.5px; cursor:pointer; padding:2px 4px;
+  }
+
+  /* iOS-Variante mit Anleitung (Teilen-Symbol) statt Ein-Klick-Button */
+  .install-banner.ios .ib-sub b{ color: var(--marken-rot-hell); }
+
+  .toast{
+    position: fixed; left:50%; bottom: 90px; transform: translateX(-50%) translateY(20px);
+    background: var(--anthrazit); color:#fff; padding:10px 18px; border-radius: 30px;
+    font-size:13px; opacity:0; pointer-events:none; transition: all .25s ease; z-index:60;
+  }
+  .toast.show{ opacity:1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ======================= HEADER / LOGO ======================= -->
+  <header class="top">
+    <!-- Offizielles Springmann-Logo (freigestellt, transparenter Hintergrund) -->
+    <img class="logo-mark" src="./assets/springmann-logo.png" alt="Springmann – Premium Pflanzen" />
+    <div class="brand-text">
+      <span class="sub">Bestellerfassung</span>
+    </div>
+  </header>
+
+  <!-- ======================= TAB-NAVIGATION ======================= -->
+  <nav class="tabbar">
+    <button class="tab-btn" id="tabErfassenBtn" type="button">📋 Erfassen</button>
+    <button class="tab-btn active" id="tabKundenBtn" type="button">👥 Kunden</button>
+  </nav>
+
+  <main>
+
+    <!-- ======================= ANSICHT: ERFASSEN ======================= -->
+    <div id="viewErfassen" style="display:none;">
+
+    <!-- ======================= BESTELLERFASSUNGS-PROTOKOLL ======================= -->
+    <section class="card">
+      <h2>Bestellerfassung</h2>
+      <p class="hint">Protokoll-Kopf: zuerst den Kunden zuweisen, danach Ware scannen.</p>
+
+      <!-- Kundenname steht bewusst als Erstes im Formular (Protokoll-Kopf) -->
+      <label class="field-label" for="kunde">Kunde</label>
+      <input type="text" id="kunde" list="kundenListe" placeholder="Kunde auswählen oder eingeben" />
+      <datalist id="kundenListe"></datalist>
+
+      <label class="field-label" style="margin-top:18px;">Etikett scannen</label>
+      <div class="scan-zone" id="scanZone">
+        <span class="placeholder" id="scanPlaceholder">Noch kein Foto aufgenommen</span>
+        <img id="previewImg" style="display:none" alt="Vorschau des fotografierten Etiketts" />
+        <div class="corner tl"></div><div class="corner tr"></div>
+        <div class="corner bl"></div><div class="corner br"></div>
+        <div class="scan-line" id="scanLine"></div>
+      </div>
+
+      <div class="btn-row">
+        <!-- capture="environment" öffnet direkt die Rückkamera auf dem Smartphone -->
+        <label class="btn btn-outline" for="cameraInput">📷 Foto aufnehmen</label>
+        <button class="btn btn-primary" id="ocrBtn" disabled>Etikett auslesen</button>
+      </div>
+      <input type="file" id="cameraInput" accept="image/*" capture="environment" />
+      <div class="ocr-status" id="ocrStatus"></div>
+
+      <label class="field-label" for="artNr">Artikelnummer</label>
+      <input type="text" id="artNr" placeholder="z. B. D36162" />
+
+      <label class="field-label" for="menge">Menge (Stück)</label>
+      <div class="qty-row">
+        <button type="button" class="qty-btn" id="qtyMinus">–</button>
+        <input type="number" id="menge" min="0" value="1" />
+        <button type="button" class="qty-btn" id="qtyPlus">+</button>
+      </div>
+
+      <!-- Farbe jetzt als freies Eingabefeld (mit Vorschlägen aus bisherigen Einträgen) -->
+      <label class="field-label" for="farbe">Farbe</label>
+      <input type="text" id="farbe" list="farbenListe" placeholder="Farbe eingeben, z. B. Lila" />
+      <datalist id="farbenListe"></datalist>
+
+      <button class="btn btn-primary btn-block" id="addEntryBtn" style="margin-top:18px;">
+        + Eintrag hinzufügen
+      </button>
+
+      <!-- Schließt die Bestellung ab: erzeugt direkt CSV + Fotos als ZIP -->
+      <button class="btn btn-block" id="bestellungAbschliessenBtn"
+              style="margin-top:10px; background: var(--gefahr); color:#fff;">
+        ✓ Bestellung abschließen
+      </button>
+      <p class="hint" id="offeneArtikelHinweis" style="text-align:center; margin:10px 0 0;">Noch keine Artikel für diese Bestellung erfasst.</p>
+    </section>
+
+    <p class="footnote">Alle Daten werden lokal auf dem Gerät gespeichert. Für den ZIP-Export ist keine Internetverbindung nötig.</p>
+    </div>
+
+    <!-- ======================= ANSICHT: KUNDENPORTAL ======================= -->
+    <div id="viewKunden">
+      <section class="card">
+        <h2>Kundenportal</h2>
+        <p class="hint">Kunden erscheinen hier automatisch, sobald eine Bestellung abgeschlossen wurde – antippen zum Öffnen.</p>
+
+        <!-- Suchfenster ganz oben im Portal -->
+        <div class="such-row">
+          <input type="text" id="kundenSuche" class="search-input" placeholder="🔍 Kunde suchen …" />
+          <button class="btn btn-primary" id="neuerKundeBtn" type="button" title="Neuen Kunden hinzufügen">+</button>
+        </div>
+
+        <!-- Inline-Formular für neuen Kunden, standardmäßig ausgeblendet -->
+        <div id="neuerKundeForm" class="neuer-kunde-form" style="display:none;">
+          <input type="text" id="neuerKundeName" placeholder="Name des neuen Kunden" />
+          <div class="btn-row" style="margin-top:8px;">
+            <button class="btn btn-primary" id="neuerKundeSpeichern" style="flex:1;">Hinzufügen</button>
+            <button class="btn btn-outline" id="neuerKundeAbbrechen" style="flex:1;">Abbrechen</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" style="padding-top:8px;">
+        <div id="kundenPortalListe"></div>
+        <div class="empty-state" id="kundenEmptyState" style="display:none;">Keine Kunden gefunden.</div>
+      </section>
+    </div>
+
+  </main>
+</div>
+
+<!-- ======================= INSTALLATIONS-POP-UP ======================= -->
+<div class="install-banner" id="installBanner">
+  <div class="ib-icon">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 19h14" stroke="#7c4e9e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+  <div class="ib-text">
+    <div class="ib-title">App auf dem Gerät installieren</div>
+    <div class="ib-sub" id="installSub">Schneller Zugriff direkt vom Startbildschirm – wie eine normale App.</div>
+  </div>
+  <div class="ib-actions">
+    <button class="ib-install" id="installBtn">Installieren</button>
+    <button class="ib-close" id="installClose">Später</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================================================================
+   SPRINGMANN BESTELLERFASSUNG — App-Logik
+   Gliederung:
+   1) Konstante Daten (Farben, Beispiel-Kunden)
+   2) Lokaler Speicher (localStorage) für Einträge & Kundenliste
+   3) Foto-Aufnahme + OCR (Tesseract.js)
+   4) Formular- und Listen-Logik
+   5) CSV-Export
+   6) Installations-Pop-up (Android/Chrome + iOS/Safari)
+   7) Service-Worker-Registrierung
+   ================================================================ */
+
+/* ---------- 1) Konstante Daten ---------- */
+
+// Typische Blüten-/Produktfarben im Pflanzenhandel – dienen nur noch als
+// Autocomplete-Vorschläge im freien Farb-Eingabefeld (kein festes Auswahlmenü mehr)
+const START_FARBEN = ["Weiß", "Creme", "Gelb", "Orange", "Rosa", "Pink", "Rot", "Lila", "Blau", "Grün", "Bunt gemischt"];
+
+// Startvorschläge für Kunden – bewusst leer, es werden nur echte,
+// selbst eingegebene Kunden gespeichert (keine Beispieldaten mehr).
+const START_KUNDEN = [];
+
+/* ---------- 2) Lokaler Speicher ---------- */
+
+const LS_ENTRIES      = "springmann_entries_v1";
+const LS_KUNDEN       = "springmann_kunden_v1";
+const LS_FARBEN       = "springmann_farben_v1";
+const LS_BESTELLUNGEN = "springmann_bestellungen_v1"; // abgeschlossene Bestellungen (Kundenportal)
+
+function ladeEintraege() {
+  return JSON.parse(localStorage.getItem(LS_ENTRIES) || "[]");
+}
+function speichereEintraege(liste) {
+  localStorage.setItem(LS_ENTRIES, JSON.stringify(liste));
+}
+function ladeKunden() {
+  const gespeichert = JSON.parse(localStorage.getItem(LS_KUNDEN) || "null");
+  return gespeichert || START_KUNDEN;
+}
+function speichereKunden(liste) {
+  localStorage.setItem(LS_KUNDEN, JSON.stringify(liste));
+}
+function ladeFarben() {
+  const gespeichert = JSON.parse(localStorage.getItem(LS_FARBEN) || "null");
+  return gespeichert || START_FARBEN;
+}
+function speichereFarben(liste) {
+  localStorage.setItem(LS_FARBEN, JSON.stringify(liste));
+}
+// Abgeschlossene Bestellungen: nur Einträge, die bereits über
+// "Bestellung abschließen" bestätigt wurden, landen hier – und damit
+// erst dann auch sichtbar im Kundenportal.
+function ladeAbgeschlosseneBestellungen() {
+  return JSON.parse(localStorage.getItem(LS_BESTELLUNGEN) || "[]");
+}
+function speichereAbgeschlosseneBestellungen(liste) {
+  localStorage.setItem(LS_BESTELLUNGEN, JSON.stringify(liste));
+}
+
+let eintraege = ladeEintraege();
+let kunden = ladeKunden();
+let farben = ladeFarben();
+let abgeschlosseneEintraege = ladeAbgeschlosseneBestellungen();
+let letztesFoto = null; // Data-URL des (verkleinerten) Vorschaubilds
+
+/* ---------- Hilfsfunktion: kleine Bestätigungs-Meldung ---------- */
+function zeigeToast(text) {
+  const t = document.getElementById("toast");
+  t.textContent = text;
+  t.classList.add("show");
+  clearTimeout(zeigeToast._timer);
+  zeigeToast._timer = setTimeout(() => t.classList.remove("show"), 2200);
+}
+
+/* ---------- Kundenliste (Datalist) rendern ---------- */
+function renderKundenListe() {
+  const dl = document.getElementById("kundenListe");
+  dl.innerHTML = kunden.map(k => `<option value="${escapeHtml(k)}"></option>`).join("");
+}
+
+/* ---------- Farb-Vorschläge (Datalist) rendern ---------- */
+function renderFarbenListe() {
+  const dl = document.getElementById("farbenListe");
+  dl.innerHTML = farben.map(f => `<option value="${escapeHtml(f)}"></option>`).join("");
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, s => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[s]));
+}
+
+/* ---------- 3) Foto-Aufnahme + OCR ---------- */
+
+const cameraInput   = document.getElementById("cameraInput");
+const previewImg    = document.getElementById("previewImg");
+const scanPlaceholder = document.getElementById("scanPlaceholder");
+const scanZone       = document.getElementById("scanZone");
+const ocrBtn         = document.getElementById("ocrBtn");
+const ocrStatus      = document.getElementById("ocrStatus");
+const artNrInput     = document.getElementById("artNr");
+
+let letztesFotoHochaufloesend = null; // nur für die OCR-Erkennung, wird nicht gespeichert
+
+cameraInput.addEventListener("change", async (ev) => {
+  const file = ev.target.files[0];
+  if (!file) return;
+
+  // Für die Anzeige/Speicherung reicht eine kleinere Version (spart Platz),
+  // für die Texterkennung selbst nutzen wir aber eine deutlich höher
+  // aufgelöste Version desselben Fotos – mehr Pixel = deutlich bessere
+  // Trefferquote bei kleiner Etikettenschrift.
+  const dataUrl = await verkleinereBild(file, 1000);
+  letztesFoto = await verkleinereBild(file, 480); // fürs Listen-Vorschaubild & Export
+  letztesFotoHochaufloesend = await verkleinereBild(file, 1800); // fürs Scannen selbst
+
+  previewImg.src = dataUrl;
+  previewImg.style.display = "block";
+  scanPlaceholder.style.display = "none";
+  ocrBtn.disabled = false;
+  ocrStatus.textContent = "";
+  artNrInput.classList.remove("filled-by-ocr", "filled-by-ocr-unsicher");
+});
+
+// Verkleinert ein Foto per <canvas>, bevor es verarbeitet/gespeichert wird
+function verkleinereBild(file, maxBreite) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const scale = Math.min(1, maxBreite / img.width);
+        const canvas = document.createElement("canvas");
+        canvas.width = img.width * scale;
+        canvas.height = img.height * scale;
+        canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL("image/jpeg", 0.85));
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+// Bereitet das Foto für die Texterkennung auf: Graustufen + adaptive
+// Kontraststreckung. Das verbessert bei Etiketten mit farbigem Hintergrund
+// deutlich die Trefferquote, da Tesseract mit kräftigem Schwarz/Weiß-
+// Kontrast am zuverlässigsten arbeitet.
+function bildFuerOcrAufbereiten(dataUrl) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0);
+
+      const bild = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const px = bild.data;
+
+      // 1) In Graustufen umwandeln
+      let min = 255, max = 0;
+      for (let i = 0; i < px.length; i += 4) {
+        const grau = 0.299 * px[i] + 0.587 * px[i + 1] + 0.114 * px[i + 2];
+        px[i] = px[i + 1] = px[i + 2] = grau;
+        if (grau < min) min = grau;
+        if (grau > max) max = grau;
+      }
+
+      // 2) Adaptive Kontraststreckung: die tatsächlich vorkommende Helligkeits-
+      // spanne des Fotos wird auf den vollen 0–255-Bereich gestreckt. Das
+      // passt sich automatisch an unterschiedliche Licht-/Etikettverhältnisse
+      // an (besser als ein starrer Kontrastfaktor).
+      const spanne = Math.max(1, max - min);
+      for (let i = 0; i < px.length; i += 4) {
+        const gestreckt = ((px[i] - min) / spanne) * 255;
+        const wert = Math.max(0, Math.min(255, gestreckt));
+        px[i] = px[i + 1] = px[i + 2] = wert;
+      }
+
+      ctx.putImageData(bild, 0, 0);
+      resolve(canvas.toDataURL("image/jpeg", 0.95));
+    };
+    img.src = dataUrl;
+  });
+}
+
+// Zweite, "härtere" Variante: reines Schwarz/Weiß per Schwellenwert (Otsu-
+// ähnliches Verfahren). Für manche Etiketten (z. B. sehr kontrastarme oder
+// leicht verschwommene Fotos) liefert diese Variante bessere Ergebnisse als
+// die sanftere Kontraststreckung – deshalb probieren wir bei Bedarf beide.
+function bildFuerOcrSchwarzWeiss(dataUrl) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0);
+
+      const bild = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const px = bild.data;
+      const grauwerte = new Uint8ClampedArray(px.length / 4);
+
+      for (let i = 0, j = 0; i < px.length; i += 4, j++) {
+        grauwerte[j] = 0.299 * px[i] + 0.587 * px[i + 1] + 0.114 * px[i + 2];
+      }
+
+      // Otsu-Schwellenwert: findet automatisch die Helligkeitsgrenze, die
+      // Vordergrund (Text) am besten vom Hintergrund trennt.
+      const histogramm = new Array(256).fill(0);
+      grauwerte.forEach(w => histogramm[w]++);
+      const gesamt = grauwerte.length;
+      let summeGesamt = 0;
+      for (let t = 0; t < 256; t++) summeGesamt += t * histogramm[t];
+
+      let summeHintergrund = 0, gewichtHintergrund = 0, maxVarianz = 0, schwelle = 128;
+      for (let t = 0; t < 256; t++) {
+        gewichtHintergrund += histogramm[t];
+        if (gewichtHintergrund === 0) continue;
+        const gewichtVordergrund = gesamt - gewichtHintergrund;
+        if (gewichtVordergrund === 0) break;
+        summeHintergrund += t * histogramm[t];
+        const mittelHintergrund = summeHintergrund / gewichtHintergrund;
+        const mittelVordergrund = (summeGesamt - summeHintergrund) / gewichtVordergrund;
+        const varianz = gewichtHintergrund * gewichtVordergrund *
+          (mittelHintergrund - mittelVordergrund) * (mittelHintergrund - mittelVordergrund);
+        if (varianz > maxVarianz) { maxVarianz = varianz; schwelle = t; }
+      }
+
+      for (let i = 0, j = 0; i < px.length; i += 4, j++) {
+        const wert = grauwerte[j] > schwelle ? 255 : 0;
+        px[i] = px[i + 1] = px[i + 2] = wert;
+      }
+
+      ctx.putImageData(bild, 0, 0);
+      resolve(canvas.toDataURL("image/jpeg", 0.95));
+    };
+    img.src = dataUrl;
+  });
+}
+
+ocrBtn.addEventListener("click", async () => {
+  if (!previewImg.src || !letztesFotoHochaufloesend) return;
+
+  ocrBtn.disabled = true;
+  scanZone.classList.add("busy");
+
+  try {
+    // Durchlauf 1: adaptive Kontraststreckung (schnell, funktioniert bei den
+    // meisten gut ausgeleuchteten Fotos zuverlässig)
+    ocrStatus.textContent = "Bild wird aufbereitet …";
+    const kontrastBild = await bildFuerOcrAufbereiten(letztesFotoHochaufloesend);
+    let treffer = await ocrDurchlauf(kontrastBild, "Versuch 1/2");
+
+    // Durchlauf 2: nur falls Durchlauf 1 nichts oder nur einen unsicheren
+    // Treffer geliefert hat – zweite Variante (Schwarz/Weiß) probieren und
+    // bei Bedarf das bessere Ergebnis der beiden übernehmen
+    if (!treffer || !treffer.sicher) {
+      const swBild = await bildFuerOcrSchwarzWeiss(letztesFotoHochaufloesend);
+      const treffer2 = await ocrDurchlauf(swBild, "Versuch 2/2");
+      if (treffer2 && (!treffer || treffer2.konfidenz > treffer.konfidenz)) {
+        treffer = treffer2;
+      }
+    }
+
+    if (treffer) {
+      artNrInput.value = treffer.wert;
+      artNrInput.classList.remove("filled-by-ocr", "filled-by-ocr-unsicher");
+      artNrInput.classList.add(treffer.sicher ? "filled-by-ocr" : "filled-by-ocr-unsicher");
+      ocrStatus.textContent = treffer.sicher
+        ? "Artikelnummer erkannt ✓ — bei Bedarf korrigieren."
+        : "Artikelnummer unsicher erkannt — bitte unbedingt prüfen.";
+    } else {
+      ocrStatus.textContent = "Keine Artikelnummer erkannt. Bitte manuell eintragen oder näher/schärfer fotografieren.";
+    }
+  } catch (err) {
+    console.error(err);
+    ocrStatus.textContent = "Fehler beim Scannen. Bitte erneut versuchen.";
+  } finally {
+    ocrBtn.disabled = false;
+    scanZone.classList.remove("busy");
+  }
+});
+
+// Führt einen einzelnen Tesseract-Durchlauf aus und liefert den besten
+// gefundenen Artikelnummer-Treffer (oder null) zurück.
+async function ocrDurchlauf(bildDataUrl, statusLabel) {
+  const { data } = await Tesseract.recognize(bildDataUrl, "eng", {
+    // PSM 6 = "einheitlicher Textblock" – passt gut zu kompakten Etikett-
+    // Ausschnitten und liefert zuverlässigere Worterkennung als der Standard.
+    tessedit_pageseg_mode: "6",
+    tessedit_char_whitelist: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-. ",
+    logger: (m) => {
+      if (m.status === "recognizing text") {
+        ocrStatus.textContent = `${statusLabel}: Etikett wird gelesen … ${Math.round(m.progress * 100)}%`;
+      }
+    },
+  });
+  return extrahiereArtikelnummer(data);
+}
+
+// Springmann-Artikelnummern beginnen bekanntermaßen mit "D" gefolgt von genau
+// 5 Ziffern (z. B. "D36162") – dieses feste Muster wird zuerst geprüft, da es
+// deutlich zuverlässiger ist als eine offene Suche. Als Rückfallebene bleibt
+// zusätzlich ein etwas offeneres Muster aktiv, falls doch mal ein anderes
+// Format vorkommt (1–3 Buchstaben + 4–6 Ziffern).
+const ARTIKEL_MUSTER_SPRINGMANN = /^D\d{5}$/;
+const ARTIKEL_MUSTER_OFFEN = /^[A-Z]{1,3}[-\s]?\d{4,6}$/;
+
+function extrahiereArtikelnummer(ocrDaten) {
+  const alleWoerter = (ocrDaten.words || []).map(w => ({
+    wert: w.text.toUpperCase().replace(/[^A-Z0-9-]/g, ""),
+    konfidenz: w.confidence,
+  }));
+
+  // 1) zuerst gezielt nach dem bekannten Springmann-Format suchen
+  let woerter = alleWoerter.filter(w => ARTIKEL_MUSTER_SPRINGMANN.test(w.wert));
+  // 2) falls nichts gefunden, offeneres Muster als Rückfallebene probieren
+  if (!woerter.length) {
+    woerter = alleWoerter.filter(w => ARTIKEL_MUSTER_OFFEN.test(w.wert));
+  }
+
+  if (woerter.length) {
+    woerter.sort((a, b) => b.konfidenz - a.konfidenz);
+    const beste = woerter[0];
+    return {
+      wert: beste.wert.replace(/[\s-]/g, ""),
+      konfidenz: beste.konfidenz,
+      sicher: beste.konfidenz >= 60, // ab diesem Wert gilt der Treffer als verlässlich
+    };
+  }
+
+  // Rückfallebene: gesamten Text durchsuchen, falls Tesseract keine sauberen
+  // Einzelwörter liefert (z. B. bei sehr engem Zeilenabstand auf dem Etikett)
+  const bereinigt = (ocrDaten.text || "").toUpperCase();
+  const textTreffer = bereinigt.match(/D\s?-?\s?\d{5}/) || bereinigt.match(/\b[A-Z]{1,3}[-\s]?\d{4,6}\b/);
+  if (textTreffer) {
+    return { wert: textTreffer[0].replace(/[\s-]/g, ""), konfidenz: 0, sicher: false };
+  }
+
+  return null;
+}
+
+/* ---------- 4) Formular- und Listen-Logik ---------- */
+
+document.getElementById("qtyMinus").addEventListener("click", () => {
+  const el = document.getElementById("menge");
+  el.value = Math.max(0, (parseInt(el.value || "0", 10) - 1));
+});
+document.getElementById("qtyPlus").addEventListener("click", () => {
+  const el = document.getElementById("menge");
+  el.value = parseInt(el.value || "0", 10) + 1;
+});
+
+document.getElementById("addEntryBtn").addEventListener("click", () => {
+  const artNr = artNrInput.value.trim();
+  const kunde = document.getElementById("kunde").value.trim();
+  const menge = parseInt(document.getElementById("menge").value || "0", 10);
+  const farbe = document.getElementById("farbe").value.trim();
+
+  if (!kunde) { zeigeToast("Bitte Kunde zuweisen."); document.getElementById("kunde").focus(); return; }
+  if (!artNr) { zeigeToast("Bitte Artikelnummer eingeben."); artNrInput.focus(); return; }
+  if (!menge || menge <= 0) { zeigeToast("Bitte Menge angeben."); return; }
+  if (!farbe) { zeigeToast("Bitte Farbe eingeben."); document.getElementById("farbe").focus(); return; }
+
+  const eintrag = {
+    id: Date.now(),
+    zeit: new Date().toLocaleString("de-DE", { day:"2-digit", month:"2-digit", hour:"2-digit", minute:"2-digit" }),
+    artNr, kunde, menge, farbe,
+    foto: letztesFoto,
+  };
+
+  eintraege.unshift(eintrag);
+  speichereEintraege(eintraege);
+
+  // Neuen Kunden ggf. der Vorschlagsliste hinzufügen
+  if (!kunden.includes(kunde)) {
+    kunden.unshift(kunde);
+    speichereKunden(kunden);
+    renderKundenListe();
+  }
+  // Neue Farbe ggf. der Vorschlagsliste hinzufügen
+  if (!farben.includes(farbe)) {
+    farben.unshift(farbe);
+    speichereFarben(farben);
+    renderFarbenListe();
+  }
+
+  renderListe();
+  formularZuruecksetzen();
+  zeigeToast("Eintrag hinzugefügt ✓");
+});
+
+function formularZuruecksetzen() {
+  artNrInput.value = "";
+  artNrInput.classList.remove("filled-by-ocr", "filled-by-ocr-unsicher");
+  document.getElementById("kunde").value = "";
+  document.getElementById("menge").value = 1;
+  document.getElementById("farbe").value = "";
+  previewImg.style.display = "none";
+  previewImg.src = "";
+  scanPlaceholder.style.display = "block";
+  ocrBtn.disabled = true;
+  ocrStatus.textContent = "";
+  letztesFoto = null;
+  letztesFotoHochaufloesend = null;
+  cameraInput.value = "";
+}
+
+// Zeigt statt der vollständigen Liste nur noch einen kurzen Hinweis mit der
+// Anzahl der aktuell für die Bestellung erfassten Artikel an – die Liste
+// selbst wird auf Wunsch nicht mehr angezeigt, nur beim Abschließen verwendet.
+function renderListe() {
+  const hinweis = document.getElementById("offeneArtikelHinweis");
+  hinweis.textContent = eintraege.length
+    ? `${eintraege.length} Artikel bereit zum Abschließen.`
+    : "Noch keine Artikel für diese Bestellung erfasst.";
+}
+
+/* ---------- 5) Export: CSV und CSV+Fotos als ZIP ---------- */
+
+// Baut den gemeinsamen CSV-Inhalt. mitFotoSpalte fügt eine Spalte mit dem
+// Dateinamen des zugehörigen Fotos hinzu (nur relevant für den ZIP-Export,
+// da im reinen CSV-Export keine Fotodateien danebenliegen).
+function baueCsv(mitFotoSpalte, liste) {
+  liste = liste || eintraege;
+  const kopf = ["Zeit", "Artikelnummer", "Kunde", "Menge", "Farbe"];
+  if (mitFotoSpalte) kopf.push("Foto-Datei");
+
+  const zeilen = liste.map(e => {
+    const zeile = [e.zeit, e.artNr, e.kunde, e.menge, e.farbe];
+    if (mitFotoSpalte) zeile.push(e.foto ? `fotos/${e.id}.jpg` : "");
+    return zeile;
+  });
+
+  return [kopf, ...zeilen]
+    .map(zeile => zeile.map(feld => `"${String(feld).replace(/"/g, '""')}"`).join(";"))
+    .join("\n");
+}
+
+function ladeDatei(blob, dateiname) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = dateiname;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ZIP-Export: CSV mit Foto-Verweis + die tatsächlichen Etikettfotos als Belege.
+// Wird sowohl vom regulären Export-Button (aktuelle Arbeitsliste) als auch
+// vom "Bestellung abschließen"-Button (dort mit der gerade archivierten
+// Auswahl) verwendet.
+async function zipExportErstellen(liste) {
+  liste = liste || eintraege;
+  if (!liste.length) { zeigeToast("Keine Einträge zum Exportieren."); return; }
+
+  zeigeToast("ZIP wird erstellt …");
+
+  const zip = new JSZip();
+  zip.file("bestellerfassung.csv", "\uFEFF" + baueCsv(true, liste));
+
+  const fotoOrdner = zip.folder("fotos");
+  liste.forEach(e => {
+    if (e.foto) {
+      // Data-URL "data:image/jpeg;base64,...." → nur den Base64-Teil für JSZip verwenden
+      const base64 = e.foto.split(",")[1];
+      fotoOrdner.file(`${e.id}.jpg`, base64, { base64: true });
+    }
+  });
+
+  const inhalt = await zip.generateAsync({ type: "blob" });
+  ladeDatei(inhalt, `springmann_bestellerfassung_${new Date().toISOString().slice(0,10)}.zip`);
+  zeigeToast("ZIP-Export fertig ✓");
+}
+
+
+// "Bestellung abschließen": archiviert die aktuell erfassten Einträge
+// (dadurch erscheinen die betroffenen Kunden erst jetzt im Kundenportal),
+// erzeugt direkt den ZIP-Export als Beleg und leert danach die Arbeitsliste
+// "Erfasste Ware" für die nächste Bestellung.
+document.getElementById("bestellungAbschliessenBtn").addEventListener("click", async () => {
+  if (!eintraege.length) { zeigeToast("Keine Einträge zum Abschließen."); return; }
+
+  const jetzt = new Date().toISOString();
+  const archivPaket = eintraege.map(e => ({ ...e, abgeschlossenAm: jetzt }));
+
+  await zipExportErstellen(archivPaket);
+
+  abgeschlosseneEintraege = [...archivPaket, ...abgeschlosseneEintraege];
+  speichereAbgeschlosseneBestellungen(abgeschlosseneEintraege);
+
+  eintraege = [];
+  speichereEintraege(eintraege);
+  renderListe();
+  renderKundenPortal();
+
+  zeigeToast("Bestellung abgeschlossen ✓");
+});
+
+/* ---------- 6) Installations-Pop-up ---------- */
+
+const installBanner = document.getElementById("installBanner");
+const installBtn     = document.getElementById("installBtn");
+const installClose   = document.getElementById("installClose");
+const installSub     = document.getElementById("installSub");
+
+let deferredPrompt = null; // vom Browser bereitgestelltes Installations-Ereignis (Android/Chrome)
+
+// Läuft die App bereits als installierte/standalone App? Dann kein Pop-up nötig.
+function laeuftAlsInstallierteApp() {
+  return window.matchMedia("(display-mode: standalone)").matches
+      || window.navigator.standalone === true; // iOS-spezifisch
+}
+
+function istIOS() {
+  return /iphone|ipad|ipod/i.test(window.navigator.userAgent);
+}
+
+// Merkt sich, wann der Nutzer das Banner zuletzt weggeklickt hat,
+// damit es nicht bei jedem Öffnen erneut nervt.
+function bannerKuerzlichAbgelehnt() {
+  const t = localStorage.getItem("springmann_install_dismissed_at");
+  if (!t) return false;
+  const DREI_TAGE = 3 * 24 * 60 * 60 * 1000;
+  return Date.now() - Number(t) < DREI_TAGE;
+}
+
+function zeigeInstallBanner() {
+  if (laeuftAlsInstallierteApp() || bannerKuerzlichAbgelehnt()) return;
+  installBanner.classList.add("show");
+}
+
+function versteckeInstallBanner(merkeAblehnung) {
+  installBanner.classList.remove("show");
+  if (merkeAblehnung) {
+    localStorage.setItem("springmann_install_dismissed_at", String(Date.now()));
+  }
+}
+
+// --- Android / Chrome / Edge: natives Installations-Ereignis abfangen ---
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();          // verhindert die Standard-Mini-Infoleiste des Browsers
+  deferredPrompt = e;          // für späteren Aufruf durch unseren eigenen Button merken
+  installSub.textContent = "Schneller Zugriff direkt vom Startbildschirm – wie eine normale App.";
+  zeigeInstallBanner();        // unser eigenes Pop-up automatisch anzeigen
+});
+
+installBtn.addEventListener("click", async () => {
+  if (deferredPrompt) {
+    // Android/Chrome: nativen Installationsdialog auslösen
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    versteckeInstallBanner(true);
+    if (outcome === "accepted") zeigeToast("App wird installiert …");
+  } else if (istIOS()) {
+    // iOS unterstützt keinen automatischen Dialog -> kurze Anleitung anzeigen
+    alert('So installierst du die App:\n\n1. Auf das Teilen-Symbol ⬆️ tippen\n2. "Zum Home-Bildschirm" auswählen\n3. Mit "Hinzufügen" bestätigen');
+  }
+});
+
+installClose.addEventListener("click", () => versteckeInstallBanner(true));
+
+window.addEventListener("appinstalled", () => {
+  versteckeInstallBanner(false);
+  zeigeToast("App erfolgreich installiert ✓");
+});
+
+// --- iOS / Safari: kein "beforeinstallprompt"-Ereignis verfügbar ---
+// Daher zeigen wir dort automatisch die Anleitungs-Variante des Banners an.
+if (istIOS() && !laeuftAlsInstallierteApp()) {
+  installBanner.classList.add("ios");
+  installSub.innerHTML = 'Tippe unten auf <b>Teilen ⬆️</b> und dann auf <b>„Zum Home-Bildschirm“</b>.';
+  installBtn.textContent = "Anleitung";
+  setTimeout(zeigeInstallBanner, 1200); // kurze Verzögerung, wirkt weniger aufdringlich
+}
+
+/* ---------- 8) Tab-Navigation (Erfassen ↔ Kundenportal) ---------- */
+
+const tabErfassenBtn = document.getElementById("tabErfassenBtn");
+const tabKundenBtn   = document.getElementById("tabKundenBtn");
+const viewErfassen   = document.getElementById("viewErfassen");
+const viewKunden     = document.getElementById("viewKunden");
+
+tabErfassenBtn.addEventListener("click", () => {
+  tabErfassenBtn.classList.add("active");
+  tabKundenBtn.classList.remove("active");
+  viewErfassen.style.display = "";
+  viewKunden.style.display = "none";
+});
+
+tabKundenBtn.addEventListener("click", () => {
+  tabKundenBtn.classList.add("active");
+  tabErfassenBtn.classList.remove("active");
+  viewErfassen.style.display = "none";
+  viewKunden.style.display = "";
+  renderKundenPortal(); // beim Öffnen des Tabs immer aktuell rendern
+});
+
+/* ---------- 9) Kundenportal: alphabetische Liste + Suche ---------- */
+
+// Kundenname erscheint hier bewusst erst, NACHDEM eine Bestellung über
+// "Bestellung abschließen" archiviert wurde – nicht schon beim reinen
+// Hinzufügen eines Eintrags oder beim manuellen Anlegen über "+".
+function alleKundenEindeutig() {
+  const namen = new Set(abgeschlosseneEintraege.map(e => e.kunde));
+  return [...namen].filter(Boolean);
+}
+
+// Gruppiert eine sortierte Namensliste nach Anfangsbuchstabe, z. B. { A: [...], B: [...] }
+function gruppiereNachBuchstabe(namen) {
+  const gruppen = {};
+  namen.forEach(name => {
+    const buchstabe = name.trim().charAt(0).toUpperCase();
+    if (!gruppen[buchstabe]) gruppen[buchstabe] = [];
+    gruppen[buchstabe].push(name);
+  });
+  return gruppen;
+}
+
+function renderKundenPortal() {
+  const suchbegriff = document.getElementById("kundenSuche").value.trim().toLowerCase();
+  const liste = document.getElementById("kundenPortalListe");
+  const leer  = document.getElementById("kundenEmptyState");
+
+  let namen = alleKundenEindeutig()
+    .filter(n => n.toLowerCase().includes(suchbegriff))
+    .sort((a, b) => a.localeCompare(b, "de"));
+
+  if (!namen.length) {
+    liste.innerHTML = "";
+    leer.style.display = "block";
+    leer.textContent = abgeschlosseneEintraege.length
+      ? "Keine Kunden gefunden."
+      : "Noch keine abgeschlossenen Bestellungen.";
+    return;
+  }
+  leer.style.display = "none";
+
+  const gruppen = gruppiereNachBuchstabe(namen);
+  const buchstaben = Object.keys(gruppen).sort((a, b) => a.localeCompare(b, "de"));
+
+  // Kundenname antippen klappt seine abgeschlossene(n) Bestellung(en) auf/zu
+  liste.innerHTML = buchstaben.map(buchstabe => `
+    <div class="alpha-heading">${buchstabe}</div>
+    ${gruppen[buchstabe].map(name => {
+      const anzahl = abgeschlosseneEintraege.filter(e => e.kunde === name).length;
+      return `
+        <div class="kunde-row" data-kunde="${escapeHtml(name)}">
+          <span class="kunde-name">${escapeHtml(name)}</span>
+          <span class="kunde-badge">${anzahl} Bestellung${anzahl === 1 ? "" : "en"}</span>
+          <span class="chevron">▸</span>
+        </div>
+        <div class="kunde-detail" id="detail-${cssId(name)}"></div>
+      `;
+    }).join("")}
+  `).join("");
+
+  // Klick auf eine Kundenzeile klappt die zugehörige Bestellung auf/zu
+  liste.querySelectorAll(".kunde-row").forEach(row => {
+    row.addEventListener("click", () => {
+      const name = row.dataset.kunde;
+      const detail = document.getElementById(`detail-${cssId(name)}`);
+      const offen = detail.classList.contains("open");
+
+      // andere geöffnete Details schließen, damit das Portal übersichtlich bleibt
+      liste.querySelectorAll(".kunde-detail.open").forEach(d => d.classList.remove("open"));
+      liste.querySelectorAll(".kunde-row.open").forEach(r => r.classList.remove("open"));
+
+      if (!offen) {
+        detail.classList.add("open");
+        row.classList.add("open");
+        detail.innerHTML = renderKundenDetail(name);
+      }
+    });
+  });
+}
+
+// Baut eine kleine Liste der abgeschlossenen Bestellungen eines Kunden (gleiche Optik wie die Haupt-Erfassungsliste)
+function renderKundenDetail(name) {
+  const eigene = abgeschlosseneEintraege.filter(e => e.kunde === name);
+  if (!eigene.length) {
+    return `<div class="keine">Noch keine Bestellungen für diesen Kunden.</div>`;
+  }
+  return eigene.map(e => `
+    <div class="entry">
+      ${e.foto ? `<img class="thumb" src="${e.foto}" alt="Etikettfoto" />` : `<div class="thumb"></div>`}
+      <div class="info">
+        <div class="art">${escapeHtml(e.artNr)}</div>
+        <div class="meta">${e.menge} Stk. · ${escapeHtml(e.farbe)} · ${e.zeit}</div>
+      </div>
+    </div>
+  `).join("");
+}
+
+// Wandelt einen Kundennamen in eine gültige HTML-ID um (für die Detail-Container)
+function cssId(text) {
+  return String(text).toLowerCase().replace(/[^a-z0-9]+/g, "-");
+}
+
+document.getElementById("kundenSuche").addEventListener("input", renderKundenPortal);
+
+/* ---------- Neuen Kunden manuell hinzufügen (Kundenportal) ---------- */
+
+const neuerKundeBtn        = document.getElementById("neuerKundeBtn");
+const neuerKundeForm       = document.getElementById("neuerKundeForm");
+const neuerKundeName       = document.getElementById("neuerKundeName");
+const neuerKundeSpeichern  = document.getElementById("neuerKundeSpeichern");
+const neuerKundeAbbrechen  = document.getElementById("neuerKundeAbbrechen");
+
+// Plus-Button öffnet/schließt das kleine Formular und fokussiert das Eingabefeld
+neuerKundeBtn.addEventListener("click", () => {
+  const geoeffnet = neuerKundeForm.style.display !== "none";
+  neuerKundeForm.style.display = geoeffnet ? "none" : "block";
+  if (!geoeffnet) {
+    neuerKundeName.value = "";
+    neuerKundeName.focus();
+  }
+});
+
+neuerKundeAbbrechen.addEventListener("click", () => {
+  neuerKundeForm.style.display = "none";
+});
+
+function neuenKundenSpeichern() {
+  const name = neuerKundeName.value.trim();
+  if (!name) { zeigeToast("Bitte einen Namen eingeben."); neuerKundeName.focus(); return; }
+
+  // Groß-/Kleinschreibung ignorieren, damit z.B. "Blumen Meier" nicht doppelt angelegt wird
+  const existiertBereits = kunden.some(k => k.toLowerCase() === name.toLowerCase());
+  if (existiertBereits) {
+    zeigeToast("Dieser Kunde existiert bereits.");
+    return;
+  }
+
+  kunden.unshift(name);
+  speichereKunden(kunden);
+  renderKundenListe();     // Datalist im Erfassen-Formular aktualisieren
+
+  neuerKundeForm.style.display = "none";
+  zeigeToast(`Kunde „${name}" für die Autovervollständigung gespeichert ✓`);
+}
+
+neuerKundeSpeichern.addEventListener("click", neuenKundenSpeichern);
+// Enter-Taste im Eingabefeld speichert ebenfalls
+neuerKundeName.addEventListener("keydown", (ev) => {
+  if (ev.key === "Enter") neuenKundenSpeichern();
+});
+
+/* ---------- 7) Service-Worker registrieren ---------- */
+// Voraussetzung dafür, dass die App offlinefähig UND (auf Android) installierbar ist.
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch((err) => {
+      console.warn("Service Worker konnte nicht registriert werden:", err);
+    });
+  });
+}
+
+/* ---------- Start: erste Anzeige rendern ---------- */
+renderKundenListe();
+renderFarbenListe();
+renderListe();
+renderKundenPortal(); // Kundenportal ist die Startansicht der App
+</script>
+</body>
+</html>
