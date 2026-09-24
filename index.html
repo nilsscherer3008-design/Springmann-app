@@ -182,10 +182,111 @@ footer{font-family:var(--head);font-size:.8rem;color:var(--muted);padding:0 0 32
 .vk-text{position:relative;padding:10px 12px;display:flex;flex-direction:column;gap:2px;background:linear-gradient(transparent,rgba(0,0,0,.55));width:100%}
 .vk-text b{font-family:var(--head);font-size:1rem}
 .vk-text small{font-family:var(--head);font-size:.78rem;opacity:.85}
-.card{display:grid;grid-template-columns:1fr auto;gap:0 14px}
-.card > *{grid-column:1}
-.card .thumb{grid-column:2;grid-row:1 / span 3;width:96px;height:96px;border-radius:10px;object-fit:cover;align-self:start;margin-top:4px}
-@media (max-width:420px){.card .thumb{width:72px;height:72px}}
+/* Nachrichtenkarte: großes Bild oben, darunter Zeile, Überschrift, Vorspann */
+.card{display:block;padding:0;overflow:hidden}
+.card .ktext{padding:14px 16px 16px}
+.kbild{position:relative;aspect-ratio:16/9;overflow:hidden;background:var(--surface);--akzent:#16407A}
+.kbild img{width:100%;height:100%;object-fit:cover;display:block}
+.kbild.tafel,.kbild.karte{background:linear-gradient(140deg,#0E2F5C,#0A1F3C)}
+.kbild.tafel::before,.kbild.karte::before{content:"";position:absolute;inset:0;
+  background:radial-gradient(110% 120% at 6% -10%,var(--akzent) 0%,rgba(0,0,0,0) 62%),
+             repeating-linear-gradient(118deg,rgba(255,255,255,.03) 0 2px,rgba(0,0,0,0) 2px 10px);opacity:.75}
+.kb-inhalt{position:absolute;inset:0}
+.kb-zahl,.kb-marke{position:absolute;left:5%;right:5%;top:50%;transform:translateY(-50%);color:#fff;z-index:2}
+.kb-zahl b{display:block;font-family:var(--head);font-weight:800;line-height:1;font-size:clamp(1.5rem,7vw,2.4rem);
+  font-variant-numeric:tabular-nums}
+.kb-zahl span{display:block;margin-top:.4em;font-family:var(--head);font-size:.82rem;color:#C7D6E8}
+.kb-marke b{display:inline-block;font-family:var(--head);font-weight:800;text-transform:uppercase;letter-spacing:.09em;
+  font-size:.72rem;background:var(--akzent);padding:4px 10px;border-radius:4px}
+.kb-marke span{display:block;margin-top:10px;font-family:var(--head);font-size:.92rem;color:#D7E2F0}
+.kb-marke small{display:block;margin-top:3px;font-family:var(--head);font-size:.76rem;color:#9FB3CC}
+.kb-gross{position:absolute;right:-2%;bottom:-14%;z-index:1;font-family:var(--head);font-weight:800;
+  font-size:4.6rem;line-height:.8;letter-spacing:-.04em;color:rgba(255,255,255,.07);white-space:nowrap;pointer-events:none}
+.kbild .karte{position:absolute;inset:0;width:100%;height:100%}
+.kbild .karte .k-meer{fill:#0B2140}
+.kbild .karte .k-land path{fill:#23558F;stroke:#0A2246;stroke-width:1.2}
+.kb-ort{position:absolute;left:5%;bottom:8%;z-index:2;color:#fff;font-family:var(--head);font-weight:800;
+  font-size:clamp(.95rem,4vw,1.3rem);text-shadow:0 2px 10px rgba(0,0,0,.6)}
+.kb-credit{position:absolute;right:6px;bottom:6px;z-index:2;font-family:var(--head);font-size:.58rem;color:#fff;
+  background:rgba(0,0,0,.5);padding:2px 6px;border-radius:4px;max-width:80%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* Wettermodelle im Vergleich */
+.modellvgl{border:1px solid var(--line);border-left:4px solid #E0A126;border-radius:14px;
+  padding:13px 15px;margin:10px 0;background:var(--card)}
+.modellvgl.einig{border-left-color:#2E9E63}
+.mv-kopf{font-family:var(--head);font-weight:700;font-size:.98rem;margin-bottom:10px}
+.mv-kopf small{display:block;font-weight:400;color:var(--muted);font-size:.82rem;margin-top:2px}
+.mv-reihe{display:flex;gap:10px;flex-wrap:wrap}
+.mv-modell{flex:1 1 84px;text-align:center;border:1px solid var(--line);border-radius:10px;padding:8px 6px}
+.mv-modell b{display:block;font-family:var(--head);font-size:1.3rem;line-height:1}
+.mv-modell span{display:block;font-family:var(--head);font-size:.7rem;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.04em;margin-top:3px}
+.mv-modell i{display:block;font-style:normal;font-size:.72rem;color:var(--muted);margin-top:3px}
+.mv-text{margin:10px 0 0;font-size:.9rem;line-height:1.4}
+.mv-quelle{margin:8px 0 0;font-size:.74rem;color:var(--muted)}
+/* Vergleichstafel in der Sendung */
+.tf-vgl-gitter{display:flex;flex-direction:column;gap:.55em;margin-top:.5em}
+.vgl-teil{display:block;padding:.5em .75em;border-radius:.45em;border-left:.28em solid}
+.vgl-teil b{display:block;font-size:.62em;font-weight:800;text-transform:uppercase;letter-spacing:.09em;
+  opacity:.85;margin-bottom:.22em}
+.vgl-teil span{display:block;font-size:.92em;line-height:1.34;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.vgl-teil.einig{border-left-color:#2E9E63;background:rgba(46,158,99,.14)}
+.vgl-teil.offen{border-left-color:#E0A126;background:rgba(224,161,38,.14)}
+.vgl-wer{display:flex;flex-wrap:wrap;gap:.3em;margin-top:.55em}
+.vgl-wer i{font-style:normal;font-size:.58em;font-weight:700;letter-spacing:.02em;opacity:.8;
+  border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:.16em .55em}
+/* Medien-Siegel: die Zahl, die diese App von allen anderen unterscheidet */
+.siegel{position:absolute;left:10px;top:10px;z-index:3;display:flex;align-items:center;gap:7px;
+  background:rgba(8,18,32,.82);backdrop-filter:blur(4px);border-radius:10px;padding:5px 9px 5px 7px;
+  box-shadow:0 2px 10px rgba(0,0,0,.35);border-left:3px solid #2E9E63}
+.siegel.mit-offen{border-left-color:#E0A126}
+.si-zahl{font-family:var(--head);font-weight:800;font-size:1.28rem;color:#fff;line-height:1}
+.si-wort{font-family:var(--head);font-size:.56rem;font-weight:700;line-height:1.12;color:#C7D6E8;
+  text-transform:uppercase;letter-spacing:.04em}
+.si-offen{font-family:var(--head);font-size:.58rem;font-weight:800;color:#0F1B2B;background:#E0A126;
+  padding:2px 5px;border-radius:4px;white-space:nowrap;letter-spacing:.02em}
+/* Ansicht "Wo sie sich uneinig sind" */
+.uneinig-band{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit;
+  border:1px solid var(--line);border-left:4px solid #E0A126;border-radius:14px;
+  padding:13px 15px;margin:10px 0;background:var(--card)}
+.uneinig-band b{display:block;font-family:var(--head);font-size:1rem}
+.uneinig-band small{display:block;color:var(--muted);font-size:.84rem;margin-top:2px;line-height:1.35}
+.uneinig-band .ub-pfeil{margin-left:auto;color:var(--muted);font-size:1.3rem}
+.streit{border:1px solid var(--line);border-radius:14px;padding:15px 16px;margin:12px 0;background:var(--card)}
+.streit .st-kopf{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:9px}
+.streit .st-rub{font-family:var(--head);font-size:.72rem;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.06em}
+.streit h3{font-family:var(--head);font-size:1.05rem;margin:0 0 10px;line-height:1.25}
+.streit .st-zeile{display:flex;gap:10px;padding:8px 0;border-top:1px solid var(--line)}
+.streit .st-marke{flex:0 0 auto;font-family:var(--head);font-size:.62rem;font-weight:800;
+  padding:3px 7px;border-radius:5px;height:fit-content;letter-spacing:.03em;white-space:nowrap}
+.streit .st-marke.einig{background:#E3F3EA;color:#14603C}
+.streit .st-marke.offen{background:#FBEFD6;color:#7A5410}
+.streit .st-text{font-size:.93rem;line-height:1.42}
+.st-wer{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.st-wer i{font-style:normal;font-family:var(--head);font-size:.64rem;font-weight:700;color:var(--muted);
+  background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:2px 7px}
+@media (prefers-color-scheme:dark){
+  .streit .st-marke.einig{background:#123A27;color:#7FD3A6}
+  .streit .st-marke.offen{background:#3C2E10;color:#EBC478}
+}
+/* Abspielknopf auf einer Kachel */
+.kbild-huelle{position:relative;display:block}
+.kb-play{position:absolute;left:10px;bottom:10px;z-index:3;display:flex;align-items:center;gap:7px;
+  background:rgba(8,18,32,.74);padding:5px 10px 5px 5px;border-radius:999px;backdrop-filter:blur(3px);
+  box-shadow:0 2px 10px rgba(0,0,0,.35)}
+.kb-play-kreis{width:26px;height:26px;border-radius:50%;background:#fff;color:#0D2B55;display:flex;
+  align-items:center;justify-content:center;font-size:.68rem;padding-left:2px}
+.kb-play b{font-family:var(--head);font-size:.72rem;font-weight:700;color:#fff;letter-spacing:.01em}
+/* In Arbeit: zeigt an, dass eine lange Doku entsteht */
+.in-arbeit{display:flex;gap:12px;align-items:center;border:1px dashed var(--line);border-radius:14px;
+  padding:13px 15px;margin:10px 0 4px;background:var(--card)}
+.in-arbeit .ia-text{flex:1;min-width:0}
+.in-arbeit b{display:block;font-family:var(--head);font-size:.95rem}
+.in-arbeit small{display:block;color:var(--muted);font-size:.82rem;margin-top:2px;line-height:1.35}
+.ia-balken{height:6px;border-radius:3px;background:var(--line);margin-top:8px;overflow:hidden}
+.ia-balken i{display:block;height:100%;background:#1D7A4C;border-radius:3px}
+.card h3{margin:8px 0 6px}
 .hero{position:relative;margin:16px 0 8px;border-radius:14px;overflow:hidden;background:var(--bar);aspect-ratio:16/9}
 .hero img{width:100%;height:100%;object-fit:cover;display:block}
 .hero .tafel{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--head);font-weight:800;color:rgba(255,255,255,.18);font-size:clamp(2rem,9vw,4rem);text-align:center;padding:10px}
@@ -208,13 +309,54 @@ footer{font-family:var(--head);font-size:.8rem;color:var(--muted);padding:0 0 32
 .zeitleiste b{font-family:var(--head);display:block;font-size:.9rem;color:var(--muted)}
 #player{position:fixed;inset:0;z-index:100;background:#05080d;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:10px;outline:none}
 .pl-kopf{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:10px 14px;font-family:var(--head);font-weight:700}
-.pl-x{background:rgba(255,255,255,.12);color:#fff;border:0;border-radius:999px;width:42px;height:42px;font-size:1.1rem;cursor:pointer}
+.pl-x{display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.12);color:#fff;border:0;
+  border-radius:999px;width:42px;height:42px;padding:0;cursor:pointer}
+.pl-x svg{width:20px;height:20px}
+.pl-x:hover{background:rgba(255,255,255,.22)}
 .pl-buehne{position:relative;overflow:hidden;border-radius:12px;background:#0D2B55}
 .pl-buehne.quer{width:min(96vw,calc((100vh - 150px)*16/9));aspect-ratio:16/9}
 .pl-buehne.hoch{height:min(calc(100vh - 150px),calc(96vw*16/9));aspect-ratio:9/16}
-.pl-buehne:fullscreen{width:100vw;height:100vh;border-radius:0;aspect-ratio:auto}
+/* ---- Vollbild ----
+   Immer selbst gebaut, damit die Bedienknöpfe mitkommen (im echten Vollbild der Bühne
+   waren sie weg) und das Bild sein 16:9-Format behält statt in die Länge gezogen zu werden. */
+#player.voll{padding:0;gap:0;justify-content:center;background:#000}
+#player.voll .pl-drehhinweis{bottom:14px}
+#player.voll .pl-kopf{background:linear-gradient(180deg,rgba(0,0,0,.72),rgba(0,0,0,0));z-index:6;
+  padding:max(10px,env(safe-area-inset-top)) 14px 22px}
+/* Die Bedienleiste schwebt jetzt über dem Bild, also darf das Bild die volle Höhe nutzen. */
+#player.voll .pl-buehne{border-radius:0;max-width:none;
+  width:min(100vw, calc((100dvh - 62px) * 16 / 9));
+  height:min(calc(100dvh - 62px), calc(100vw * 9 / 16));
+  aspect-ratio:16/9}
+#player.voll .pl-buehne.hoch{width:min(100vw, calc((100dvh - 62px) * 9 / 16));
+  height:min(calc(100dvh - 62px), calc(100vw * 16 / 9));aspect-ratio:9/16}
+
+/* Bedienleiste unter dem Bild statt darüber – sonst überdeckt sie Untertitel und Laufband.
+   Dafür im Vollbild kompakter, damit dem Bild mehr Höhe bleibt. */
+#player.voll .pl-steuer{width:100%;justify-content:center;background:#05080d;flex:0 0 auto;
+  padding:6px 8px calc(6px + env(safe-area-inset-bottom));gap:6px}
+#player.voll .pl-steuer button{width:40px;height:40px}
+#player.voll .pl-steuer .pl-haupt{width:50px;height:50px}
+#player.voll .pl-steuer .pl-zeit{font-size:.8rem}
+#player.voll .pl-marke,#player.voll .pl-credit{top:calc(46px + env(safe-area-inset-top))}
+#player.voll .pl-bu{top:calc(72px + env(safe-area-inset-top))}
+/* Hochkant gehaltenes Handy, Querformat-Video: den ganzen Spieler drehen,
+   damit das Bild den Bildschirm füllt – Handy einfach quer halten. */
+#player.voll.gedreht{inset:auto;top:50%;left:50%;width:100dvh;height:100dvw;
+  transform:translate(-50%,-50%) rotate(90deg);transform-origin:center center}
+#player.voll.gedreht .pl-buehne{width:min(100dvh, calc((100dvw - 62px) * 16 / 9));
+  height:min(calc(100dvw - 62px), calc(100dvh * 9 / 16))}
+.pl-drehhinweis{position:absolute;left:50%;bottom:92px;transform:translateX(-50%);z-index:7;
+  background:rgba(5,8,13,.82);color:#DCE6F2;font-family:var(--head);font-size:.78rem;font-weight:700;
+  padding:7px 13px;border-radius:999px;white-space:nowrap;pointer-events:none;
+  animation:drehweg .4s ease 4s forwards}
+@keyframes drehweg{to{opacity:0;visibility:hidden}}
 .pl-fortschritt{position:absolute;top:10px;left:10px;right:10px;display:flex;gap:4px;z-index:3}
-.pl-fortschritt i{flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.28)}
+.pl-fortschritt i{flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.28);cursor:pointer;
+  transition:background .15s,transform .12s}
+.pl-fortschritt i::after{content:"";position:absolute;top:-9px;bottom:-9px;left:0;right:0}
+.pl-fortschritt i{position:relative}
+.pl-fortschritt i:hover{background:rgba(255,255,255,.7);transform:scaleY(1.8)}
 .pl-fortschritt i.fertig,.pl-fortschritt i.jetzt{background:#fff}
 .pl-bild{position:absolute;inset:0}
 .pl-bild img{width:100%;height:100%;object-fit:cover;transform-origin:center}
@@ -232,30 +374,86 @@ footer{font-family:var(--head);font-size:.8rem;color:var(--muted);padding:0 0 32
 .pl-bild.tafel.gelb{background:linear-gradient(135deg,#5a4a10,#8C7520)}
 .pl-bild.tafel.rot{background:linear-gradient(135deg,#7a1020,#C41E2E)}
 .pl-credit{position:absolute;right:10px;top:22px;z-index:2;font-family:var(--head);font-size:clamp(.55rem,1.4vw,.72rem);background:rgba(0,0,0,.5);padding:2px 8px;border-radius:6px;max-width:70%;text-align:right}
-.pl-inhalt{position:absolute;left:0;right:0;bottom:22%;padding:0 5%;z-index:2}
+.pl-inhalt{position:absolute;left:0;right:0;bottom:22%;padding:0 5%;z-index:2;transition:bottom .2s}
+.pl-buehne.mit-ut .pl-inhalt{bottom:calc(12% + var(--ut-hoehe,62px))}
+.pl-buehne.hoch.mit-ut .pl-inhalt{bottom:calc(14% + var(--ut-hoehe,66px))}
 .hoch .pl-inhalt{bottom:26%}
-.pl-logo{font-family:var(--head);font-weight:800;font-size:clamp(1rem,3vw,1.6rem)}
+.pl-logo{font-family:var(--head);font-weight:800;font-size:clamp(.95rem,2.8vw,1.6rem)}
 .pl-logo span{color:#B9C8DE;font-weight:600}
 .pl-rubrik{font-family:var(--head);font-weight:700;font-size:clamp(.72rem,1.8vw,1rem);text-transform:uppercase;letter-spacing:.06em;color:#B9C8DE}
 .pl-eil{background:#C41E2E;color:#fff;padding:1px 8px;border-radius:4px;margin-right:6px}
 .pl-titel{font-family:var(--head);font-weight:800;font-size:clamp(1.1rem,3.6vw,2.3rem);line-height:1.12;margin:6px 0 10px;text-shadow:0 2px 12px rgba(0,0,0,.4)}
 .hoch .pl-titel{font-size:clamp(1.1rem,5.5vw,1.8rem)}
+.rub.wissen{color:#1D7A4C}
+.wissen-karte .ktext .meta .rub{color:#1D7A4C}
+.mehr-zeile{margin:10px 0 0}
+.mehr-zeile a{font-family:var(--head);font-weight:700;color:var(--akzent-link,#16407A)}
+.quelle-kasten{margin:24px 0;padding:16px 18px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.quelle-kasten h2{font-family:var(--head);font-size:1.05rem;margin:0 0 6px}
+.quelle-kasten p{margin:0;color:var(--ink);font-size:.95rem;line-height:1.45}
+.begriff{padding:10px 0;border-bottom:1px solid var(--line)}
+.begriff b{display:block;font-family:var(--head)}
+.begriff span{color:var(--muted);font-size:.95rem;line-height:1.4}
+.seiten-text{color:var(--muted);line-height:1.5;margin-bottom:16px}
+.kanaele{margin-top:26px}
+.kanal-hinweis{color:var(--muted);font-size:.95rem;margin-bottom:14px}
+.kanal{display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:12px;
+  padding:12px 14px;margin-bottom:10px;background:var(--card)}
+.kanal.wichtig{border-color:var(--red);border-width:2px}
+.kanal-text{flex:1 1 auto;min-width:0}
+.kanal-text b{display:block;font-family:var(--head);font-size:1.05rem}
+.kanal-text span{display:block;color:var(--muted);font-size:.9rem;line-height:1.3;margin:2px 0 4px}
+.kanal-text code{font-size:.76rem;color:var(--muted);word-break:break-all}
+.kanal .btn{flex:0 0 auto;white-space:nowrap}
+.pl-sprecher{font-family:var(--head);font-size:clamp(.68rem,1.7vw,.95rem);color:#C7D6E8;margin-top:2px}
+.pl-sprecher b{color:#fff}
+.pl-sprecher span{color:#9FB3CC}
+.pl-inhalt.einblenden .pl-sprecher{animation:vonUnten .5s ease-out .25s both}
 .pl-chips{display:flex;flex-wrap:wrap;gap:6px}
 .pl-chips span{font-family:var(--head);font-size:clamp(.66rem,1.6vw,.9rem);background:rgba(255,255,255,.14);border-radius:999px;padding:3px 10px}
 .pl-link{display:inline-block;margin-top:10px;font-family:var(--head);font-weight:700;color:#fff;font-size:clamp(.72rem,1.6vw,.95rem)}
 .pl-ut{position:absolute;left:4%;right:4%;bottom:5%;z-index:2;text-align:center;font-family:var(--body);font-size:clamp(.85rem,2.2vw,1.35rem);line-height:1.35}
 .pl-ut:not(:empty){background:rgba(0,0,0,.72);padding:6px 12px;border-radius:8px}
-.pl-marke{position:absolute;left:10px;top:22px;z-index:2;font-family:var(--head);font-size:clamp(.55rem,1.4vw,.72rem);opacity:.8}
-.pl-start{position:absolute;inset:0;margin:auto;width:84px;height:84px;border-radius:50%;border:0;background:rgba(255,255,255,.92);color:#0D2B55;font-size:2rem;cursor:pointer;z-index:4}
-.pl-steuer{display:flex;gap:8px}
-.pl-steuer button{background:rgba(255,255,255,.12);color:#fff;border:0;border-radius:999px;width:48px;height:48px;font-size:1.15rem;cursor:pointer}
-.pl-steuer .pl-haupt{width:60px;background:#fff;color:#0D2B55}
+.pl-marke{position:absolute;left:10px;top:20px;z-index:2;font-family:var(--head);font-size:clamp(.55rem,1.4vw,.72rem);opacity:.8;max-width:58%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pl-start{position:absolute;inset:0;margin:auto;width:84px;height:84px;border-radius:50%;border:0;
+  display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.94);color:#0D2B55;cursor:pointer;z-index:4;
+  box-shadow:0 8px 28px rgba(0,0,0,.45);transition:transform .12s}
+.pl-start svg{width:38px;height:38px;fill:currentColor;margin-left:3px}
+.pl-start:hover{transform:scale(1.06)}
+.pl-start[hidden]{display:none}
+.pl-steuer{display:flex;gap:8px;align-items:center;width:min(96vw,760px);padding:0 4px}
+.pl-steuer button{display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.12);color:#fff;
+  border:0;border-radius:999px;width:48px;height:48px;padding:0;cursor:pointer;flex:0 0 auto;
+  transition:background .15s,transform .1s,opacity .15s;-webkit-tap-highlight-color:transparent}
+.pl-steuer button svg{width:24px;height:24px;fill:currentColor;display:block}
+.pl-steuer button:hover{background:rgba(255,255,255,.22)}
+.pl-steuer button:active{transform:scale(.93)}
+.pl-steuer button:focus-visible{outline:3px solid #7FB3E8;outline-offset:2px}
+.pl-steuer .pl-haupt{width:62px;height:62px;background:#fff;color:#0D2B55}
+.pl-steuer .pl-haupt:hover{background:#E6EDF6}
+.pl-steuer .pl-haupt svg{width:30px;height:30px}
+.pl-steuer button.aus{opacity:.55}
+.pl-steuer button.an{background:var(--red);color:#fff}
+.pl-zeit{font-family:var(--head);font-weight:700;font-size:.92rem;color:#D7E2F0;font-variant-numeric:tabular-nums;
+  margin-left:6px;white-space:nowrap}
+.pl-luecke{flex:1 1 auto}
+@media (max-width:430px){
+  .pl-steuer{gap:5px}
+  .pl-steuer button{width:44px;height:44px}
+  .pl-steuer .pl-haupt{width:56px;height:56px}
+  .pl-steuer button svg{width:22px;height:22px}
+  .pl-zeit{font-size:.8rem;margin-left:2px}
+}
 /* ===== Artikelseite (neu) ===== */
 .bar .wrap{min-height:56px}
 @media (max-width:520px){ .stand{font-size:0} .stand b{font-size:.82rem} .brand{font-size:1.05rem} .brand span{display:block;font-size:.8rem} }
 .detail{max-width:720px;margin:0 auto}
 .zurueck-link{display:inline-block;font-family:var(--head);font-weight:600;color:var(--muted);text-decoration:none;padding:4px 0 12px;min-height:36px}
 .detail .hero{margin:0 0 0;border-radius:12px;aspect-ratio:16/9;position:relative;overflow:visible;background:transparent}
+.detail .hero .hero-ersatz{position:absolute;inset:0;border-radius:12px;overflow:hidden}
+.detail .hero .hero-ersatz .kb-ort{bottom:auto;top:8%}
+.detail .hero .hero-ersatz .kb-zahl,.detail .hero .hero-ersatz .kb-marke{top:38%}
+@media (max-width:600px){ .detail .hero .hero-ersatz{border-radius:0} }
 .detail .hero .tafel{position:absolute;inset:0;border-radius:12px;background:linear-gradient(135deg,var(--bar),var(--bar-2));color:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;font-family:var(--head);font-weight:800;font-size:clamp(1.8rem,8vw,3.4rem)}
 .detail .hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:12px}
 .detail .hero figcaption{position:absolute;top:100%;left:0;right:0;font-family:var(--head);font-size:.72rem;color:var(--muted);padding-top:5px;line-height:1.3}
@@ -350,14 +548,19 @@ code{background:var(--surface);padding:3px 8px;border-radius:6px;user-select:all
 .stimmwahl{font-family:var(--head);font-size:.95rem;display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap}
 .stimmwahl select{font:inherit;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);min-height:42px}
 .pl-logo{position:relative}
-.pl-strich{display:block;height:4px;background:var(--red);border-radius:2px;margin-top:10px;width:0}
-.pl-logo-anim{animation:logoAuf 1.2s ease-out both}
-.pl-logo-anim .pl-strich{animation:strichAuf 4.2s cubic-bezier(.2,.8,.2,1) 1.1s both}
+.pl-strich{display:block;height:4px;background:var(--red);border-radius:2px;margin-top:8px;width:0}
+.pl-logo-anim{animation:logoAuf 1.1s cubic-bezier(.2,1.4,.4,1) 6.05s both}
+.pl-logo-anim .pl-strich{animation:strichAuf 1.3s cubic-bezier(.2,.8,.2,1) 6.5s both}
 .pl-logo-anim + .pl-titel{animation:titelAuf .9s ease-out 6.0s both}
 @keyframes logoAuf{from{opacity:0;transform:translateY(14px) scale(.96)}to{opacity:1;transform:none}}
 @keyframes strichAuf{from{width:0}to{width:72%}}
 @keyframes titelAuf{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.pl-logo-anim,.pl-logo-anim .pl-strich,.pl-logo-anim + .pl-titel{animation:none}.pl-logo-anim .pl-strich{width:72%}}
+.pl-logo-wissen .pl-strich{background:#1D7A4C}
+.pl-buehne .pl-logo-wissen ~ *{--akzent:#1D7A4C}
+.pl-logo + .pl-titel{border-left:0;padding-left:0;margin:12px 0 4px;color:#D7E2F0;font-size:clamp(.95rem,2.9vw,1.7rem)}
+.pl-inhalt.einblenden .pl-logo-anim + .pl-titel{animation:titelAuf .8s ease-out 6.7s both}
+.pl-inhalt.einblenden .pl-logo-anim ~ .pl-sprecher{animation:vonUnten .6s ease-out 7.1s both}
 .pl-buehne{--akzent:#16407A}
 .pl-inhalt.einblenden .pl-rubrik{animation:vonLinks .5s cubic-bezier(.2,.8,.2,1) both}
 .pl-inhalt.einblenden .pl-titel{animation:vonUnten .55s cubic-bezier(.2,.8,.2,1) .12s both}
@@ -401,8 +604,10 @@ html[data-schrift="klein"]{font-size:15px}
 html[data-schrift="gross"]{font-size:20px}
 body{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
 .tableiste{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
-.tableiste a{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 2px 9px;font-family:var(--head);font-size:.7rem;color:var(--muted);text-decoration:none;min-height:56px}
-.tableiste a span{font-size:1.15rem;line-height:1.1}
+.tableiste a{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 1px 9px;
+  font-family:var(--head);font-size:clamp(.58rem,2.5vw,.7rem);letter-spacing:-.01em;color:var(--muted);text-decoration:none;
+  min-height:56px;white-space:nowrap;overflow:hidden}
+.tableiste a span{font-size:clamp(1rem,4.2vw,1.15rem);line-height:1.1}
 .tableiste a[aria-current="page"]{color:var(--link);font-weight:700}
 #player,#intro{bottom:0;z-index:100}
 .story-start{display:block;text-align:center;font-family:var(--head);font-weight:700;background:var(--surface);border-radius:12px;padding:13px;margin-bottom:18px;text-decoration:none;color:var(--ink)}
@@ -434,24 +639,30 @@ body{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
   background:radial-gradient(115% 115% at 6% -12%,var(--akzent) 0%,rgba(0,0,0,0) 58%),
              repeating-linear-gradient(118deg,rgba(255,255,255,.035) 0 2px,rgba(0,0,0,0) 2px 11px);opacity:.6}
 .pl-bild.tafel-flaeche::after{background:linear-gradient(180deg,rgba(5,15,30,.3) 0%,rgba(5,15,30,0) 45%,rgba(5,15,30,.78) 100%)}
-.tf{position:absolute;left:6%;right:6%;top:11%;bottom:23%;z-index:2;display:flex;flex-direction:column;justify-content:center;
-  gap:clamp(8px,1.8vh,20px);color:#fff}
-.hoch .tf{top:13%;bottom:28%}
-.tf-kopf{align-self:flex-start;font-family:var(--head);font-weight:800;text-transform:uppercase;letter-spacing:.08em;
-  font-size:clamp(.56rem,1.45vw,.86rem);background:var(--akzent);padding:4px 12px;border-radius:4px}
-.tf-band{position:absolute;left:0;right:0;bottom:-2%;font-family:var(--head);font-weight:600;
+.tf{position:absolute;left:6%;right:6%;top:calc(7% + 24px);bottom:23%;z-index:2;display:flex;flex-direction:column;
+  justify-content:center;justify-content:safe center;overflow:hidden;
+  gap:clamp(5px,1.5vh,20px);color:#fff}
+.tf > *{flex:0 0 auto;min-height:0}
+.hoch .tf{top:calc(9% + 24px);bottom:28%}
+.pl-buehne.mit-ut .tf{bottom:calc(12% + 66px)}
+.pl-buehne.hoch.mit-ut .tf{bottom:calc(14% + 70px)}
+.pl-buehne.mit-ut .tf-karte{bottom:auto}
+.tf-kopf{flex:0 0 auto;align-self:flex-start;font-family:var(--head);font-weight:800;text-transform:uppercase;letter-spacing:.08em;
+  font-size:clamp(.52rem,1.45vw,.86rem);background:var(--akzent);padding:3px 10px;border-radius:4px}
+.tf-band{margin-top:.6em;font-family:var(--head);font-weight:600;
   font-size:clamp(.56rem,1.35vw,.8rem);color:#9FB3CC;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tf-zahlen{display:flex;gap:clamp(12px,4vw,52px);flex-wrap:wrap}
 .tf-zahlen div{flex:1 1 40%;border-left:4px solid var(--akzent);padding-left:clamp(8px,1.4vw,18px)}
 .tf-zahlen b{display:block;font-family:var(--head);font-weight:800;line-height:1;font-variant-numeric:tabular-nums;
   font-size:clamp(1.4rem,6vw,4.2rem)}
 .tf-zahlen span{display:block;margin-top:.45em;font-family:var(--head);font-size:clamp(.6rem,1.5vw,.95rem);color:#C7D6E8}
-.tf-zitat blockquote{margin:0;font-family:var(--body);font-size:clamp(.92rem,2.9vw,1.95rem);line-height:1.32}
+.tf-zitat blockquote{margin:0;font-family:var(--body);font-size:clamp(.82rem,2.9vw,1.95rem);line-height:1.3;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .tf-zitat blockquote::before{content:"„";color:var(--akzent);font-family:var(--head);font-weight:800;font-size:1.6em;line-height:0;
   position:relative;top:.25em;margin-right:.04em}
 .tf-zitat blockquote::after{content:"“";color:var(--akzent);font-family:var(--head);font-weight:800;font-size:1.6em;line-height:0;
   position:relative;top:.25em;margin-left:.02em}
-.tf-wer{font-family:var(--head);font-weight:700;font-size:clamp(.7rem,1.8vw,1.1rem)}
+.tf-wer{flex:0 0 auto;font-family:var(--head);font-weight:700;font-size:clamp(.64rem,1.8vw,1.1rem)}
 .tf-wer span{display:block;font-weight:500;color:#9FB3CC;font-size:.82em;margin-top:3px}
 .tf-zeit{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:clamp(5px,1.2vh,13px)}
 .tf-zeit li{display:grid;grid-template-columns:clamp(56px,14%,140px) 1fr;gap:clamp(8px,1.5vw,20px);align-items:baseline;
@@ -473,10 +684,14 @@ body{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
 .tf-w b{display:block;font-family:var(--head);text-transform:uppercase;letter-spacing:.07em;color:#9FB3CC;
   font-size:clamp(.54rem,1.3vw,.8rem)}
 .tf-w span{font-family:var(--body);font-size:clamp(.72rem,1.9vw,1.15rem);line-height:1.25}
-.tf-gross{margin:0;font-family:var(--body);font-size:clamp(.88rem,2.5vw,1.65rem);line-height:1.32}
+.tf-gross{margin:0;font-family:var(--body);font-size:clamp(.82rem,2.5vw,1.65rem);line-height:1.3;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .tf-warn .tf-kopf{background:#8C7520}
 .tf-warn .tf-kopf::before{content:"⚠ "}
-.pl-bild.tafel-flaeche.gelb::before{background:radial-gradient(115% 115% at 6% -12%,#8C7520 0%,rgba(0,0,0,0) 58%)}
+.pl-bild.tafel-flaeche.gelb::before{background:radial-gradient(90% 100% at 0% 50%,#A8892A 0%,rgba(0,0,0,0) 52%),
+  repeating-linear-gradient(118deg,rgba(255,255,255,.03) 0 2px,rgba(0,0,0,0) 2px 11px);opacity:.5}
+.pl-inhalt.gross .pl-titel{font-size:clamp(1.3rem,4.4vw,2.9rem)}
+.hoch .pl-inhalt.gross .pl-titel{font-size:clamp(1.2rem,6.2vw,2rem)}
 .tf-begriff{align-self:flex-start;font-family:var(--head);font-weight:800;line-height:1.04;
   font-size:clamp(1.25rem,5vw,3.1rem);border-bottom:5px solid var(--akzent);padding-bottom:.1em}
 .tf-titel{font-family:var(--head);font-weight:800;line-height:1.08;font-size:clamp(1.25rem,4.8vw,3.3rem);
@@ -497,10 +712,9 @@ body{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
 .tf.auf li:nth-child(5),.tf.auf .tf-medien > div:nth-child(5){animation-delay:.64s}
 .tf.auf li:nth-child(6),.tf.auf .tf-medien > div:nth-child(6){animation-delay:.76s}
 .tf-zahlen b.lang{font-size:clamp(1.05rem,3.6vw,2.5rem)}
-.tf-karte{justify-content:flex-start;bottom:auto;top:11%}
+.tf-karte{justify-content:flex-start;bottom:auto}
 .tf-ortname{font-family:var(--head);font-weight:800;line-height:1.05;font-size:clamp(1.2rem,4.4vw,3rem);
   text-shadow:0 2px 16px rgba(0,0,0,.65);align-self:flex-start;margin-top:.15em}
-.tf-karte .tf-band{position:static;margin-top:.5em}
 @media (prefers-reduced-motion:reduce){.tf.auf *,.tf-logo i{animation:none}.tf-logo i{width:60%}}
 
 /* ---------- Wetter ---------- */
@@ -521,7 +735,135 @@ body{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
 .pl-bild .wetterkarte .w-zeichen{font-size:24px}
 
 .wetterkarte .w-nachbarn path{fill:#13355C;stroke:#0A2246;stroke-width:1}
-.wetterkarte .w-laender path{fill:#2A639F;stroke:#9FC4E8;stroke-width:.9;stroke-linejoin:round}
+.wetterkarte .w-laender path{stroke:#9FC4E8;stroke-width:.9;stroke-linejoin:round}
+
+/* ---------- Vorspann: eigene Titelsequenz, im Takt der Musik ---------- */
+.opener{position:absolute;inset:0;overflow:hidden;z-index:1}
+.op-gitter{position:absolute;inset:-20%;opacity:0;
+  background:
+    repeating-linear-gradient(90deg,rgba(125,175,230,.16) 0 1px,rgba(0,0,0,0) 1px 42px),
+    repeating-linear-gradient(0deg,rgba(125,175,230,.10) 0 1px,rgba(0,0,0,0) 1px 42px);
+  transform:perspective(420px) rotateX(58deg) translateY(12%);
+  animation:opGitter 7.3s cubic-bezier(.25,.6,.3,1) both}
+.op-svg{position:absolute;left:50%;top:44%;width:min(62%,340px);aspect-ratio:1;transform:translate(-50%,-50%) scale(.72);
+  opacity:0;animation:opSvgAuf 7.3s cubic-bezier(.2,.8,.2,1) both}
+.op-kugel{fill:rgba(20,60,110,.55);stroke:rgba(150,200,245,.5);stroke-width:1.2}
+.op-netz ellipse{fill:none;stroke:rgba(150,200,245,.42);stroke-width:.9}
+.op-mer{transform-origin:center;animation:opDreh 6s linear infinite}
+.op-mer1{animation-delay:-1.5s}.op-mer2{animation-delay:-3s}.op-mer3{animation-delay:-4.5s}
+.op-ring{fill:none;stroke:var(--red);stroke-width:2;opacity:0;transform-origin:center}
+.op-ring0{animation:opRing .84s ease-out 2.7s 4 both}
+.op-ring1{animation:opRing .84s ease-out 3.12s 4 both}
+.op-ring2{animation:opRing .84s ease-out 5.22s 2 both}
+.op-ring3{animation:opRing 1.6s ease-out 6.06s 1 both}
+.op-marke{fill:rgba(160,205,245,.75);transform-origin:0 0;opacity:0;animation:opMarke .5s ease-out both}
+.op-marken .op-marke:nth-child(3n){animation-delay:.5s}
+.op-marken .op-marke:nth-child(3n+1){animation-delay:1.1s}
+.op-marken .op-marke:nth-child(3n+2){animation-delay:1.7s}
+.op-marken{transform-origin:center;animation:opDrehLangsam 24s linear infinite}
+.op-blitz{position:absolute;inset:0;background:#fff;opacity:0;animation:opBlitz 1s ease-out 6.02s both}
+@keyframes opGitter{0%{opacity:0;transform:perspective(420px) rotateX(70deg) translateY(30%) scale(1.5)}
+  30%{opacity:.85}70%{opacity:.7}100%{opacity:.14;transform:perspective(420px) rotateX(48deg) translateY(2%) scale(1)}}
+@keyframes opSvgAuf{0%{opacity:0;transform:translate(-50%,-50%) scale(.45)}
+  25%{opacity:.9}70%{opacity:1;transform:translate(-50%,-50%) scale(.82)}
+  82%{transform:translate(-50%,-50%) scale(1.16)}
+  100%{opacity:.16;transform:translate(-50%,-52%) scale(1.02)}}
+@keyframes opDreh{from{transform:scaleX(1)}50%{transform:scaleX(-1)}to{transform:scaleX(1)}}
+@keyframes opDrehLangsam{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes opRing{0%{opacity:.85;transform:scale(.5)}100%{opacity:0;transform:scale(2.1)}}
+@keyframes opMarke{from{opacity:0}to{opacity:1}}
+@keyframes opBlitz{0%{opacity:0}12%{opacity:.75}100%{opacity:0}}
+/* Der Wissensteil bekommt denselben Vorspann, nur grün, ruhiger und kürzer */
+.opener-w .op-gitter,.opener-w .op-svg{animation-duration:5.6s}
+.opener-w .op-ring{stroke:#2FA86A}
+.opener-w .op-ring0{animation:opRing .9s ease-out 1.1s 2 both}
+.opener-w .op-ring1{animation:opRing .9s ease-out 1.9s 2 both}
+.opener-w .op-ring2{animation:opRing 1.2s ease-out 2.7s 1 both}
+.opener-w .op-ring3{animation:opRing 1.8s ease-out 3.5s 1 both}
+.opener-w .op-kugel{fill:rgba(18,80,58,.5);stroke:rgba(150,235,195,.5)}
+.opener-w .op-netz ellipse{stroke:rgba(150,235,195,.42)}
+.opener-w .op-marke{fill:rgba(160,235,200,.7)}
+.opener-w .op-blitz{animation-delay:3.3s}
+.pl-buehne.wissen-format .pl-logo-anim{animation-delay:3.35s}
+.pl-buehne.wissen-format .pl-logo-anim .pl-strich{animation-delay:3.7s}
+.pl-buehne.wissen-format .pl-inhalt.einblenden .pl-logo-anim + .pl-titel{animation-delay:3.95s}
+/* Abspann: alles fährt wieder zusammen */
+.opener-ende .op-svg{animation:opSchluss 3.2s ease-in-out both}
+.opener-ende .op-gitter{animation:opGitterAus 3.2s ease-out both}
+.opener-ende .op-blitz,.opener-ende .op-ring{animation:none;opacity:0}
+@keyframes opSchluss{from{opacity:.5;transform:translate(-50%,-50%) scale(1.25)}to{opacity:.12;transform:translate(-50%,-50%) scale(.6)}}
+@keyframes opGitterAus{from{opacity:.3}to{opacity:.05}}
+@media (prefers-reduced-motion:reduce){.opener *{animation:none !important}.op-svg{opacity:.18}}
+
+.rub.doku{color:#1D7A4C}
+.bereich-nav{display:flex;gap:8px;overflow-x:auto;padding:2px 0 14px;-webkit-overflow-scrolling:touch}
+.bereich-nav button{flex:0 0 auto;font-family:var(--head);font-weight:700;font-size:.9rem;white-space:nowrap;
+  background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:7px 14px;cursor:pointer}
+.bereich-nav button:hover{border-color:#1D7A4C}
+.bereich-nav button.an{background:#1D7A4C;color:#fff;border-color:#1D7A4C}
+.kapitelliste{margin:22px 0}
+.kapitelliste h2{font-family:var(--head);font-size:1.1rem;margin:0 0 10px}
+.kapitel{display:flex;width:100%;align-items:center;gap:12px;text-align:left;background:var(--card);
+  border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;cursor:pointer;color:inherit;font:inherit}
+.kapitel:hover{border-color:#1D7A4C}
+.kap-nr{flex:0 0 28px;height:28px;border-radius:50%;background:#1D7A4C;color:#fff;font-family:var(--head);
+  font-weight:800;display:flex;align-items:center;justify-content:center;font-size:.9rem}
+.kap-text{flex:1 1 auto;min-width:0}
+.kap-text b{display:block;font-family:var(--head);font-size:1rem;line-height:1.2}
+.kap-text small{display:block;color:var(--muted);font-size:.85rem;line-height:1.3;margin-top:2px}
+.kap-min{flex:0 0 auto;font-family:var(--head);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.kap-begriffe{margin:10px 0 18px;padding:10px 14px;background:var(--surface);border-radius:10px}
+.quellen-liste{margin:8px 0;padding-left:20px}
+.quellen-liste li{margin:3px 0}
+
+/* Wetterkarte: gezeichnete Symbole und Temperaturfarben */
+.wetterkarte .w-laender path{stroke:rgba(255,255,255,.5);stroke-width:1;stroke-linejoin:round}
+.wetterkarte .w-sonne{fill:#FFD34D}
+.wetterkarte .w-strahl{stroke:#FFD34D;stroke-width:2.2;stroke-linecap:round}
+.wetterkarte .w-wolke{fill:#F2F6FA}
+.wetterkarte .w-wolke2,.wetterkarte .w-nebel{stroke:#F2F6FA;stroke-width:2;stroke-linecap:round;fill:none}
+.wetterkarte .w-nebel{opacity:.75}
+.wetterkarte .w-regen{stroke:#8FD0FF;stroke-width:2.4;stroke-linecap:round;fill:none}
+.wetterkarte .w-flocke path{stroke:#DCEEFF;stroke-width:1.6;stroke-linecap:round;fill:none}
+.wetterkarte .w-blitz{fill:#FFD34D}
+.wetterkarte .w-sym{filter:drop-shadow(0 2px 3px rgba(0,0,0,.55))}
+.wetterkarte .w-legende rect{stroke:rgba(255,255,255,.35);stroke-width:.6}
+.w-quelle{position:absolute;right:10px;top:20px;text-align:right;z-index:2;font-family:var(--head);
+  font-size:clamp(.5rem,1.2vw,.68rem);color:#C7D6E8;background:rgba(4,12,24,.5);padding:2px 7px;border-radius:5px;
+  max-width:70%;line-height:1.3}
+.wetterkarte .w-legende text{fill:#E4EEF8;font-family:var(--head);font-size:12px;font-weight:700;
+  paint-order:stroke;stroke:#08192F;stroke-width:3px}
+
+/* ---------- Kurzvideos: hochkant, zum Wischen ---------- */
+.kurzvideo-band{display:flex;align-items:center;gap:14px;margin:14px 0;padding:12px 14px;text-decoration:none;color:inherit;
+  border-radius:14px;background:linear-gradient(120deg,#16407A,#0D2B55 60%,#3B1E5E);border:1px solid var(--line);color:#fff}
+.kv-hoch{position:relative;flex:0 0 54px;height:84px;border-radius:9px;overflow:hidden;background:#0A1F3C;display:block}
+.kv-hoch img{width:100%;height:100%;object-fit:cover;display:block;opacity:.75}
+.kv-play{position:absolute;inset:0;margin:auto;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.92);
+  color:#0D2B55;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-style:normal;padding-left:2px}
+.kv-text{flex:1 1 auto;min-width:0}
+.kv-text b{display:block;font-family:var(--head);font-size:1.15rem}
+.kv-text small{display:block;color:#C7D6E8;font-size:.88rem;line-height:1.3;margin-top:2px}
+.kv-pfeil{flex:0 0 auto;font-size:1.5rem;color:#9FB3CC}
+/* Bühne im Hochformat füllt den Bildschirm */
+#player .pl-buehne.hoch{height:min(calc(100dvh - 92px),calc(96vw*16/9));width:auto;max-width:96vw}
+.pl-buehne.hoch .pl-ut{font-size:clamp(.9rem,3.6vw,1.2rem)}
+.pl-buehne.wisch-hoch{animation:wischHoch .34s cubic-bezier(.2,.8,.2,1)}
+.pl-buehne.wisch-runter{animation:wischRunter .34s cubic-bezier(.2,.8,.2,1)}
+@keyframes wischHoch{from{transform:translateY(22%);opacity:.35}to{transform:none;opacity:1}}
+@keyframes wischRunter{from{transform:translateY(-22%);opacity:.35}to{transform:none;opacity:1}}
+/* Im Hochformat weniger Beiwerk: kein Laufband, keine Chips – das Bild soll wirken */
+.pl-buehne.hoch .pl-laufband{display:none}
+.pl-buehne.hoch .pl-uhr{right:10px;bottom:10px}
+.pl-buehne.hoch .pl-chips{display:none}
+.pl-buehne.hoch .pl-credit{top:38px;font-size:.56rem;max-width:62%}
+.pl-buehne.hoch .pl-bu{top:64px;bottom:auto;left:10px;right:10px;max-width:none;text-align:left}
+.pl-buehne.hoch .pl-inhalt,.pl-buehne.hoch.mit-ut .pl-inhalt{bottom:calc(12% + 96px)}
+.pl-buehne.hoch .pl-wischhinweis{position:absolute;left:0;right:0;bottom:calc(12% + 54px);z-index:5;text-align:center;
+  font-family:var(--head);font-size:.9rem;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.7);
+  animation:wischTipp 2.6s ease-in-out 3 both;pointer-events:none}
+@keyframes wischTipp{0%,100%{opacity:0;transform:translateY(6px)}30%,60%{opacity:.95;transform:translateY(-6px)}}
+@media (prefers-reduced-motion:reduce){.pl-buehne.wisch-hoch,.pl-buehne.wisch-runter,.pl-wischhinweis{animation:none}}
 </style>
 </head>
 <body>
@@ -543,6 +885,7 @@ body{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
 <nav class="tableiste" aria-label="Hauptbereiche">
   <a href="#/" data-t="heft"><span>📰</span>Heft</a>
   <a href="#/videos" data-t="videos"><span>▶</span>Videos</a>
+  <a href="#/wissen" data-t="wissen"><span>💡</span>Wissen</a>
   <a href="#/archiv" data-t="archiv"><span>🔍</span>Suche</a>
   <a href="#/merkliste" data-t="merkliste"><span>★</span>Merkliste</a>
   <a href="#/mehr" data-t="mehr"><span>☰</span>Mehr</a>
@@ -634,16 +977,268 @@ function etikett(n){
   if (n.unklar?.length >= 3) return '<span class="etikett">Noch offen</span>';
   return "";
 }
+// Jede Nachricht bekommt ein Bild: Foto, sonst Ortskarte, sonst eine Grafiktafel aus den geprüften Daten
+function kartenBild(n, gross){
+  const b = (n.bildInfos && n.bildInfos[0]) || n.bildInfo || (n.bild && n.bild.url ? n.bild : null);
+  const farbe = RUBRIK_FARBE[n.rubrik] || "#16407A";
+  if (b && b.url){
+    const quelle = b.urheber ? `<span class="kb-credit">Foto: ${esc(String(b.urheber).slice(0,40))} / Wikimedia${b.lizenz ? " · " + esc(b.lizenz) : ""}</span>` : "";
+    return `<div class="kbild foto${gross ? " gross" : ""}" style="--akzent:${farbe}">
+      <img src="${esc(b.url)}" alt="" loading="lazy" referrerpolicy="no-referrer"
+           onerror="this.closest('.kbild').className='kbild tafel${gross ? " gross" : ""}';this.replaceWith(kartenErsatz(this.dataset.id))" data-id="${esc(n.id)}">${quelle}</div>`;
+  }
+  return `<div class="kbild ${n.ortInfo ? "karte" : "tafel"}${gross ? " gross" : ""}" style="--akzent:${farbe}">${kartenErsatzHTML(n)}</div>`;
+}
+function kartenErsatzHTML(n){
+  if (n.ortInfo) return karteSVG(n.ortInfo, 46, 26, true, 0.5, 0.45) + `<span class="kb-ort">${esc(n.ortInfo.name)}</span>`;
+  const f = (n.fakten || []).filter(x => Array.isArray(x) && x[0] && x[1])[0];
+  if (f) return `<div class="kb-zahl"><b>${esc(String(f[1]).length > 16 ? String(f[1]).slice(0,16) + "…" : f[1])}</b><span>${esc(f[0])}</span></div>`;
+  const anzahl = (n.medien || []).length;
+  const wo = (n.wfragen?.wo && !/noch unklar/i.test(n.wfragen.wo)) ? n.wfragen.wo : "";
+  return `<div class="kb-gross" aria-hidden="true">${esc(n.rubrik)}</div>
+    <div class="kb-marke"><b>${esc(n.rubrik)}</b>${anzahl ? `<span>✓ ${anzahl} Medien verglichen</span>` : ""}${wo ? `<small>${esc(wo.length > 40 ? wo.slice(0,38) + "…" : wo)}</small>` : ""}</div>`;
+}
+function kartenErsatz(id){
+  const n = NACHRICHTEN.find(x => x.id === id) || ARCHIV_TREFFER?.find?.(x => x.id === id) || { rubrik:"Welt", medien:[] };
+  const d = document.createElement("div");
+  d.className = "kb-inhalt";
+  d.innerHTML = kartenErsatzHTML(n);
+  return d;
+}
+const RUBRIK_FARBE = { "Deutschland":"#C41E2E", "Welt":"#1F7A9E", "Wirtschaft":"#B07A00", "Wissen & Klima":"#1D7A4C", "Sport":"#6A3FA0", "Region":"#1F5F8B" };
+// Das Siegel ist der Grund, warum es diese App gibt: wie viele unabhaengige
+// Medien den Bericht bestaetigen - und ob etwas davon noch offen ist.
+function medienSiegel(n){
+  const zahl = (n.medien || []).length;
+  if (!zahl) return "";
+  const offen = (n.unklar || []).length;
+  return `<span class="siegel${offen ? " mit-offen" : ""}">
+    <span class="si-zahl">${zahl}</span>
+    <span class="si-wort">Medien<br>bestätigen</span>
+    ${offen ? `<span class="si-offen" title="Hier gehen die Berichte auseinander">! offen</span>` : ""}
+  </span>`;
+}
 function karte(n, archiv){
-  const anzahl = n.medien ? `<span class="check">✓ ${n.medien.length} Medien verglichen</span>` : "";
   return `<a class="card" href="#/n/${esc(n.id)}">
-    <div class="meta">${n.eil && !archiv ? '<span class="eil-tag">Eil</span>' : ""}
-      <span class="rub">${esc(n.rubrik)}</span><span>${esc(fmtZeit(n.zeit, n.nurDatum))}</span>${anzahl}${etikett(n)}</div>
-    <h3>${esc(n.titel)}</h3><p>${esc(n.vorspann)}</p>${n.bild && n.bild.url ? `<img class="thumb" src="${esc(n.bild.url)}" alt="" loading="lazy">` : n.bildInfo ? `<img class="thumb" src="${esc(n.bildInfo.url)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : ""}</a>`;
+    <div class="kbild-huelle">${kartenBild(n)}${medienSiegel(n)}</div>
+    <div class="ktext">
+      <div class="meta">${n.eil && !archiv ? '<span class="eil-tag">Eil</span>' : ""}
+        <span class="rub">${esc(n.rubrik)}</span><span>${esc(fmtZeit(n.zeit, n.nurDatum))}</span>${etikett(n)}</div>
+      <h3>${esc(n.titel)}</h3><p>${esc(n.vorspann)}</p>
+    </div></a>`;
 }
 const zurueck = `<a class="back" href="#/">← Alle Nachrichten</a>`;
 const istIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
 const istInstalliert = matchMedia("(display-mode: standalone)").matches || navigator.standalone;
+
+/* ---------- Wissen: Hintergrund statt Tagesgeschehen ---------- */
+const WISSEN_TITEL = "Warum eigentlich?";   // Name des Wissensbereichs – hier ändern, wenn dir ein anderer lieber ist
+const WISSEN_FARBE = "#1D7A4C";
+function wissenBild(w, gross){
+  const b = w.bildInfo;
+  if (b && b.url){
+    return `<div class="kbild foto${gross ? " gross" : ""}" style="--akzent:${WISSEN_FARBE}">
+      <img src="${esc(b.url)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.kbild').className='kbild tafel';this.remove()">
+      ${b.urheber ? `<span class="kb-credit">Bild: ${esc(String(b.urheber).slice(0,40))} / Wikimedia${b.lizenz ? " · " + esc(b.lizenz) : ""}</span>` : ""}</div>`;
+  }
+  const f = (w.fakten || [])[0];
+  return `<div class="kbild tafel${gross ? " gross" : ""}" style="--akzent:${WISSEN_FARBE}">
+    <div class="kb-gross" aria-hidden="true">Wissen</div>
+    ${f ? `<div class="kb-zahl"><b>${esc(String(f[1]).slice(0,16))}</b><span>${esc(f[0])}</span></div>`
+        : `<div class="kb-marke"><b>Wissen</b><span>${esc(w.bereich || "")}</span></div>`}</div>`;
+}
+// Abspielknopf auf der Kachel – sonst sieht niemand, dass es zu dem Stück ein Video gibt.
+function videoPlakette(dauer){
+  return `<span class="kb-play" aria-hidden="true"><span class="kb-play-kreis">▶</span>${dauer ? `<b>${esc(dauer)}</b>` : ""}</span>`;
+}
+function wissenDauer(w){
+  return w.video?.length ? dauerText(dauerSek([{ saetze:w.video, tonListe:w.ton || [] }])) : "";
+}
+function wissenKarte(w){
+  const dauer = wissenDauer(w);
+  return `<a class="card wissen-karte" href="#/wissen/${esc(w.id)}">
+    <div class="kbild-huelle">${wissenBild(w)}${dauer ? videoPlakette(dauer) : ""}</div>
+    <div class="ktext">
+      <div class="meta"><span class="rub wissen">Wissen</span><span>${esc(w.bereich || "")}</span>${dauer ? `<span>▶ Video · ${esc(dauer)}</span>` : ""}</div>
+      <h3>${esc(w.titel)}</h3><p>${esc(w.vorspann)}</p>
+    </div></a>`;
+}
+const dokuDauer = d => `${d.dauerMinuten || Math.round((d.woerter || 0) / 140)} Min.`;
+function dokuKarte(d){
+  const b = d.bildInfo;
+  const bild = b?.url
+    ? `<div class="kbild foto" style="--akzent:${WISSEN_FARBE}"><img src="${esc(b.url)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.kbild').className='kbild tafel';this.remove()"></div>`
+    : `<div class="kbild tafel" style="--akzent:${WISSEN_FARBE}"><div class="kb-gross" aria-hidden="true">Doku</div>
+       <div class="kb-marke"><b>Dokumentation</b><span>${esc(d.bereich || "")}</span></div></div>`;
+  return `<a class="card doku-karte" href="#/doku/${esc(d.id)}"><div class="kbild-huelle">${bild}${videoPlakette(dokuDauer(d))}</div>
+    <div class="ktext"><div class="meta"><span class="rub doku">Dokumentation</span>
+      <span>${esc(dokuDauer(d))}</span><span>${d.kapitel.length} Kapitel</span></div>
+      <h3>${esc(d.titel)}</h3><p>${esc(d.untertitel || "")}</p></div></a>`;
+}
+function dokuDetail(id){
+  const d = DOKU.find(x => x.id === id);
+  if (!d){ $app.innerHTML = `<div class="empty"><strong>Nicht gefunden.</strong><br><a href="#/wissen">Zurück</a></div>`; return; }
+  document.getElementById("rubNav").hidden = true;
+  $app.innerHTML = `<article class="detail doku-detail">
+    <a class="zurueck-link" href="#/wissen">‹ ${esc(WISSEN_TITEL)}</a>
+    <figure class="hero">${d.bildInfo?.url
+      ? `<img src="${esc(d.bildInfo.url)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">`
+      : `<div class="hero-ersatz kbild tafel" style="--akzent:${WISSEN_FARBE}"><div class="kb-gross" aria-hidden="true">Doku</div></div>`}
+      <button class="hero-play" id="dokuPlay"><span class="pl-dreieck">▶</span> Doku ansehen · ${esc(dokuDauer(d))}</button>
+      ${d.bildInfo?.seite ? `<figcaption>Bild: ${esc(d.bildInfo.urheber || "unbekannt")} / <a href="${esc(d.bildInfo.seite)}" target="_blank" rel="noopener">Wikimedia Commons</a>${d.bildInfo.lizenz ? " · " + esc(d.bildInfo.lizenz) : ""}</figcaption>` : ""}
+    </figure>
+    <div class="kopf"><div class="rubrik-zeile"><span class="rub doku">Dokumentation</span> ${esc(d.bereich || "")} · ${esc(dokuDauer(d))}</div>
+      <h1>${esc(d.titel)}</h1><p class="vorspann">${esc(d.untertitel || "")}</p></div>
+    <section class="kapitelliste"><h2>Die Kapitel</h2>
+      ${d.kapitel.map((k, i) => `<button class="kapitel" data-i="${i}">
+        <span class="kap-nr">${i + 1}</span>
+        <span class="kap-text"><b>${esc(k.ueberschrift)}</b><small>${esc(k.fokus || "")}</small></span>
+        <span class="kap-min">${Math.max(1, Math.round((k.woerter || 0) / 140))} Min.</span></button>`).join("")}
+    </section>
+    <div class="artikel">${d.kapitel.map((k, i) => `<h2 id="kap${i}">${i + 1}. ${esc(k.ueberschrift)}</h2>
+      ${k.absaetze.map(t => `<p>${esc(t)}</p>`).join("")}
+      ${k.begriffe?.length ? `<div class="kap-begriffe">${k.begriffe.map(([b, e]) => `<div class="begriff"><b>${esc(b)}</b><span>${esc(e)}</span></div>`).join("")}</div>` : ""}`).join("")}</div>
+    <section class="quelle-kasten"><h2>Woher die Angaben stammen</h2>
+      <p>Jedes Kapitel fasst einen Wikipedia-Artikel zusammen. Die KI durfte nur verwenden, was dort steht:</p>
+      <ul class="quellen-liste">${(d.quellen || []).map(q => `<li><a href="${esc(q.url)}" target="_blank" rel="noopener">${esc(q.titel)}</a></li>`).join("")}</ul>
+      <p>Texte der Wikipedia unter CC BY-SA 4.0.</p></section>
+    <a class="back" href="#/wissen">← Zurück</a></article>`;
+  document.getElementById("dokuPlay")?.addEventListener("click", () => { PLAYER.zurueck = location.hash; location.hash = `#/video/doku/${d.id}`; });
+  $app.querySelectorAll(".kapitel").forEach(b => b.onclick = () => {
+    PLAYER.zurueck = location.hash; PLAYER.startSegment = +b.dataset.i + 1; location.hash = `#/video/doku/${d.id}`;
+  });
+  window.scrollTo(0, 0);
+}
+// ---- "Wo sie sich uneinig sind" ----
+// Das ist der Blick, den kein einzelnes Medium anbieten kann: nebeneinander,
+// worin sich die Berichte decken und wo sie auseinandergehen.
+function streitThemen(){
+  return [...NACHRICHTEN]
+    .filter(n => (n.unklar || []).length && (n.medien || []).length >= 2)
+    .sort((a, b) => b.zeit.localeCompare(a.zeit));
+}
+function uneinigBand(){
+  const liste = streitThemen();
+  if (liste.length < 2) return "";
+  return `<a class="uneinig-band" href="#/uneinig">
+    <div><b>Wo sie sich uneinig sind</b>
+    <small>${liste.length} Themen, bei denen die Medien auseinandergehen – nebeneinandergestellt.</small></div>
+    <span class="ub-pfeil" aria-hidden="true">›</span></a>`;
+}
+function streitKarte(n){
+  const einig = (n.einig || []).slice(0, 2);
+  const offen = (n.unklar || []).slice(0, 2);
+  return `<a class="streit" href="#/n/${esc(n.id)}" style="text-decoration:none;color:inherit;display:block">
+    <div class="st-kopf"><span class="st-rub">${esc(n.rubrik)}</span>
+      <span class="st-rub">${(n.medien || []).length} Medien verglichen</span></div>
+    <h3>${esc(n.titel)}</h3>
+    ${einig.map(e => {
+      const text = Array.isArray(e) ? e[0] : e;
+      const wer = Array.isArray(e) && Array.isArray(e[1]) ? e[1] : [];
+      return `<div class="st-zeile"><span class="st-marke einig">Einig</span>
+        <span class="st-text">${esc(text)}
+        ${wer.length ? `<span class="st-wer">${wer.map(m => `<i>${esc(m)}</i>`).join("")}</span>` : ""}</span></div>`;
+    }).join("")}
+    ${offen.map(t => `<div class="st-zeile"><span class="st-marke offen">Offen</span>
+      <span class="st-text">${esc(t)}</span></div>`).join("")}
+  </a>`;
+}
+function uneinigSeite(){
+  document.getElementById("rubNav").hidden = true;
+  const liste = streitThemen();
+  $app.innerHTML = `<a class="zurueck-link" href="#/">‹ Alle Nachrichten</a>
+    <h1 class="seiten-titel">Wo sie sich uneinig sind</h1>
+    <p class="seiten-text">Kein einzelnes Medium kann dir das zeigen – es wäre ja selbst eines davon.
+      Hier steht nebeneinander, worin sich die Berichte decken und wo sie auseinandergehen.
+      Beides stammt aus den verlinkten Originalberichten, nichts davon ist eine Bewertung.</p>
+    ${liste.length ? liste.map(streitKarte).join("")
+      : `<div class="empty"><strong>Gerade gehen die Berichte nirgends auseinander.</strong><br>
+         Das kommt vor – schau später noch einmal vorbei.</div>`}`;
+  window.scrollTo(0, 0);
+}
+function wissenLeiste(){
+  if (!WISSEN.length && !DOKU.length) return "";
+  return `<section class="videos"><h2 class="abschnitt">${esc(WISSEN_TITEL)} <small>· erklärt statt gemeldet</small></h2>
+    <div class="list">${DOKU.slice(0, 1).map(dokuKarte).join("")}${WISSEN.slice(0, 2).map(wissenKarte).join("")}</div>
+    ${(WISSEN.length + DOKU.length) > 3 ? `<p class="mehr-zeile"><a href="#/wissen">Alles ansehen ›</a></p>` : ""}</section>`;
+}
+// Eine Doku wird über viele Stunden geschrieben. Bis sie fertig ist, zeigen wir hier,
+// wie weit sie ist – sonst wirkt der Bereich leer, obwohl im Hintergrund gearbeitet wird.
+function dokuInArbeitHTML(a){
+  const gesamt = (a.kapitel || []).length;
+  if (!gesamt) return "";
+  const fertig = (a.kapitel || []).filter(k => k && (k.absaetze?.length || k.fehlgeschlagen)).length;
+  const anteil = Math.round(fertig / gesamt * 100);
+  return `<div class="in-arbeit">
+    <div class="ia-text">
+      <b>In Arbeit: ${esc(a.titel)}</b>
+      <small>${esc(a.untertitel || "")}</small>
+      <small>Kapitel ${fertig} von ${gesamt} geschrieben. Die Doku erscheint hier, sobald sie komplett ist.</small>
+      <div class="ia-balken"><i style="width:${anteil}%"></i></div>
+    </div></div>`;
+}
+let WISSEN_FILTER = "";
+function bereichsListe(){
+  const alle = [...DOKU, ...WISSEN].map(x => x.bereich).filter(Boolean);
+  return [...new Set(alle)].sort();
+}
+function wissenSeite(){
+  document.getElementById("rubNav").hidden = true;
+  const bereiche = bereichsListe();
+  if (WISSEN_FILTER && !bereiche.includes(WISSEN_FILTER)) WISSEN_FILTER = "";
+  const passt = x => !WISSEN_FILTER || x.bereich === WISSEN_FILTER;
+  const dokus = DOKU.filter(passt), stuecke = WISSEN.filter(passt);
+  $app.innerHTML = `<a class="zurueck-link" href="#/">‹ Alle Nachrichten</a>
+    <h1 class="seiten-titel">${esc(WISSEN_TITEL)}</h1>
+    <p class="seiten-text">Hier geht es nicht darum, was heute passiert ist, sondern darum, wie etwas funktioniert.
+      Die Themen sucht sich die KI selbst aus. Die Fakten holt sie aus dem jeweiligen Wikipedia-Artikel, der unter jedem Stück verlinkt ist.</p>
+    ${bereiche.length > 1 ? `<nav class="bereich-nav">
+      <button class="${WISSEN_FILTER ? "" : "an"}" data-b="">Alles</button>
+      ${bereiche.map(b => `<button class="${WISSEN_FILTER === b ? "an" : ""}" data-b="${esc(b)}">${esc(b)}</button>`).join("")}
+    </nav>` : ""}
+    ${dokus.length || (DOKU_ARBEIT && !WISSEN_FILTER) ? `<h2 class="abschnitt">Dokumentationen <small>· die lange Form</small></h2>
+      ${dokus.length ? `<div class="list">${dokus.map(dokuKarte).join("")}</div>` : ""}
+      ${DOKU_ARBEIT && !WISSEN_FILTER ? dokuInArbeitHTML(DOKU_ARBEIT) : ""}` : ""}
+    ${stuecke.length ? `<h2 class="abschnitt">Kurz erklärt</h2><div class="list">${stuecke.map(wissenKarte).join("")}</div>` : ""}
+    ${!dokus.length && !stuecke.length && !(DOKU_ARBEIT && !WISSEN_FILTER) ? `<div class="empty"><strong>${WISSEN_FILTER ? "In diesem Bereich ist noch nichts da." : "Noch nichts da."}</strong><br>${WISSEN_FILTER ? `<a href="#" onclick="WISSEN_FILTER='';wissenSeite();return false">Alle Bereiche zeigen</a>` : "Jeden Tag kommt ein Stück dazu, und an einer langen Doku wird im Hintergrund gearbeitet."}</div>` : ""}`;
+  $app.querySelectorAll(".bereich-nav button").forEach(b => b.onclick = () => { WISSEN_FILTER = b.dataset.b; wissenSeite(); window.scrollTo(0, 0); });
+}
+function wissenDetail(id){
+  const w = WISSEN.find(x => x.id === id);
+  if (!w){ $app.innerHTML = `<div class="empty"><strong>Nicht gefunden.</strong><br><a href="#/wissen">Zurück zum Wissensbereich</a></div>`; return; }
+  document.getElementById("rubNav").hidden = true;
+  AKTUELLE_DETAIL = null;
+  const dauer = w.video?.length ? dauerText(dauerSek([{ saetze:w.video, tonListe:w.ton || [] }])) : "";
+  $app.innerHTML = `<article class="detail wissen-detail">
+    <a class="zurueck-link" href="#/wissen">‹ ${esc(WISSEN_TITEL)}</a>
+    <figure class="hero">${wissenBild(w, true)}
+      ${w.video?.length ? `<button class="hero-play" id="wissenPlay"><span class="pl-dreieck">▶</span> Erklärvideo · ${esc(dauer)}</button>` : ""}
+      ${w.bildInfo?.seite ? `<figcaption>Bild: ${esc(w.bildInfo.urheber || "unbekannt")} / <a href="${esc(w.bildInfo.seite)}" target="_blank" rel="noopener">Wikimedia Commons</a>${w.bildInfo.lizenz ? " · " + esc(w.bildInfo.lizenz) : ""}</figcaption>` : ""}
+    </figure>
+    <div class="kopf"><div class="rubrik-zeile"><span class="rub wissen">Wissen</span> ${esc(w.bereich || "")}</div>
+      <h1>${esc(w.titel)}</h1>
+      <p class="vorspann">${esc(w.vorspann)}</p></div>
+    ${w.fakten?.length ? `<div class="wfragen"><h2>Zahlen dazu</h2><dl>
+      ${w.fakten.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl></div>` : ""}
+    <div class="artikel">${w.artikel.map(a => `<h2>${esc(a.ueberschrift)}</h2>${a.absaetze.map(t => `<p>${esc(t)}</p>`).join("")}`).join("")}</div>
+    ${w.begriffe?.length ? `<section class="lernen"><h2>Begriffe</h2>
+      ${w.begriffe.map(([b, e]) => `<div class="begriff"><b>${esc(b)}</b><span>${esc(e)}</span></div>`).join("")}</section>` : ""}
+    ${w.quiz?.length ? `<section class="block lernen"><h3>Quiz: Hast du es verstanden?</h3>
+      ${w.quiz.map((q, i) => `<div class="quiz" data-i="${i}">
+        <div class="quiz-frage">${i + 1}. ${esc(q.frage)}</div>
+        ${q.optionen.map((o, j) => `<button data-j="${j}">${esc(o)}</button>`).join("")}
+        <div class="erkl" hidden></div></div>`).join("")}</section>` : ""}
+    <section class="quelle-kasten">
+      <h2>Woher die Angaben stammen</h2>
+      <p>Dieses Stück fasst den Wikipedia-Artikel <a href="${esc(w.quelle.url)}" target="_blank" rel="noopener"><b>${esc(w.quelle.titel)}</b></a> zusammen.
+      Dort stehen alle Einzelnachweise. Text der Wikipedia unter ${esc(w.quelle.lizenz)}.
+      Die Zusammenfassung hat eine KI geschrieben – sie durfte nur verwenden, was in diesem Artikel steht.</p>
+    </section>
+    <a class="back" href="#/wissen">← Alle Wissensstücke</a></article>`;
+  if (w.quiz?.length) quizAktivieren({ quiz: w.quiz });
+  document.getElementById("wissenPlay")?.addEventListener("click", () => { PLAYER.zurueck = location.hash; location.hash = `#/video/wissen/${w.id}`; });
+  window.scrollTo(0, 0);
+}
 
 /* ---------- Startseite ---------- */
 function startseite(rubrik){
@@ -657,7 +1252,7 @@ function startseite(rubrik){
     html += `<a class="eil" href="#/n/${esc(eil.id)}"><div class="eil-label"><i aria-hidden="true"></i>EILMELDUNG · ${esc(fmtZeit(eil.zeit))}</div>
       <h2>${esc(eil.titel)}</h2><p>${esc(eil.vorspann)}</p></a>`;
   }
-  if (rubrik === "Alle") html += `<a class="story-start" href="#/story">📱 Schlagzeilen durchwischen (Story-Modus)</a>` + sendungsLeiste() + videoLeiste() + wetterLeiste();
+  if (rubrik === "Alle") html += uneinigBand() + `<a class="story-start" href="#/story">📱 Schlagzeilen durchwischen (Story-Modus)</a>` + sendungsLeiste() + kurzvideoLeiste() + videoLeiste() + wissenLeiste() + wetterLeiste();
   else if (liste.length >= 2) html += `<section class="videos"><div class="vreihe"><a class="vkarte sendung" href="#/video/rubrik/${slug(rubrik)}">
       <span class="vk-text"><b>▶ ${esc(rubrik)} als Video</b><small>${liste.length} Themen</small></span></a></div></section>`;
   html += liste.length ? `<div class="list">${liste.map(n => karte(n)).join("")}</div>`
@@ -817,7 +1412,8 @@ function videoSeite(){
     ["haupt","Hauptausgabe","Alle Themen der letzten Stunden, ausführlich"],
     ["einfach","Einfach erklärt","Drei Themen in einfacher Sprache, mit Begriffen"],
     ["kurzmeldungen","Kurzmeldungen","Zehn Schlagzeilen in Kürze"]]
-    .concat(WOCHE ? [["woche","Wochenrückblick","Die wichtigsten Themen der Woche"]] : []);
+    .concat(wocheZeigen() ? [["woche","Wochenrückblick","Die wichtigsten Themen der Woche"]] : [])
+    .concat([["kurzvideo","Kurzvideos","Hochkant zum Wischen, in einfacher Sprache"]]);
   const rubriken = RUBRIKEN.filter(r => r !== "Alle" && NACHRICHTEN.filter(n => n.rubrik === r).length >= 2);
   $app.innerHTML = `<h1 class="seiten-titel">Videos</h1>
     <div class="list">${formate.map(([f,t,u]) => {
@@ -948,6 +1544,17 @@ async function pushAbmelden(){
 }
 
 /* ---------- Seite: Eilmeldungen einrichten ---------- */
+// Welche Kanäle gibt es? Einer nur für Eilmeldungen, einer für alles, einer je Rubrik.
+function kanalListe(topic){
+  const liste = [
+    { name:"Nur Eilmeldungen", kanal:`${topic}-eil`, wichtig:true,
+      text:"Nur wenn wirklich etwas Großes passiert. Kommt laut durch, auch nachts." },
+    { name:"Alle Nachrichten", kanal:topic,
+      text:"Jedes neue Thema, sobald es fertig geprüft ist – dazu die Eilmeldungen." }
+  ];
+  for (const r of RUBRIKEN) if (r !== "Alle") liste.push({ name:r, kanal:`${topic}-${slug(r)}`, text:`Nur Themen aus der Rubrik ${r}.` });
+  return liste;
+}
 function eilSeite(){
   document.getElementById("rubNav").hidden = true;
   const topic = DATEN.ntfyTopic || "";
@@ -958,18 +1565,22 @@ function eilSeite(){
     <h1 class="seiten-titel">🔔 Nachrichten aufs Handy</h1>
     <p>Bei wichtigen Ereignissen bekommst du eine Mitteilung – wie bei jeder Nachrichten-App.</p>
     <div id="pushBox" class="push-box"><p class="laden">wird geprüft …</p></div>
-    <details class="about"><summary>Wenn das nicht klappt: Weg über die App ntfy</summary>
-      <p>Manche Geräte oder Browser erlauben keine Mitteilungen. Dann funktioniert dieser Weg immer:</p>
-      <ol class="schritte">
-        <li><b>App installieren</b><p>Die kostenlose App <b>ntfy</b> laden.</p>
-          <p class="knoepfe"><a class="btn" href="https://play.google.com/store/apps/details?id=io.heckel.ntfy" target="_blank" rel="noopener">Android</a>
-          <a class="btn" href="https://apps.apple.com/app/ntfy/id1625396347" target="_blank" rel="noopener">iPhone</a></p></li>
-        <li><b>Kanal abonnieren</b><p>QR-Code scannen oder auf den Knopf tippen.</p>
-          <img class="qr" src="eil-qr.png" alt="QR-Code" onerror="this.remove()">
-          <p class="knoepfe"><a class="btn" href="${esc(link)}" target="_blank" rel="noopener">Kanal öffnen</a></p>
-          <p>Kanalname: <code>${esc(topic)}</code>${topic ? `<br>Nur eine Rubrik? Dann <code>${esc(topic)}-wirtschaft</code>, <code>${esc(topic)}-sport</code> und so weiter.` : ""}</p></li>
-      </ol>
-    </details>`;
+    ${topic ? `<section class="kanaele">
+      <h2 class="abschnitt">Kanäle – such dir aus, was du bekommen willst</h2>
+      <p class="kanal-hinweis">Dafür brauchst du einmal die kostenlose App <b>ntfy</b>:
+        <a href="https://apps.apple.com/app/ntfy/id1625396347" target="_blank" rel="noopener">iPhone</a> ·
+        <a href="https://play.google.com/store/apps/details?id=io.heckel.ntfy" target="_blank" rel="noopener">Android</a>.
+        Danach reicht ein Tipp auf „Abonnieren“.</p>
+      ${kanalListe(topic).map(k => `<div class="kanal${k.wichtig ? " wichtig" : ""}">
+        <div class="kanal-text"><b>${esc(k.name)}</b><span>${esc(k.text)}</span>
+          <code>${esc(k.kanal)}</code></div>
+        <a class="btn" href="https://ntfy.sh/${encodeURIComponent(k.kanal)}" target="_blank" rel="noopener">Abonnieren</a>
+      </div>`).join("")}
+      <details class="about"><summary>Was ist ntfy?</summary>
+        <p>Ein kostenloser Dienst, der Mitteilungen weiterreicht. Du meldest dich nirgends an – du abonnierst nur einen
+        Kanalnamen. Jeder, der den Namen kennt, kann denselben Kanal abonnieren. Deshalb stehen dort nur Nachrichten,
+        nichts Persönliches.</p></details>
+    </section>` : ""}`;
   pushBoxZeichnen(gewaehlt);
 }
 
@@ -1191,7 +1802,8 @@ function detail(n, archiv){
   $app.innerHTML = `<article class="detail">
     <a class="zurueck-link" href="#/">‹ Alle Nachrichten</a>
     <figure class="hero">
-      <div class="tafel" aria-hidden="true">${esc(n.rubrik)}</div>
+      ${b ? `<div class="tafel" aria-hidden="true">${esc(n.rubrik)}</div>`
+          : `<div class="hero-ersatz kbild ${n.ortInfo ? "karte" : "tafel"}" style="--akzent:${RUBRIK_FARBE[n.rubrik] || "#16407A"}">${kartenErsatzHTML(n)}</div>`}
       ${b ? `<img src="${esc(b.url)}" alt="${esc(b.hinweis)}" referrerpolicy="no-referrer" onerror="if(this.dataset.o!=='1'&&this.dataset.orig){this.dataset.o='1';this.src=this.dataset.orig}else{this.remove()}" data-orig="${esc(b.original || "")}">` : ""}
       <button class="hero-play" id="clipBtn"><span class="pl-dreieck">▶</span> Clip · ${clipDauer}</button>
       ${n.artikel?.length ? `<button class="hero-play hero-zweit" id="tiefBtn">▶ Ganzer Artikel vorgelesen</button>` : ""}
@@ -1285,10 +1897,50 @@ function weltLaden(){
   WELT = WELT_ROH.split(";").map(land => land.split("|").map(ring => ring.split(" ").map(p => p.split(",").map(Number))));
   return WELT;
 }
-const WETTER_BILD = { 0:"☀", 1:"🌤", 2:"⛅", 3:"☁", 45:"🌫", 48:"🌫", 51:"🌦", 53:"🌦", 55:"🌧", 56:"🌧", 57:"🌧",
-  61:"🌦", 63:"🌧", 65:"🌧", 66:"🌧", 67:"🌧", 71:"🌨", 73:"🌨", 75:"❄", 77:"🌨",
-  80:"🌦", 81:"🌧", 82:"⛈", 85:"🌨", 86:"🌨", 95:"⛈", 96:"⛈", 99:"⛈" };
-const wetterZeichen = c => WETTER_BILD[c] || "🌡";
+// Eigene Wettersymbole – auf jedem Gerät gleich, anders als Emoji
+const WETTER_ART = { 0:"sonne", 1:"heiter", 2:"wolkig", 3:"bedeckt", 45:"nebel", 48:"nebel",
+  51:"niesel", 53:"niesel", 55:"regen", 56:"regen", 57:"regen",
+  61:"leichtregen", 63:"regen", 65:"starkregen", 66:"regen", 67:"regen",
+  71:"schnee", 73:"schnee", 75:"schnee", 77:"schnee",
+  80:"schauer", 81:"schauer", 82:"starkregen", 85:"schnee", 86:"schnee",
+  95:"gewitter", 96:"gewitter", 99:"gewitter" };
+const WOLKE = '<path d="M-13 5c-4 0-7-3-7-6.5S-17-8-13-8c1-4 5-7 9-7 5 0 9 3.5 10 8 3.5.3 6 3 6 6s-3 6-6.5 6z" class="w-wolke"/>';
+const TROPFEN = n => Array.from({ length:n }, (_, i) => `<path d="M${-7 + i * 7} 8l-2 6" class="w-regen"/>`).join("");
+function wetterSymbol(code){
+  const art = WETTER_ART[code] || "wolkig";
+  const sonne = (cx, cy, r) => `<circle cx="${cx}" cy="${cy}" r="${r}" class="w-sonne"/>` +
+    Array.from({ length:8 }, (_, i) => { const w = i * Math.PI / 4;
+      return `<line x1="${(cx + Math.cos(w) * (r + 2.5)).toFixed(1)}" y1="${(cy + Math.sin(w) * (r + 2.5)).toFixed(1)}"
+        x2="${(cx + Math.cos(w) * (r + 6)).toFixed(1)}" y2="${(cy + Math.sin(w) * (r + 6)).toFixed(1)}" class="w-strahl"/>`; }).join("");
+  if (art === "sonne") return sonne(0, 0, 8);
+  if (art === "heiter") return sonne(-4, -4, 6.5) + WOLKE;
+  if (art === "wolkig") return sonne(-6, -6, 5.5) + WOLKE;
+  if (art === "bedeckt") return WOLKE + '<path d="M-16 8h26" class="w-wolke2"/>';
+  if (art === "nebel") return WOLKE + '<path d="M-14 9h24M-11 14h20" class="w-nebel"/>';
+  if (art === "niesel" || art === "leichtregen") return WOLKE + TROPFEN(2);
+  if (art === "regen") return WOLKE + TROPFEN(3);
+  if (art === "starkregen") return WOLKE + TROPFEN(4) + '<path d="M-7 15l-2 5M7 15l-2 5" class="w-regen"/>';
+  if (art === "schauer") return sonne(-6, -7, 5) + WOLKE + TROPFEN(2);
+  if (art === "schnee") return WOLKE + [-7, 0, 7].map(x =>
+    `<g class="w-flocke" transform="translate(${x} 12)"><path d="M0 -3v6M-2.6 -1.5l5.2 3M-2.6 1.5l5.2 -3"/></g>`).join("");
+  if (art === "gewitter") return WOLKE + '<path d="M1 7l-7 9h5l-3 8 10-11h-5z" class="w-blitz"/>';
+  return WOLKE;
+}
+// Farbskala für die Temperatur – kühl blau, warm rot
+function tempFarbe(t){
+  const punkte = [[-8,"#3B5F9E"],[2,"#3E86AE"],[10,"#4FA08C"],[16,"#6DA85C"],[21,"#C6A32C"],[26,"#C9762C"],[32,"#B8452E"]];
+  if (t <= punkte[0][0]) return punkte[0][1];
+  if (t >= punkte[punkte.length-1][0]) return punkte[punkte.length-1][1];
+  for (let i = 0; i < punkte.length - 1; i++){
+    const [a, fa] = punkte[i], [b, fb] = punkte[i+1];
+    if (t >= a && t <= b){
+      const f = (t - a) / (b - a);
+      const misch = (x, y) => Math.round(parseInt(x, 16) + f * (parseInt(y, 16) - parseInt(x, 16)));
+      return "#" + [1,3,5].map(k => misch(fa.substr(k,2), fb.substr(k,2)).toString(16).padStart(2,"0")).join("");
+    }
+  }
+  return punkte[0][1];
+}
 // Umrisse der Bundesländer – Geodaten: GeoBasis-DE / BKG, Lizenz dl-de/by-2-0
 const DE_ROH = "9.65,49.776 9.637,49.69 9.672,49.683 9.716,49.724 9.735,49.684 9.796,49.725 9.837,49.699 9.833,49.651 9.881,49.603 9.826,49.551 9.866,49.54 9.921,49.581 9.905,49.555 9.934,49.555 9.942,49.478 10.022,49.479 10.071,49.542 10.089,49.505 10.129,49.505 10.103,49.442 10.172,49.392 10.116,49.376 10.134,49.347 10.111,49.336 10.152,49.325 10.163,49.279 10.119,49.255 10.142,49.252 10.132,49.2 10.264,49.143 10.214,49.098 10.26,49.091 10.26,49.04 10.364,49.03 10.467,48.938 10.439,48.909 10.467,48.894 10.438,48.85 10.461,48.813 10.421,48.776 10.505,48.69 10.421,48.665 10.449,48.698 10.415,48.702 10.359,48.659 10.347,48.696 10.279,48.71 10.262,48.67 10.33,48.615 10.302,48.611 10.319,48.53 10.234,48.519 10.245,48.501 10.178,48.466 10.038,48.463 10.044,48.434 9.972,48.384 10.068,48.286 10.086,48.185 10.143,48.104 10.138,48.021 10.083,47.961 10.111,47.939 10.106,47.883 10.078,47.871 10.134,47.819 10.068,47.789 10.117,47.763 10.129,47.677 10.084,47.676 10.073,47.639 10.024,47.691 9.964,47.654 9.844,47.679 9.747,47.607 9.567,47.586 9.499,47.653 9.315,47.677 9.044,47.824 9.177,47.738 9.221,47.668 9.164,47.654 8.992,47.748 9.01,47.73 8.941,47.732 9.006,47.695 8.892,47.655 8.854,47.684 8.874,47.708 8.808,47.742 8.771,47.72 8.798,47.68 8.728,47.697 8.73,47.766 8.69,47.763 8.656,47.806 8.63,47.766 8.62,47.804 8.569,47.814 8.576,47.789 8.473,47.77 8.404,47.679 8.472,47.643 8.601,47.677 8.629,47.651 8.597,47.647 8.585,47.6 8.521,47.638 8.458,47.605 8.496,47.585 8.437,47.571 8.33,47.575 8.291,47.614 8.205,47.626 8.088,47.563 7.944,47.55 7.891,47.594 7.821,47.595 7.669,47.537 7.632,47.562 7.68,47.571 7.671,47.593 7.608,47.581 7.525,47.66 7.558,47.881 7.622,47.974 7.569,48.036 7.578,48.121 7.666,48.221 7.694,48.302 7.745,48.33 7.734,48.399 7.805,48.514 7.805,48.593 7.97,48.756 8.087,48.802 8.197,48.957 8.295,49.004 8.362,49.1 8.388,49.234 8.491,49.301 8.45,49.333 8.495,49.36 8.499,49.393 8.465,49.392 8.509,49.441 8.446,49.45 8.468,49.473 8.419,49.552 8.429,49.586 8.592,49.525 8.625,49.552 8.6,49.613 8.698,49.627 8.682,49.579 8.729,49.522 8.902,49.511 8.88,49.474 8.828,49.477 8.84,49.441 8.8,49.418 8.858,49.405 8.955,49.461 8.954,49.512 9.133,49.52 9.092,49.546 9.109,49.583 9.259,49.586 9.315,49.657 9.418,49.645 9.428,49.712 9.399,49.73 9.365,49.705 9.387,49.727 9.307,49.738 9.336,49.742 9.324,49.768 9.51,49.786 9.574,49.742 9.572,49.779 9.65,49.776|8.708,47.716 8.722,47.697 8.661,47.695 8.708,47.716;10.134,50.55 10.204,50.554 10.234,50.513 10.334,50.494 10.405,50.423 10.394,50.393 10.458,50.401 10.494,50.352 10.605,50.33 10.612,50.226 10.723,50.2 10.735,50.248 10.855,50.249 10.717,50.323 10.722,50.36 10.831,50.39 10.94,50.39 10.998,50.342 10.998,50.364 11.044,50.342 11.113,50.365 11.159,50.328 11.142,50.287 11.252,50.265 11.282,50.366 11.248,50.477 11.324,50.488 11.348,50.522 11.43,50.515 11.418,50.451 11.446,50.422 11.482,50.433 11.522,50.374 11.593,50.404 11.787,50.423 11.827,50.393 11.939,50.427 11.984,50.393 11.981,50.352 12.125,50.313 12.137,50.282 12.086,50.255 12.199,50.196 12.199,50.112 12.261,50.092 12.256,50.062 12.489,49.986 12.476,49.94 12.548,49.927 12.502,49.839 12.473,49.836 12.472,49.79 12.403,49.755 12.444,49.707 12.528,49.688 12.525,49.632 12.565,49.624 12.588,49.544 12.646,49.531 12.633,49.48 12.661,49.432 12.76,49.4 12.784,49.352 12.953,49.348 13.034,49.309 13.038,49.268 13.18,49.174 13.18,49.144 13.296,49.12 13.404,49.052 13.424,48.972 13.497,48.94 13.51,48.968 13.589,48.969 13.671,48.883 13.751,48.875 13.836,48.771 13.787,48.722 13.826,48.641 13.81,48.591 13.74,48.529 13.503,48.597 13.436,48.565 13.455,48.516 13.411,48.378 13.286,48.305 13.091,48.281 12.868,48.204 12.753,48.117 13.001,47.852 12.911,47.731 13.015,47.73 13.082,47.691 13.106,47.639 13.048,47.585 13.054,47.495 12.97,47.477 12.8,47.561 12.781,47.582 12.827,47.616 12.771,47.645 12.783,47.676 12.605,47.679 12.577,47.634 12.506,47.629 12.436,47.701 12.259,47.676 12.254,47.74 12.174,47.699 12.209,47.601 12.017,47.622 11.857,47.579 11.636,47.598 11.581,47.512 11.437,47.513 11.388,47.472 11.424,47.446 11.342,47.452 11.274,47.391 11.224,47.391 11.246,47.435 10.978,47.396 10.927,47.478 10.863,47.478 10.919,47.516 10.883,47.538 10.772,47.516 10.6,47.574 10.561,47.536 10.432,47.586 10.433,47.498 10.463,47.487 10.472,47.433 10.434,47.379 10.39,47.375 10.323,47.303 10.17,47.27 10.227,47.393 10.096,47.355 10.069,47.412 10.095,47.418 10.091,47.457 9.997,47.486 9.971,47.55 9.874,47.531 9.813,47.551 9.802,47.597 9.736,47.541 9.616,47.575 9.659,47.613 9.758,47.611 9.844,47.679 9.964,47.654 10.024,47.691 10.073,47.639 10.084,47.676 10.129,47.677 10.117,47.763 10.068,47.789 10.134,47.819 10.078,47.871 10.106,47.883 10.111,47.939 10.083,47.961 10.138,48.021 10.143,48.104 10.086,48.185 10.068,48.286 9.972,48.384 10.044,48.434 10.038,48.463 10.178,48.466 10.245,48.501 10.234,48.519 10.319,48.53 10.302,48.611 10.33,48.615 10.262,48.67 10.279,48.71 10.347,48.696 10.359,48.659 10.415,48.702 10.449,48.698 10.421,48.665 10.505,48.69 10.421,48.776 10.461,48.813 10.438,48.85 10.467,48.894 10.439,48.909 10.467,48.938 10.364,49.03 10.26,49.04 10.26,49.091 10.214,49.098 10.264,49.143 10.132,49.2 10.142,49.252 10.119,49.255 10.163,49.279 10.152,49.325 10.111,49.336 10.134,49.347 10.116,49.376 10.172,49.392 10.103,49.442 10.129,49.505 10.089,49.505 10.071,49.542 10.022,49.479 9.959,49.474 9.925,49.489 9.921,49.581 9.866,49.54 9.826,49.551 9.88,49.607 9.807,49.725 9.74,49.684 9.716,49.724 9.66,49.683 9.632,49.698 9.656,49.788 9.572,49.779 9.574,49.742 9.51,49.786 9.38,49.779 9.307,49.738 9.387,49.727 9.353,49.719 9.377,49.701 9.41,49.727 9.434,49.693 9.418,49.645 9.315,49.657 9.236,49.579 9.126,49.576 9.074,49.605 9.114,49.646 9.095,49.693 9.163,49.745 9.117,49.76 9.145,49.797 9.105,49.793 9.104,49.844 9.046,49.847 9.032,49.991 9.067,49.995 9.048,50.042 8.995,50.052 9.034,50.112 9.138,50.125 9.173,50.118 9.17,50.089 9.238,50.149 9.377,50.132 9.419,50.08 9.519,50.093 9.533,50.167 9.504,50.175 9.5,50.242 9.66,50.232 9.653,50.269 9.744,50.311 9.746,50.416 9.883,50.399 9.959,50.422 10.075,50.542 10.134,50.55;13.162,52.594 13.216,52.583 13.23,52.627 13.273,52.622 13.286,52.656 13.37,52.621 13.475,52.649 13.457,52.661 13.482,52.675 13.529,52.641 13.515,52.589 13.664,52.528 13.619,52.469 13.768,52.437 13.661,52.339 13.651,52.376 13.488,52.393 13.477,52.419 13.428,52.409 13.432,52.376 13.252,52.419 13.141,52.387 13.094,52.417 13.176,52.505 13.122,52.521 13.162,52.594;13.88,53.501 13.917,53.421 14.24,53.428 14.236,53.369 14.1,53.261 14.258,53.258 14.32,53.313 14.42,53.326 14.449,53.262 14.367,53.18 14.388,53.136 14.366,53.076 14.142,52.961 14.156,52.88 14.121,52.84 14.341,52.759 14.466,52.657 14.639,52.58 14.601,52.533 14.631,52.499 14.529,52.396 14.571,52.29 14.7,52.241 14.669,52.122 14.741,52.073 14.681,51.905 14.585,51.837 14.739,51.667 14.74,51.604 14.685,51.599 14.665,51.551 14.57,51.572 14.342,51.501 14.154,51.545 14.092,51.496 14.107,51.48 14.05,51.48 14.08,51.448 14.015,51.374 13.972,51.399 13.779,51.362 13.56,51.37 13.422,51.454 13.396,51.425 13.337,51.441 13.287,51.386 13.233,51.398 13.223,51.431 13.193,51.428 13.226,51.505 13.204,51.557 13.064,51.648 13.199,51.716 13.138,51.847 13.163,51.872 13.048,51.87 13.055,51.9 12.983,51.901 12.972,51.934 12.863,51.932 12.858,51.965 12.798,51.959 12.684,52.008 12.55,51.98 12.479,52.033 12.436,52.015 12.221,52.165 12.302,52.22 12.254,52.25 12.317,52.342 12.293,52.357 12.313,52.401 12.283,52.413 12.339,52.475 12.243,52.521 12.205,52.491 12.175,52.503 12.194,52.529 12.151,52.522 12.189,52.569 12.178,52.621 12.246,52.624 12.241,52.684 12.205,52.71 12.219,52.769 12.262,52.791 12.24,52.855 11.847,52.903 11.829,52.922 11.854,52.948 11.694,52.975 11.688,53.005 11.632,53.009 11.639,53.039 11.521,53.043 11.46,53.077 11.348,53.052 11.273,53.101 11.398,53.108 11.398,53.137 11.541,53.121 11.579,53.162 11.567,53.211 11.636,53.24 11.834,53.223 11.804,53.249 12.028,53.299 12.055,53.366 12.172,53.335 12.235,53.353 12.265,53.319 12.4,53.299 12.448,53.246 12.671,53.251 12.676,53.225 12.762,53.22 12.743,53.194 12.767,53.183 12.977,53.195 12.946,53.169 12.982,53.158 13.121,53.237 13.183,53.247 13.231,53.213 13.302,53.275 13.405,53.244 13.439,53.295 13.526,53.316 13.549,53.397 13.624,53.407 13.709,53.48 13.829,53.496 13.78,53.512 13.79,53.556 13.818,53.515 13.88,53.501;8.985,53.128 8.949,53.124 8.993,53.098 8.963,53.09 8.983,53.05 8.935,53.015 8.866,53.044 8.818,53.024 8.773,53.057 8.731,53.037 8.626,53.165 8.487,53.229 8.598,53.217 8.594,53.187 8.83,53.166 8.862,53.137 8.947,53.157 8.985,53.128;10.072,53.718 10.199,53.741 10.143,53.689 10.228,53.634 10.155,53.556 10.331,53.446 10.177,53.408 10.054,53.474 9.996,53.429 9.906,53.425 9.918,53.458 9.861,53.439 9.763,53.517 9.769,53.566 9.724,53.569 9.76,53.639 9.826,53.595 9.907,53.662 10.073,53.689 10.072,53.718;9.499,51.632 9.628,51.637 9.689,51.583 9.59,51.523 9.645,51.472 9.646,51.421 9.572,51.393 9.562,51.348 9.731,51.301 9.771,51.343 9.736,51.323 9.706,51.371 9.819,51.416 9.869,51.375 9.856,51.416 9.911,51.42 9.974,51.286 10.057,51.278 10.076,51.226 10.237,51.188 10.214,51.118 10.172,51.151 10.125,51.141 10.179,51.118 10.15,51.055 10.221,51.025 10.156,50.996 10.043,51.015 10.02,50.982 10.068,50.948 9.948,50.948 9.949,50.926 9.99,50.937 9.979,50.908 10.015,50.922 10.063,50.885 10.021,50.867 10.022,50.833 9.95,50.822 9.957,50.782 9.921,50.763 9.939,50.737 9.873,50.642 9.946,50.63 9.951,50.671 10.049,50.677 10.086,50.632 10.038,50.614 10.063,50.557 10.04,50.493 9.965,50.425 9.847,50.398 9.758,50.424 9.739,50.3 9.653,50.269 9.66,50.232 9.5,50.242 9.504,50.175 9.533,50.167 9.519,50.093 9.419,50.08 9.377,50.132 9.238,50.149 9.17,50.089 9.173,50.118 9.138,50.125 9.017,50.093 8.995,50.045 9.048,50.042 9.067,49.995 9.032,49.991 9.046,49.847 9.104,49.844 9.105,49.793 9.145,49.797 9.117,49.76 9.163,49.745 9.095,49.693 9.114,49.646 9.074,49.623 9.109,49.583 9.092,49.546 9.133,49.52 8.954,49.512 8.955,49.461 8.818,49.404 8.828,49.477 8.88,49.474 8.902,49.511 8.729,49.522 8.682,49.579 8.698,49.627 8.6,49.613 8.625,49.552 8.557,49.524 8.393,49.618 8.362,49.69 8.486,49.768 8.428,49.766 8.386,49.82 8.397,49.85 8.349,49.882 8.347,49.959 8.275,50.016 8.188,50.032 7.888,49.971 7.785,50.053 7.87,50.129 7.941,50.103 7.946,50.14 7.898,50.17 7.92,50.204 8.006,50.235 8.048,50.213 8.076,50.232 8.052,50.269 8.139,50.274 8.083,50.374 7.984,50.414 8.03,50.448 7.997,50.485 8.011,50.526 8.056,50.557 8.162,50.551 8.174,50.6 8.119,50.676 8.18,50.736 8.132,50.792 8.276,50.881 8.381,50.859 8.471,50.912 8.468,50.963 8.555,51.013 8.517,51.039 8.538,51.095 8.735,51.106 8.71,51.132 8.784,51.205 8.752,51.26 8.602,51.246 8.574,51.286 8.704,51.375 8.958,51.387 8.969,51.429 8.939,51.428 8.912,51.48 8.991,51.507 9.106,51.498 9.114,51.443 9.229,51.46 9.379,51.592 9.343,51.614 9.486,51.657 9.499,51.632;12.52,54.484 12.655,54.443 12.962,54.438 12.802,54.408 12.637,54.425 12.577,54.403 12.593,54.383 12.436,54.379 12.36,54.306 12.383,54.279 12.364,54.266 12.46,54.248 12.409,54.28 12.535,54.339 12.553,54.38 12.592,54.357 12.67,54.391 12.657,54.408 12.715,54.404 12.735,54.371 12.787,54.396 12.81,54.345 13.02,54.439 13.025,54.397 13.094,54.367 13.076,54.345 13.106,54.282 13.286,54.235 13.346,54.18 13.318,54.16 13.416,54.175 13.382,54.142 13.411,54.157 13.457,54.091 13.501,54.085 13.489,54.124 13.696,54.172 13.807,54.103 13.744,54.029 13.914,53.922 13.825,53.866 13.938,53.908 13.906,53.99 13.965,53.99 13.96,53.934 13.984,53.963 14.042,53.942 14.047,53.997 13.974,54.064 13.911,54.064 13.924,54.035 13.863,53.999 13.879,54.04 13.858,54.048 13.769,54.019 13.812,54.099 13.749,54.159 13.804,54.178 13.871,54.102 14.221,53.93 14.186,53.916 14.217,53.865 13.806,53.858 14.039,53.755 14.283,53.74 14.215,53.703 14.273,53.699 14.289,53.634 14.325,53.619 14.303,53.543 14.376,53.459 14.416,53.33 14.32,53.313 14.258,53.258 14.1,53.261 14.236,53.369 14.24,53.428 13.917,53.421 13.88,53.503 13.818,53.515 13.79,53.556 13.78,53.512 13.829,53.496 13.709,53.48 13.624,53.407 13.549,53.397 13.526,53.316 13.439,53.295 13.405,53.244 13.302,53.275 13.231,53.213 13.183,53.247 13.121,53.237 12.982,53.158 12.946,53.169 12.977,53.195 12.767,53.183 12.743,53.194 12.762,53.22 12.676,53.225 12.671,53.251 12.448,53.246 12.4,53.299 12.265,53.319 12.235,53.353 12.172,53.335 12.055,53.366 12.028,53.299 11.953,53.267 11.897,53.275 11.872,53.245 11.804,53.249 11.834,53.223 11.747,53.213 11.636,53.24 11.554,53.203 11.579,53.162 11.541,53.121 11.398,53.137 11.385,53.108 11.186,53.135 11.199,53.18 11.069,53.23 10.994,53.335 10.919,53.351 10.839,53.309 10.708,53.379 10.597,53.374 10.639,53.465 10.824,53.517 10.823,53.58 10.923,53.585 10.947,53.678 10.758,53.752 10.744,53.841 10.768,53.881 10.875,53.928 10.901,53.901 10.964,53.911 10.888,53.924 10.895,53.956 11.179,54.016 11.259,53.985 11.259,53.934 11.335,53.958 11.455,53.9 11.484,53.968 11.444,53.96 11.445,53.997 11.428,53.961 11.388,53.965 11.378,53.997 11.493,54.023 11.467,53.974 11.49,53.968 11.519,54.032 11.573,54.033 11.626,54.09 11.604,54.103 11.533,54.049 11.525,54.072 11.682,54.153 11.854,54.145 12.087,54.183 12.092,54.152 12.125,54.15 12.142,54.172 12.095,54.181 12.339,54.298 12.52,54.484|13.429,54.685 13.376,54.635 13.421,54.578 13.68,54.563 13.669,54.521 13.57,54.462 13.61,54.405 13.674,54.401 13.767,54.342 13.717,54.31 13.725,54.273 13.646,54.297 13.704,54.326 13.611,54.316 13.683,54.349 13.614,54.331 13.581,54.353 13.455,54.336 13.395,54.271 13.352,54.27 13.418,54.255 13.394,54.221 13.29,54.251 13.321,54.245 13.335,54.278 13.27,54.254 13.2,54.27 13.194,54.297 13.139,54.282 13.185,54.301 13.115,54.332 13.127,54.371 13.262,54.383 13.211,54.43 13.15,54.429 13.268,54.479 13.227,54.486 13.23,54.511 13.159,54.504 13.144,54.547 13.255,54.552 13.305,54.514 13.297,54.552 13.369,54.579 13.338,54.549 13.377,54.559 13.413,54.494 13.506,54.481 13.502,54.548 13.396,54.573 13.37,54.615 13.243,54.559 13.283,54.646 13.161,54.559 13.25,54.66 13.429,54.685|13.184,54.494 13.227,54.469 13.121,54.442 13.184,54.494|13.136,54.605 13.158,54.579 13.111,54.584 13.117,54.538 13.064,54.458 13.097,54.59 13.136,54.605;8.681,53.892 8.757,53.843 8.884,53.828 9.016,53.836 9.096,53.884 9.288,53.869 9.507,53.701 9.547,53.624 9.769,53.566 9.763,53.517 9.861,53.439 9.899,53.469 9.925,53.447 9.906,53.425 9.983,53.425 10.054,53.474 10.177,53.408 10.331,53.443 10.579,53.37 10.708,53.379 10.839,53.309 10.932,53.351 10.994,53.335 11.069,53.23 11.199,53.18 11.186,53.135 11.267,53.127 11.329,53.06 11.46,53.077 11.602,53.032 11.564,52.995 11.515,52.999 11.508,52.939 11.321,52.874 11.042,52.913 10.992,52.906 10.943,52.851 10.766,52.851 10.796,52.721 10.832,52.723 10.921,52.607 10.978,52.622 10.934,52.566 11.01,52.492 10.948,52.492 10.936,52.459 11.079,52.373 10.988,52.337 11.092,52.226 11.02,52.197 11.068,52.167 11.051,52.134 10.949,52.105 10.975,52.057 10.692,52.053 10.563,52.01 10.656,51.961 10.613,51.942 10.656,51.905 10.577,51.851 10.578,51.783 10.632,51.757 10.705,51.644 10.64,51.619 10.665,51.558 10.605,51.576 10.522,51.551 10.378,51.585 10.35,51.522 10.238,51.47 10.196,51.482 10.144,51.441 10.162,51.43 10.055,51.438 9.943,51.379 9.911,51.42 9.856,51.416 9.869,51.375 9.819,51.416 9.706,51.371 9.736,51.323 9.771,51.343 9.731,51.301 9.562,51.348 9.572,51.393 9.646,51.421 9.645,51.472 9.59,51.523 9.689,51.583 9.628,51.637 9.382,51.648 9.409,51.7 9.389,51.758 9.451,51.793 9.437,51.84 9.466,51.855 9.341,51.854 9.351,51.895 9.278,51.927 9.282,51.968 9.179,51.978 9.193,52.072 9.137,52.093 9.16,52.123 9.021,52.132 8.987,52.195 9.048,52.181 9.04,52.222 9.076,52.23 8.965,52.281 9.123,52.403 9.097,52.443 9.138,52.477 9.094,52.499 9.051,52.502 8.94,52.403 8.856,52.391 8.71,52.396 8.704,52.504 8.654,52.533 8.508,52.515 8.433,52.45 8.304,52.463 8.313,52.407 8.444,52.365 8.471,52.317 8.446,52.212 8.521,52.187 8.404,52.111 8.27,52.135 8.196,52.074 8.033,52.068 7.974,52.036 7.886,52.086 8.009,52.115 8.018,52.173 7.9,52.199 7.955,52.277 7.929,52.306 7.988,52.312 7.938,52.369 7.719,52.402 7.693,52.456 7.613,52.476 7.578,52.431 7.609,52.421 7.587,52.376 7.299,52.264 7.07,52.243 7.03,52.294 7.079,52.383 7.006,52.47 6.951,52.437 6.714,52.484 6.684,52.556 6.768,52.565 6.724,52.591 6.744,52.647 7.052,52.636 7.094,52.846 7.261,52.998 7.257,53.098 7.227,53.124 7.293,53.163 7.285,53.2 7.272,53.234 7.205,53.239 7.249,53.33 7.027,53.336 6.999,53.361 7.05,53.508 7.034,53.533 7.134,53.532 7.09,53.577 7.158,53.628 7.317,53.683 8.016,53.711 8.045,53.642 8.11,53.642 8.172,53.555 8.155,53.514 8.065,53.506 8.074,53.465 8.252,53.399 8.316,53.466 8.316,53.522 8.231,53.52 8.272,53.61 8.516,53.556 8.557,53.526 8.52,53.501 8.571,53.518 8.484,53.694 8.558,53.834 8.681,53.892|8.499,53.931 8.515,53.917 8.487,53.914 8.499,53.931|8.009,53.786 8.022,53.745 7.988,53.77 8.009,53.786|7.896,53.794 7.968,53.775 7.846,53.787 7.896,53.794|7.706,53.78 7.806,53.775 7.667,53.759 7.706,53.78|7.574,53.757 7.627,53.748 7.468,53.727 7.485,53.755 7.574,53.757|7.394,53.735 7.43,53.725 7.36,53.727 7.394,53.735|7.316,53.723 7.343,53.721 7.138,53.705 7.316,53.723|7.059,53.685 7.096,53.681 6.855,53.661 7.059,53.685|6.901,53.654 6.897,53.626 6.865,53.639 6.901,53.654|6.762,53.619 6.811,53.603 6.721,53.584 6.75,53.557 6.631,53.598 6.762,53.619;8.666,52.525 8.704,52.504 8.71,52.396 8.74,52.389 8.94,52.403 9.051,52.502 9.131,52.485 9.089,52.357 9.028,52.345 8.965,52.281 9.076,52.23 9.04,52.222 9.048,52.181 8.987,52.195 9.021,52.132 9.16,52.123 9.137,52.093 9.193,52.072 9.179,51.978 9.282,51.968 9.278,51.927 9.351,51.895 9.341,51.854 9.466,51.855 9.437,51.84 9.451,51.793 9.384,51.743 9.409,51.7 9.382,51.648 9.452,51.645 9.343,51.614 9.379,51.592 9.229,51.46 9.114,51.443 9.112,51.495 9.042,51.519 8.912,51.48 8.939,51.428 8.969,51.429 8.958,51.387 8.704,51.375 8.633,51.336 8.569,51.275 8.602,51.246 8.74,51.271 8.784,51.205 8.71,51.132 8.735,51.106 8.538,51.095 8.517,51.039 8.555,51.013 8.468,50.963 8.471,50.912 8.381,50.859 8.276,50.881 8.132,50.792 8.179,50.74 8.153,50.695 8.053,50.699 7.974,50.775 7.974,50.845 7.835,50.881 7.854,50.926 7.8,50.943 7.736,50.919 7.766,50.845 7.662,50.819 7.688,50.79 7.661,50.767 7.381,50.715 7.341,50.636 7.219,50.62 7.211,50.645 7.151,50.595 7.057,50.598 6.932,50.553 6.934,50.527 6.888,50.521 6.905,50.462 6.866,50.446 6.804,50.485 6.753,50.468 6.809,50.35 6.707,50.33 6.675,50.364 6.641,50.337 6.607,50.382 6.45,50.334 6.46,50.36 6.392,50.384 6.403,50.322 6.34,50.38 6.375,50.446 6.33,50.494 6.224,50.502 6.172,50.551 6.278,50.616 6.173,50.621 6.174,50.658 6.119,50.709 6.029,50.725 6.012,50.775 5.963,50.795 6.027,50.815 6.02,50.845 6.074,50.847 6.083,50.922 6.015,50.933 6.03,50.983 5.904,50.978 5.872,51.051 5.97,51.034 6.015,51.094 6.172,51.153 6.145,51.174 6.193,51.192 6.092,51.175 6.078,51.245 6.232,51.366 6.234,51.403 6.216,51.517 6.091,51.605 6.119,51.66 6.039,51.678 6.051,51.717 5.964,51.742 6.005,51.768 5.972,51.832 6.068,51.865 6.169,51.845 6.107,51.889 6.159,51.905 6.417,51.826 6.402,51.875 6.48,51.855 6.692,51.92 6.743,51.899 6.838,51.966 6.835,51.996 6.698,52.04 6.768,52.121 6.876,52.128 6.996,52.229 7.159,52.268 7.299,52.264 7.587,52.376 7.609,52.421 7.578,52.431 7.613,52.476 7.693,52.456 7.719,52.402 7.938,52.369 7.988,52.312 7.929,52.306 7.955,52.277 7.9,52.199 8.025,52.162 8.0,52.157 8.009,52.115 7.886,52.086 7.919,52.05 8.196,52.074 8.27,52.135 8.404,52.111 8.521,52.187 8.446,52.212 8.471,52.317 8.444,52.365 8.313,52.407 8.298,52.459 8.433,52.45 8.508,52.515 8.666,52.525;7.8,50.943 7.854,50.926 7.835,50.881 7.974,50.845 7.974,50.775 8.053,50.699 8.121,50.702 8.141,50.612 8.175,50.593 8.141,50.536 8.056,50.557 8.011,50.526 7.997,50.485 8.03,50.448 7.984,50.414 8.083,50.374 8.139,50.274 8.052,50.269 8.076,50.232 8.048,50.213 8.006,50.235 7.92,50.204 7.898,50.17 7.946,50.14 7.941,50.103 7.87,50.129 7.785,50.053 7.888,49.971 8.258,50.027 8.347,49.959 8.349,49.882 8.397,49.85 8.386,49.82 8.428,49.766 8.486,49.768 8.362,49.69 8.429,49.586 8.419,49.552 8.468,49.473 8.446,49.45 8.509,49.441 8.465,49.392 8.499,49.393 8.495,49.36 8.45,49.333 8.491,49.301 8.393,49.242 8.362,49.1 8.241,48.969 8.091,48.989 7.937,49.056 7.867,49.033 7.8,49.064 7.671,49.046 7.531,49.097 7.491,49.169 7.354,49.171 7.292,49.246 7.386,49.293 7.41,49.378 7.294,49.397 7.256,49.44 7.311,49.479 7.285,49.512 7.312,49.542 7.283,49.545 7.273,49.593 7.217,49.572 7.032,49.647 6.609,49.52 6.378,49.548 6.364,49.574 6.417,49.617 6.424,49.666 6.516,49.724 6.528,49.809 6.405,49.82 6.363,49.854 6.312,49.835 6.309,49.865 6.237,49.892 6.219,49.952 6.163,49.954 6.098,50.06 6.146,50.174 6.19,50.189 6.17,50.236 6.276,50.265 6.301,50.319 6.421,50.322 6.38,50.38 6.46,50.36 6.45,50.334 6.607,50.382 6.641,50.337 6.675,50.364 6.707,50.33 6.809,50.35 6.753,50.468 6.804,50.485 6.866,50.446 6.905,50.462 6.888,50.521 6.934,50.527 6.932,50.553 7.057,50.598 7.151,50.595 7.211,50.645 7.219,50.62 7.341,50.636 7.381,50.715 7.661,50.767 7.688,50.79 7.662,50.819 7.766,50.845 7.736,50.919 7.8,50.943;7.038,49.643 7.217,49.572 7.273,49.593 7.283,49.545 7.312,49.542 7.285,49.512 7.311,49.479 7.256,49.44 7.294,49.397 7.41,49.378 7.386,49.293 7.292,49.246 7.363,49.145 7.198,49.115 7.098,49.154 7.058,49.113 7.034,49.188 6.924,49.223 6.84,49.214 6.861,49.179 6.834,49.151 6.738,49.165 6.668,49.28 6.565,49.349 6.599,49.367 6.535,49.434 6.432,49.474 6.355,49.465 6.371,49.548 6.609,49.52 6.94,49.639 7.038,49.643;11.633,53.016 11.688,53.005 11.694,52.975 11.854,52.948 11.829,52.922 11.847,52.903 12.24,52.855 12.262,52.791 12.219,52.769 12.205,52.71 12.241,52.684 12.246,52.624 12.178,52.621 12.189,52.569 12.151,52.522 12.194,52.529 12.175,52.503 12.205,52.491 12.243,52.521 12.339,52.475 12.283,52.413 12.313,52.401 12.293,52.357 12.317,52.342 12.254,52.25 12.302,52.22 12.221,52.165 12.28,52.102 12.436,52.015 12.491,52.029 12.55,51.98 12.684,52.008 12.798,51.959 12.858,51.965 12.863,51.932 12.972,51.934 12.983,51.901 13.055,51.9 13.048,51.87 13.163,51.872 13.138,51.847 13.199,51.716 13.039,51.637 13.016,51.667 12.955,51.638 12.842,51.681 12.787,51.644 12.697,51.66 12.647,51.617 12.248,51.566 12.205,51.53 12.21,51.486 12.156,51.464 12.203,51.423 12.201,51.331 12.159,51.321 12.216,51.217 12.186,51.184 12.221,51.184 12.209,51.144 12.25,51.132 12.232,51.114 12.297,51.095 12.26,51.044 12.308,51.036 12.234,50.945 12.193,50.982 12.02,50.972 11.978,50.998 11.991,51.017 11.884,51.061 11.764,51.043 11.669,51.114 11.472,51.11 11.473,51.192 11.366,51.221 11.48,51.299 11.403,51.344 11.398,51.385 11.326,51.411 10.992,51.417 11.01,51.428 10.969,51.432 10.975,51.48 10.939,51.499 10.951,51.536 10.886,51.581 10.939,51.596 10.928,51.618 10.705,51.644 10.632,51.757 10.578,51.783 10.577,51.851 10.656,51.905 10.613,51.942 10.656,51.961 10.588,51.98 10.569,52.017 10.631,52.013 10.692,52.053 10.975,52.057 10.949,52.105 11.051,52.134 11.068,52.167 11.02,52.197 11.092,52.226 10.988,52.337 11.079,52.373 10.936,52.459 10.948,52.492 11.01,52.492 10.934,52.566 10.978,52.622 10.921,52.607 10.832,52.723 10.796,52.721 10.766,52.851 10.943,52.851 10.992,52.906 11.042,52.913 11.321,52.874 11.508,52.939 11.521,53.002 11.651,53.031 11.633,53.016;12.878,51.673 12.955,51.638 13.016,51.667 13.098,51.607 13.17,51.598 13.162,51.561 13.227,51.524 13.193,51.428 13.223,51.431 13.233,51.398 13.287,51.386 13.337,51.441 13.396,51.425 13.422,51.454 13.56,51.37 13.779,51.362 13.972,51.399 14.015,51.374 14.08,51.448 14.05,51.48 14.107,51.48 14.092,51.496 14.154,51.545 14.342,51.501 14.57,51.572 14.665,51.551 14.69,51.599 14.739,51.524 14.91,51.493 14.964,51.454 14.968,51.354 15.028,51.31 15.038,51.24 14.93,50.991 14.82,50.892 14.805,50.829 14.612,50.855 14.652,50.933 14.56,50.923 14.595,50.989 14.502,51.017 14.502,51.052 14.491,51.02 14.397,51.008 14.294,51.054 14.247,50.973 14.401,50.942 14.372,50.889 14.255,50.886 14.059,50.8 13.955,50.804 13.895,50.783 13.899,50.743 13.851,50.718 13.549,50.713 13.526,50.636 13.465,50.596 13.375,50.644 13.327,50.582 13.249,50.592 13.196,50.501 13.033,50.509 13.028,50.449 12.977,50.414 12.829,50.459 12.705,50.398 12.615,50.419 12.516,50.4 12.493,50.349 12.364,50.276 12.328,50.18 12.283,50.183 12.284,50.227 12.234,50.253 12.253,50.276 12.195,50.279 12.194,50.323 12.12,50.313 11.976,50.356 11.984,50.393 11.893,50.445 11.958,50.457 11.971,50.49 11.879,50.546 12.018,50.639 12.039,50.557 12.165,50.58 12.155,50.632 12.281,50.64 12.337,50.688 12.243,50.747 12.303,50.783 12.262,50.824 12.452,50.847 12.494,50.897 12.666,50.927 12.622,51.002 12.539,51.003 12.551,51.029 12.521,51.022 12.517,51.066 12.47,51.089 12.232,51.114 12.25,51.132 12.209,51.144 12.221,51.184 12.186,51.184 12.216,51.217 12.159,51.321 12.201,51.331 12.203,51.423 12.156,51.464 12.21,51.486 12.199,51.523 12.248,51.566 12.878,51.673;11.07,54.535 11.234,54.507 11.314,54.402 11.119,54.403 11.095,54.446 11.009,54.441 11.017,54.495 11.07,54.535|8.407,55.044 8.443,55.016 8.354,54.967 8.367,54.902 8.43,54.878 8.812,54.917 9.225,54.856 9.283,54.802 9.409,54.841 9.435,54.788 9.614,54.876 9.603,54.832 9.792,54.797 9.843,54.756 9.906,54.764 9.908,54.797 9.955,54.78 10.035,54.672 9.983,54.701 9.938,54.673 9.933,54.628 9.77,54.581 9.721,54.528 9.938,54.623 9.948,54.674 10.034,54.67 10.028,54.55 9.84,54.467 9.869,54.447 10.127,54.485 10.199,54.456 10.169,54.434 10.192,54.39 10.148,54.369 10.132,54.311 10.184,54.328 10.178,54.361 10.228,54.413 10.319,54.436 10.604,54.363 10.705,54.305 10.789,54.312 10.929,54.382 11.128,54.391 11.059,54.354 11.094,54.198 10.879,54.088 10.805,54.096 10.751,54.049 10.787,53.997 10.878,53.986 10.888,53.924 10.964,53.911 10.901,53.901 10.875,53.928 10.768,53.881 10.744,53.841 10.758,53.752 10.947,53.678 10.923,53.585 10.823,53.58 10.824,53.517 10.639,53.465 10.622,53.392 10.579,53.37 10.319,53.442 10.337,53.461 10.168,53.534 10.16,53.589 10.211,53.593 10.197,53.623 10.228,53.634 10.143,53.689 10.199,53.73 10.179,53.748 10.084,53.729 10.073,53.689 10.002,53.692 9.99,53.659 9.907,53.662 9.826,53.595 9.76,53.639 9.724,53.569 9.674,53.575 9.547,53.624 9.507,53.701 9.288,53.869 8.95,53.902 8.82,54.024 8.964,54.035 8.986,54.061 8.927,54.132 8.859,54.123 8.807,54.175 8.836,54.252 8.903,54.26 8.952,54.313 8.862,54.269 8.844,54.288 8.846,54.263 8.823,54.292 8.645,54.273 8.58,54.31 8.605,54.358 8.686,54.357 8.609,54.387 8.866,54.404 9.024,54.473 8.981,54.521 8.909,54.462 8.806,54.47 8.805,54.498 8.872,54.528 8.89,54.593 8.813,54.597 8.842,54.615 8.823,54.646 8.687,54.73 8.693,54.77 8.59,54.885 8.416,54.847 8.31,54.874 8.333,54.863 8.3,54.851 8.299,54.742 8.28,54.752 8.298,54.909 8.407,55.044|8.692,54.557 8.672,54.495 8.589,54.512 8.692,54.557|8.54,54.756 8.595,54.72 8.567,54.68 8.397,54.706 8.421,54.743 8.54,54.756|8.551,54.58 8.573,54.559 8.509,54.574 8.551,54.58|8.476,54.477 8.526,54.433 8.47,54.422 8.45,54.453 8.476,54.477|8.478,54.546 8.505,54.531 8.472,54.496 8.478,54.546|8.483,54.585 8.501,54.558 8.455,54.559 8.483,54.585|8.357,54.712 8.339,54.689 8.395,54.612 8.292,54.667 8.357,54.712;10.772,51.645 10.94,51.607 10.886,51.581 10.951,51.536 10.939,51.499 10.975,51.48 10.969,51.432 11.01,51.428 10.992,51.417 11.326,51.411 11.398,51.385 11.403,51.344 11.48,51.299 11.366,51.221 11.473,51.192 11.491,51.166 11.454,51.143 11.49,51.103 11.669,51.114 11.764,51.043 11.884,51.061 11.991,51.017 11.978,50.998 12.02,50.972 12.193,50.982 12.228,50.945 12.307,51.025 12.26,51.044 12.297,51.095 12.47,51.089 12.517,51.066 12.521,51.022 12.551,51.029 12.539,51.003 12.622,51.002 12.666,50.924 12.494,50.897 12.452,50.847 12.262,50.824 12.303,50.783 12.243,50.747 12.279,50.747 12.278,50.703 12.33,50.673 12.281,50.64 12.21,50.647 12.202,50.621 12.161,50.636 12.147,50.587 12.171,50.584 12.063,50.557 12.028,50.568 12.03,50.632 11.988,50.628 11.879,50.546 11.971,50.487 11.958,50.457 11.893,50.445 11.934,50.431 11.868,50.404 11.821,50.393 11.781,50.423 11.522,50.374 11.482,50.433 11.446,50.422 11.418,50.451 11.43,50.515 11.348,50.522 11.324,50.488 11.248,50.477 11.282,50.366 11.252,50.265 11.142,50.287 11.159,50.328 11.113,50.365 11.044,50.342 10.998,50.364 10.998,50.342 10.94,50.39 10.877,50.394 10.717,50.353 10.729,50.316 10.85,50.271 10.85,50.242 10.735,50.248 10.729,50.2 10.618,50.222 10.605,50.33 10.494,50.352 10.458,50.401 10.394,50.393 10.405,50.423 10.334,50.494 10.128,50.565 10.04,50.516 10.063,50.557 10.038,50.614 10.086,50.621 10.049,50.677 9.951,50.671 9.946,50.63 9.873,50.642 9.939,50.737 9.921,50.763 9.957,50.782 9.95,50.822 10.022,50.833 10.021,50.867 10.063,50.885 10.015,50.922 9.979,50.908 9.99,50.937 9.949,50.926 9.948,50.948 10.068,50.948 10.02,50.982 10.043,51.015 10.204,51.003 10.203,51.044 10.15,51.055 10.179,51.118 10.125,51.141 10.172,51.151 10.214,51.118 10.237,51.181 10.076,51.226 10.057,51.278 9.974,51.286 9.925,51.372 10.055,51.438 10.162,51.43 10.144,51.441 10.196,51.482 10.303,51.492 10.368,51.537 10.378,51.585 10.659,51.553 10.64,51.619 10.772,51.645";
 let DEUTSCHLAND = null;
@@ -1310,20 +1962,44 @@ function wetterKarteSVG(w, tag = "heute"){
       if (drin) nachbarn += `<path d="${pfad(ring)}"/>`;
     }
   }
+  // Jedes Bundesland bekommt die Farbe der Temperatur – zwischen den Messpunkten gewichtet gemittelt
+  const wert = (lon, lat) => {
+    let oben = 0, unten = 0;
+    for (const o of orte){
+      const t = (o[tag] || o.heute).max;
+      const d = Math.max(0.15, Math.hypot(o.lon - lon, o.lat - lat));
+      const g = 1 / (d * d);
+      oben += t * g; unten += g;
+    }
+    return unten ? oben / unten : 15;
+  };
   let laender = "";
-  for (const land of deutschlandLaden()) for (const ring of land) laender += `<path d="${pfad(ring)}"/>`;
+  for (const land of deutschlandLaden()) for (const ring of land){
+    let sx = 0, sy = 0;
+    for (const q of ring){ sx += q[0]; sy += q[1]; }
+    const farbe = tempFarbe(wert(sx / ring.length, sy / ring.length));
+    laender += `<path d="${pfad(ring)}" fill="${farbe}"/>`;
+  }
   const marken = orte.map(o => {
     const [x, y] = px([o.lon, o.lat]); const t = o[tag] || o.heute;
     const links = x > W * 0.62;
     return `<g class="w-ort" transform="translate(${x.toFixed(1)} ${y.toFixed(1)})">
-      <text class="w-zeichen" x="0" y="-16" text-anchor="middle">${wetterZeichen(t.code)}</text>
-      <circle r="4.5"/>
-      <text class="w-grad" x="${links ? -11 : 11}" y="4" text-anchor="${links ? "end" : "start"}">${t.max}°</text>
-      <text class="w-stadt" x="${links ? -11 : 11}" y="19" text-anchor="${links ? "end" : "start"}">${esc(o.name)}</text></g>`;
+      <g class="w-sym" transform="translate(0 -21)">${wetterSymbol(t.code)}</g>
+      <circle r="3.4"/>
+      <text class="w-grad" x="${links ? -10 : 10}" y="5" text-anchor="${links ? "end" : "start"}">${t.max}°</text>
+      <text class="w-stadt" x="${links ? -10 : 10}" y="19" text-anchor="${links ? "end" : "start"}">${esc(o.name)}</text></g>`;
   }).join("");
+  const skala = [0, 8, 14, 20, 26, 32];
+  const legende = `<g class="w-legende" transform="translate(${W - 30} ${H - 222})">
+    ${skala.map((t, i) => `<rect x="0" y="${(skala.length - 1 - i) * 22}" width="15" height="22" fill="${tempFarbe(t)}"/>
+      <text x="-5" y="${(skala.length - 1 - i) * 22 + 15}" text-anchor="end">${t}°</text>`).join("")}</g>`;
   return `<svg class="karte wetterkarte" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Wetterkarte für Deutschland">
+    <defs><filter id="wschatten" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#04101f" flood-opacity=".55"/></filter></defs>
     <rect width="${W}" height="${H}" class="k-meer"/>
-    <g class="w-nachbarn">${nachbarn}</g><g class="w-laender">${laender}</g>${marken}</svg>`;
+    <g class="w-nachbarn">${nachbarn}</g>
+    <g class="w-laender" filter="url(#wschatten)">${laender}</g>
+    ${legende}${marken}</svg>`;
 }
 function wetterLeiste(){
   const w = DATEN.wetter;
@@ -1332,8 +2008,29 @@ function wetterLeiste(){
   return `<section class="videos wetterteil"><h2 class="abschnitt">Das Wetter <small>· ${esc(w.quelle)} · Karte: GeoBasis-DE / BKG (dl-de/by-2-0)</small></h2>
     <div class="wk-box">${wetterKarteSVG(w, "heute")}
       <div class="wk-band"><b>Heute ${esc(spanne("heute"))}</b><span>Morgen (${esc(w.morgenTag)}) ${esc(spanne("morgen"))}</span></div></div>
+    ${modellVergleichHTML(w)}
     <div class="vreihe"><a class="vkarte sendung" href="#/video/wetter">
       <span class="vk-text"><b>▶ Das Wetter als Video</b><small>Karte für heute und morgen</small></span></a></div></section>`;
+}
+// Dieselbe Ehrlichkeit wie bei den Medien: Wettermodelle sind sich oft uneinig.
+// Andere Apps zeigen eine Zahl und tun so, als waere sie sicher.
+function modellVergleichHTML(w){
+  const m = w && w.modelle;
+  if (!m || !(m.orte || []).length) return "";
+  const beispiel = [...m.orte].sort((a, b) => {
+    const s = x => Math.max(...x.je.map(y => y.grad)) - Math.min(...x.je.map(y => y.grad));
+    return s(b) - s(a);
+  })[0];
+  const einig = (m.spanneGrad || 0) <= 1 && !m.uneinigRegen;
+  return `<div class="modellvgl${einig ? " einig" : ""}">
+    <div class="mv-kopf">${einig ? "Die Wettermodelle sind sich einig" : "Hier sind sich die Wettermodelle uneinig"}
+      <small>für morgen in ${esc(beispiel.name)}</small></div>
+    <div class="mv-reihe">${beispiel.je.map(x => `<div class="mv-modell">
+      <b>${esc(x.grad)}°</b><span>${esc(x.name)}</span>
+      ${x.regen != null ? `<i>${x.regen >= 1 ? "Regen" : "trocken"}</i>` : ""}</div>`).join("")}</div>
+    ${m.uneinigRegen ? `<p class="mv-text">In ${esc(m.uneinigRegen.ort)} erwartet ${esc(m.uneinigRegen.nass.join(" und "))}
+      Regen, ${esc(m.uneinigRegen.trocken.join(" und "))} dagegen nicht.</p>` : ""}
+    <p class="mv-quelle">Verglichen: ${esc((m.dienste || []).join(" · "))}</p></div>`;
 }
 function karteSVG(ort, breite = 30, hoehe = 18, ohneName, mx0 = 0.5, my0 = 0.5){
   if (!ort || typeof ort.lat !== "number") return "";
@@ -1467,6 +2164,37 @@ function pauke(ctx, start, lautstaerke){
   rauschen(ctx, start, 0.12, 900, 200, lautstaerke * 0.25);   // Fellanschlag
 }
 // Erkennungsmelodie: klassisch-orchestral, Puls, zwei Akkordwechsel, großer Schluss (ca. 9 s)
+// Aufziehendes Rauschen – das, was vor jedem Filmtitel die Spannung aufbaut
+function riser(ctx, start, dauer, lautstaerke = .10){
+  rauschen(ctx, start, dauer, 200, 7000, lautstaerke);
+  const o = ctx.createOscillator(), g = ctx.createGain();
+  o.type = "sawtooth";
+  o.frequency.setValueAtTime(70, start);
+  o.frequency.exponentialRampToValueAtTime(700, start + dauer);
+  g.gain.setValueAtTime(0.0001, start);
+  g.gain.exponentialRampToValueAtTime(lautstaerke * 0.8, start + dauer * 0.88);
+  g.gain.exponentialRampToValueAtTime(0.0001, start + dauer + 0.12);
+  o.connect(g); g.connect(ctx.destination);
+  o.start(start); o.stop(start + dauer + 0.2);
+}
+// Beckenschlag auf den Schlussakkord
+function becken(ctx, start, lautstaerke = .22){
+  const laenge = Math.floor(ctx.sampleRate * 1.8);
+  const puffer = ctx.createBuffer(1, laenge, ctx.sampleRate);
+  const d = puffer.getChannelData(0);
+  for (let i = 0; i < laenge; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / laenge, 2.2);
+  const q = ctx.createBufferSource(); q.buffer = puffer;
+  const f = ctx.createBiquadFilter(); f.type = "highpass"; f.frequency.value = 4500;
+  const g = ctx.createGain();
+  g.gain.setValueAtTime(lautstaerke, start);
+  g.gain.exponentialRampToValueAtTime(0.0001, start + 1.8);
+  q.connect(f); f.connect(g); g.connect(ctx.destination);
+  q.start(start);
+}
+// Glocke – heller Anschlag mit langem Ausklang
+function glocke(ctx, frequenz, start, lautstaerke = .14){
+  [1, 2.01, 3.03, 4.2].forEach((teil, i) => note(ctx, frequenz * teil, start, 3.2 - i * 0.5, lautstaerke / (i + 1.6), "sine"));
+}
 function melodie(){
   const ctx = tonKontext(); if (!ctx) return 0;
   const t = ctx.currentTime + 0.05;
@@ -1490,6 +2218,46 @@ function melodie(){
   streicher(ctx, [146.83, 220, 293.66], ende, 2.8, .18);
   note(ctx, 36.71, ende, 2.6, .28);
   return 7.3;   // danach setzt die Stimme ein, der Akkord klingt darunter aus
+}
+
+// Abspann: drei Akkorde, die zur Ruhe kommen
+function schlussKlang(){
+  const ctx = tonKontext(); if (!ctx) return 0;
+  const t = ctx.currentTime + 0.05;
+  blech(ctx, [146.83, 220, 293.66], t, 0.7, .26);
+  pauke(ctx, t, .34);
+  blech(ctx, [130.81, 196, 261.63], t + 0.62, 0.7, .24);
+  blech(ctx, [110, 164.81, 220, 329.63], t + 1.24, 2.4, .30);
+  streicher(ctx, [110, 164.81, 220], t + 1.24, 2.8, .16);
+  note(ctx, 55, t + 1.24, 2.6, .22);
+  becken(ctx, t + 1.24, .14);
+  return 0;
+}
+// Wissens-Intro: staunen statt Eilmeldung – weiter Klangraum, aufsteigende Figur, helle Glocke
+function zupf(ctx, frequenz, start, lautstaerke = .13){
+  // kurzer, holzig-weicher Anschlag wie ein Marimbaton
+  note(ctx, frequenz, start, 0.9, lautstaerke, "sine");
+  note(ctx, frequenz * 4, start, 0.22, lautstaerke * 0.25, "sine");
+  note(ctx, frequenz * 9.2, start, 0.10, lautstaerke * 0.10, "sine");
+}
+function wissenMelodie(){
+  const ctx = tonKontext(); if (!ctx) return 0;
+  const t = ctx.currentTime + 0.05;
+  // weicher Klangteppich, kein Orchester – das ist keine Nachrichtensendung
+  streicher(ctx, [130.81, 196, 261.63, 392], t, 6.4, .12);
+  note(ctx, 65.41, t, 5.4, .13);
+  rauschen(ctx, t, 1.6, 300, 2600, .045);                       // leiser Luftzug am Anfang
+  // neugierige Frage: eine Figur, die nach oben steigt und offen stehen bleibt
+  const figur = [261.63, 329.63, 392, 493.88, 587.33, 659.25];
+  figur.forEach((f, i) => zupf(ctx, f, t + 0.55 + i * 0.26, .14 - i * 0.008));
+  zupf(ctx, 783.99, t + 2.25, .15);
+  glocke(ctx, 1046.5, t + 2.55, .13);                           // heller Anschlag: der Aha-Moment
+  const ende = t + 3.15;
+  streicher(ctx, [130.81, 196, 261.63, 329.63], ende, 3.2, .15);
+  zupf(ctx, 523.25, ende, .13);
+  glocke(ctx, 659.25, ende + 0.12, .10);
+  note(ctx, 65.41, ende, 2.8, .16);
+  return 4.4;
 }
 
 // kurzes Übergangsgeräusch zwischen zwei Themen
@@ -1528,10 +2296,18 @@ const FORMATE = {
   "kurzmeldungen": { name:"Kurzmeldungen", kurz:"Kurzmeldungen", quer:true, rate:0.95 },
   "tief":    { name:"Thema ausführlich", kurz:"Ausführlich", quer:true },
   "rubrik":  { name:"Rubrik-Ausgabe", kurz:"Rubrik", quer:true },
-  "wetter":  { name:"Das Wetter", kurz:"Wetter", quer:true }
+  "wetter":  { name:"Das Wetter", kurz:"Wetter", quer:true },
+  "wissen":  { name:WISSEN_TITEL, kurz:"Wissen", quer:true, rate:0.88 },
+  "doku":    { name:"Dokumentation", kurz:"Doku", quer:true, rate:0.88 },
+  "kurzvideo": { name:"Kurzvideos", kurz:"Kurz", quer:false, hochkant:true, rate:0.9 }
 };
-let WOCHE = null, AUSGABEN = [], AUSGABE_DATEN = {};
+let WOCHE = null, AUSGABEN = [], AUSGABE_DATEN = {}, WISSEN = [], DOKU = [], DOKU_ARBEIT = null;
 const SENDEZEITEN = [6, 9, 12, 15, 18, 21];
+// Der Wochenrückblick läuft nur sonntags – sonst wiederholt er bloß, was ohnehin in der App steht.
+const WOCHE_TAGE = ["Sun"];
+const istWochentagFuerRueckblick = () =>
+  WOCHE_TAGE.includes(new Intl.DateTimeFormat("en-GB", { timeZone:"Europe/Berlin", weekday:"short" }).format(new Date()));
+const wocheZeigen = () => !!WOCHE && istWochentagFuerRueckblick();
 function naechsteAktualisierung(){
   const jetzt = new Date(), h = stundeBerlin(jetzt);
   if (h < 6) return "ab 6:00 Uhr";
@@ -1543,12 +2319,24 @@ function naechsteSendung(){
   const naechste = SENDEZEITEN.find(z => z > h || (z === h && m < 5));
   return naechste !== undefined ? `heute ${naechste}:00 Uhr` : `morgen ${SENDEZEITEN[0]}:00 Uhr`;
 }
+const ZAHLWORT = ["null","eine","zwei","drei","vier","fünf","sechs","sieben","acht","neun","zehn"];
+const zahlWort = z => ZAHLWORT[z] || String(z);
 const saetzeAus = t => String(t || "").match(/[^.!?]+[.!?]+["“”]?|[^.!?]+$/g)?.map(x => x.trim()).filter(Boolean) || [];
 const erste = (arr, n) => (arr || []).flatMap(saetzeAus).slice(0, n);
 const aktuelle = () => [...NACHRICHTEN].filter(n => Date.now() - new Date(n.zeit) < 30*36e5).sort((a,b) => (b.eil - a.eil) || b.zeit.localeCompare(a.zeit));
 const wichtigste = (liste, n) => [...liste].sort((a,b) => (b.eil - a.eil) || (b.medien.length - a.medien.length) || b.zeit.localeCompare(a.zeit)).slice(0, n);
 const wChips = w => w ? [["Wer", w.wer], ["Was", w.was], ["Wo", w.wo], ["Wann", w.wann]].filter(([,v]) => v && !/noch unklar/i.test(v)) : [];
 
+// Wer liest? "Einfach erklärt" hat eine eigene Stimme, wie eine eigene Sendung.
+function stimmeSchluessel(format){
+  const z = DATEN?.ton?.zuordnung || { einfach:"einfach", begriff:"einfach" };
+  return format === "einfach" ? (z.einfach || "einfach") : "standard";
+}
+function stimmeName(format){
+  const st = DATEN?.ton?.stimmen;
+  if (!st) return null;
+  return st[stimmeSchluessel(format)] || st.standard || null;
+}
 const themenDaten = id => {
   const n = NACHRICHTEN.find(x => x.id === id);
   return n ? { fakten:n.fakten, positionen:n.positionen, zeitleiste:n.zeitleiste, einig:n.einig,
@@ -1563,8 +2351,30 @@ function wetterSegment(){
 function segmenteBauen(format, id){
   const datum = berlin(new Date(), { weekday:"long", day:"numeric", month:"long" });
   const gesprochen = { "Heft in 100 Sekunden":"Heft in hundert Sekunden", "Wissen & Klima":"Wissen und Klima", "Wochenrückblick":"Der Wochenrückblick" };
-  const intro = titel => ({ typ:"intro", titel, saetze:[`Nachrichten-Heft. ${gesprochen[titel] || titel} vom ${datum}.`] });
+  const sprecherin = stimmeName(format);
+  const ansage = titel => {
+    const s = [`Nachrichten-Heft. ${gesprochen[titel] || titel} vom ${datum}.`];
+    if (sprecherin) s.push(`Es liest die Computerstimme ${sprecherin}.`);
+    return s;
+  };
+  const intro = titel => ({ typ:"intro", titel, stimme:sprecherin, saetze:ansage(titel) });
   const outro = { typ:"outro", titel:"Mehr im Nachrichten-Heft", saetze:["Alle Hintergründe und Quellen findest du im Nachrichten-Heft."] };
+  // Der feste Block, der diese App ausmacht: was alle gleich berichten und wo es auseinandergeht.
+  // Steht nach jedem Thema, gesprochen wie im Fernsehen.
+  const vergleich = n => {
+    const einigText = (n.einig || []).map(e => Array.isArray(e) ? e[0] : e).filter(Boolean)[0];
+    const offenText = (n.unklar || [])[0];
+    if (!einigText && !offenText) return null;
+    const zahl = (n.medien || []).length;
+    const saetze = [];
+    if (einigText && zahl >= 2) saetze.push(`Darin stimmen die ${zahlWort(zahl)} Berichte überein: ${einigText}`);
+    else if (einigText) saetze.push(`Darin stimmen die Berichte überein: ${einigText}`);
+    if (offenText) saetze.push(`Offen bleibt: ${offenText}`);
+    if (!saetze.length) return null;
+    return { ...thema(n, saetze), typ:"vergleich", titel:"Einig und offen",
+             einigText, offenText, medienZahl:zahl,
+             medienNamen:(n.medien || []).map(m => m.name).filter(Boolean) };
+  };
   const thema = (n, saetze, extra = {}) => ({ typ:"thema", id:n.id, rubrik:n.rubrik, titel:n.titel, eil:n.eil,
     bilder: n.bildInfos?.length ? n.bildInfos : n.bildInfo ? [n.bildInfo] : (n.bilder && n.bilder[0] && n.bilder[0].url ? n.bilder : []),
     ort: n.ortInfo, chips:wChips(n.wfragen), tonListe: n.ton || [],
@@ -1580,7 +2390,7 @@ function segmenteBauen(format, id){
     s = [intro("Die Hauptausgabe")];
     liste.forEach(n => {
       s.push(thema(n, n.video?.lang?.length ? n.video.lang : erste([n.vorspann, ...(n.zusammenfassung||[])], 4)));
-      if (n.unklar?.length) s.push({ ...thema(n, erste([n.unklar[0]], 2)), typ:"unklar" });
+      const v = vergleich(n); if (v) s.push(v);
     });
     const ws = wetterSegment(); if (ws) s.push(ws);
     s.push(outro);
@@ -1597,7 +2407,7 @@ function segmenteBauen(format, id){
     const a = AUSGABE_DATEN[id];
     if (!a) return [];
     const zahlwort = { 6:"sechs", 9:"neun", 12:"zwölf", 15:"fünfzehn", 18:"achtzehn", 21:"einundzwanzig" };
-    s = [{ typ:"intro", titel:a.name, saetze:[`Nachrichten-Heft. Die Ausgabe um ${zahlwort[a.stunde] || a.stunde} Uhr vom ${datum}.`] },
+    s = [{ typ:"intro", titel:a.name, stimme:sprecherin, saetze:ansage(`Die Ausgabe um ${zahlwort[a.stunde] || a.stunde} Uhr`) },
       ...a.themen.map(t => ({ typ:"thema", id:t.id, rubrik:t.rubrik, titel:t.titel, eil:t.eil, bilder:t.bilder || [], ort:t.ort, chips:[],
         tonListe: (NACHRICHTEN.find(x => x.id === t.id)?.ton) || [], daten: themenDaten(t.id), saetze:t.saetze })),
       ...(wetterSegment() ? [wetterSegment()] : []), outro];
@@ -1624,14 +2434,42 @@ function segmenteBauen(format, id){
     const liste = aktuelle().filter(n => n.rubrik === rub).slice(0, 8);
     if (!liste.length) return [];
     s = [intro(rub), ...liste.map(n => thema(n, n.video?.lang?.length ? n.video.lang : erste([n.vorspann, ...(n.zusammenfassung||[])], 4))), outro];
+  } else if (format === "doku"){
+    const d = DOKU.find(x => x.id === id);
+    if (!d?.kapitel?.length) return [];
+    return [{ typ:"intro", titel:d.titel, rubrik:"Wissen", kapitel:WISSEN_TITEL, saetze:[], standzeit:1.4 },
+      ...d.kapitel.map((k, i) => ({
+        typ:"thema", id:d.id, rubrik:`Kapitel ${i + 1} von ${d.kapitel.length}`, titel:k.ueberschrift,
+        bilder: k.bildInfo?.url ? [k.bildInfo] : (d.bildInfo?.url ? [d.bildInfo] : []),
+        chips:[], tonListe: k.ton || [],
+        daten:{ fakten:k.fakten, begriffe:k.begriffe, zeitleiste:[], einig:[], medien:[], positionen:[] },
+        kapitelKarte: true,
+        saetze: k.absaetze.flatMap(saetzeAus)
+      })),
+      { typ:"outro", titel:"Mehr im Nachrichten-Heft", saetze:["Alle Hintergründe und Quellen findest du im Nachrichten-Heft."] }];
+  } else if (format === "wissen"){
+    const w = WISSEN.find(x => x.id === id);
+    if (!w?.video?.length) return [];
+    const bilder = w.bildInfo?.url ? [w.bildInfo] : [];
+    return [{ typ:"intro", titel:w.titel, rubrik:"Wissen", kapitel:WISSEN_TITEL, saetze:[], standzeit:1.4 },
+      { typ:"thema", id:w.id, rubrik:"Wissen", titel:w.titel, bilder, chips:[], tonListe:w.ton || [],
+        daten:{ fakten:w.fakten, zeitleiste:[], einig:[], medien:[], positionen:[] }, saetze:w.video },
+      { typ:"outro", titel:"Mehr im Nachrichten-Heft", saetze:["Alle Hintergründe und Quellen findest du im Nachrichten-Heft."] }];
   } else if (format === "wetter"){
     const ws = wetterSegment();
     return ws ? [ws] : [];
+  } else if (format === "kurzvideo"){
+    // Hochkant zum Wischen: ein Thema pro Bildschirm, in einfacher Sprache
+    const liste = aktuelle().slice(0, 20);
+    s = liste.map(n => thema(n, n.video?.einfach?.length ? n.video.einfach
+      : n.video?.kurz?.length ? n.video.kurz
+      : erste([n.einfach?.vorspann || n.vorspann], 2), { wischen:true }))
+      .filter(x => x.saetze.length);
   } else if (format === "clip"){
     const n = NACHRICHTEN.find(x => x.id === id) || AKTUELLE_DETAIL;
     if (!n) return [];
     s = [thema(n, n.video?.lang?.length ? n.video.lang : erste([n.vorspann, ...(n.zusammenfassung||[])], 4))];
-    if (n.unklar?.length) s.push({ ...thema(n, erste([n.unklar[0]], 2)), typ:"unklar" });
+    const vc = vergleich(n); if (vc) s.push(vc);
   }
   return s.filter(x => x.saetze?.length || x.standzeit);
 }
@@ -1654,7 +2492,7 @@ function tonEintrag(s){
   const k = (s.saetze || []).join(" ").slice(0, 80);
   return k ? (liste.find(e => e && e.k === k) || null) : null;
 }
-const PLAYER = { segs:[], si:0, ti:0, spielt:false, stumm:false, untertitel:true, timer:null, format:null, zurueck:"#/" };
+const PLAYER = { segs:[], si:0, ti:0, spielt:false, stumm:false, untertitel:true, timer:null, wache:null, format:null, zurueck:"#/", lauf:0, fertig:false };
 
 function deutscheStimmen(){
   return (speechSynthesis?.getVoices?.() || []).filter(v => /^de/i.test(v.lang));
@@ -1686,6 +2524,19 @@ function sprechTeile(satz){
   }
   return zusammen.length ? zusammen : [String(satz)];
 }
+const SYM = {
+  play:  '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>',
+  pause: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="5" width="3.6" height="14" rx="1.1"/><rect x="13.4" y="5" width="3.6" height="14" rx="1.1"/></svg>',
+  neu:   '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5V2.5L8 6l4 3.5V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z"/></svg>',
+  zurueck: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 6h2.2v12H7z"/><path d="M19 6v12l-8.4-6z"/></svg>',
+  weiter:  '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.8 6H17v12h-2.2z"/><path d="M5 6v12l8.4-6z"/></svg>',
+  ton:   '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.4L12 5.4v13.2L7.4 14.5H4z"/><path d="M15.2 8.8a4.6 4.6 0 0 1 0 6.4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><path d="M17.6 6.4a8 8 0 0 1 0 11.2" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>',
+  stumm: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.4L12 5.4v13.2L7.4 14.5H4z"/><path d="M15.5 9.5l5 5m0-5l-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+  ut:    '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M10 10.4a2.6 2.6 0 1 0 0 3.2M18 10.4a2.6 2.6 0 1 0 0 3.2" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>',
+  voll:  '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+  vollAus: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+  x:     '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>'
+};
 function playerOeffnen(format, id){
   const segs = segmenteBauen(format, id);
   const f = FORMATE[format];
@@ -1693,7 +2544,7 @@ function playerOeffnen(format, id){
   document.getElementById("player")?.remove();
   const el = document.createElement("div");
   el.id = "player"; el.setAttribute("role", "dialog"); el.setAttribute("aria-label", f.name);
-  el.innerHTML = `<div class="pl-kopf"><span>${esc(f.name)}</span><button class="pl-x" aria-label="Video schließen">✕</button></div>
+  el.innerHTML = `<div class="pl-kopf"><span>${esc(f.name)}</span><button class="pl-x" aria-label="Video schließen">${SYM.x}</button></div>
     <div class="pl-buehne ${f.quer ? "quer" : "hoch"}">
       <div class="pl-fortschritt"></div>
       <div class="pl-bild"></div>
@@ -1702,19 +2553,24 @@ function playerOeffnen(format, id){
       <div class="pl-marke">KI-Zusammenfassung · Computerstimme</div>
       <div class="pl-uhr"></div>
       <div class="pl-laufband"><div class="pl-lauf-inhalt"></div></div>
-      <button class="pl-start">▶</button>
+      <button class="pl-start" aria-label="Video starten">${SYM.play}</button>
+      ${f.hochkant ? `<div class="pl-wischhinweis">↑ hochwischen für das nächste Thema</div>` : ""}
     </div>
     <div class="pl-steuer">
-      <button data-a="zurueck" aria-label="Vorheriges Thema">⏮</button>
-      <button data-a="play" aria-label="Abspielen oder Pause" class="pl-haupt">▶</button>
-      <button data-a="weiter" aria-label="Nächstes Thema">⏭</button>
-      <button data-a="ton" aria-label="Ton an oder aus">🔊</button>
-      <button data-a="ut" aria-label="Untertitel an oder aus">💬</button>
-      <button data-a="voll" aria-label="Vollbild">⛶</button>
+      <button data-a="zurueck" aria-label="Vorheriges Thema">${SYM.zurueck}</button>
+      <button data-a="play" aria-label="Abspielen" class="pl-haupt">${SYM.play}</button>
+      <button data-a="weiter" aria-label="Nächstes Thema">${SYM.weiter}</button>
+      <span class="pl-zeit" aria-live="off">–</span>
+      <span class="pl-luecke"></span>
+      <button data-a="ton" aria-label="Ton aus">${SYM.ton}</button>
+      <button data-a="ut" aria-label="Untertitel aus" class="an">${SYM.ut}</button>
+      <button data-a="voll" aria-label="Vollbild">${SYM.voll}</button>
     </div>`;
   document.body.appendChild(el);
   document.body.style.overflow = "hidden";
-  Object.assign(PLAYER, { segs, si:0, ti:0, spielt:false, format, melodieGespielt:false, letzteEil:null });
+  const start = Math.min(Math.max(0, PLAYER.startSegment || 0), Math.max(0, segs.length - 1));
+  PLAYER.startSegment = 0;
+  Object.assign(PLAYER, { segs, si:start, ti:0, spielt:false, format, melodieGespielt:start > 0, letzteEil:null, fertig:false });
   if (!segs.length){
     el.querySelector(".pl-inhalt").innerHTML = `<div class="pl-titel">Gerade gibt es nicht genug Nachrichten für dieses Format.</div>`;
     el.querySelector(".pl-start").remove();
@@ -1722,23 +2578,66 @@ function playerOeffnen(format, id){
   el.querySelector(".pl-x").onclick = playerSchliessen;
   el.querySelector(".pl-start")?.addEventListener("click", () => abspielen());
   el.querySelectorAll(".pl-steuer button").forEach(b => b.onclick = () => steuern(b.dataset.a));
+  el.querySelector(".pl-fortschritt").onclick = ev => {
+    const i = ev.target?.dataset?.i;
+    if (i !== undefined) springen(+i);
+  };
   el.addEventListener("keydown", e => {
     if (e.key === " "){ e.preventDefault(); steuern("play"); }
-    if (e.key === "ArrowRight") steuern("weiter");
-    if (e.key === "ArrowLeft") steuern("zurueck");
+    if (e.key === "ArrowRight" || (f.hochkant && e.key === "ArrowDown")) steuern("weiter");
+    if (e.key === "ArrowLeft" || (f.hochkant && e.key === "ArrowUp")) steuern("zurueck");
     if (e.key === "Escape") playerSchliessen();
   });
+  if (f.hochkant) wischenEinrichten(el);
   el.tabIndex = -1; el.focus();
+  document.addEventListener("fullscreenchange", vollKnopf);
+}
+// Hoch- und runterwischen wie bei Kurzvideo-Apps
+function wischenEinrichten(el){
+  const buehne = el.querySelector(".pl-buehne");
+  let y0 = null, x0 = null, gewischt = false;
+  buehne.addEventListener("touchstart", e => {
+    const t = e.changedTouches[0]; y0 = t.clientY; x0 = t.clientX; gewischt = false;
+  }, { passive:true });
+  buehne.addEventListener("touchmove", e => {
+    if (y0 === null) return;
+    const t = e.changedTouches[0];
+    if (Math.abs(t.clientY - y0) > Math.abs(t.clientX - x0) + 8) e.preventDefault();
+  }, { passive:false });
+  buehne.addEventListener("touchend", e => {
+    if (y0 === null) return;
+    const t = e.changedTouches[0], dy = t.clientY - y0, dx = t.clientX - x0;
+    if (Math.abs(dy) > 60 && Math.abs(dy) > Math.abs(dx)){
+      gewischt = true;
+      wischAnimation(buehne, dy < 0);
+      steuern(dy < 0 ? "weiter" : "zurueck");
+    }
+    y0 = null;
+    if (!gewischt && Math.abs(dy) < 12 && Math.abs(dx) < 12) steuern("play");   // tippen = Pause
+  }, { passive:true });
+  let radBremse = 0;
+  buehne.addEventListener("wheel", e => {
+    if (Math.abs(e.deltaY) < 24 || Date.now() - radBremse < 550) return;
+    radBremse = Date.now();
+    wischAnimation(buehne, e.deltaY > 0);
+    steuern(e.deltaY > 0 ? "weiter" : "zurueck");
+  }, { passive:true });
+}
+function wischAnimation(buehne, hoch){
+  buehne.classList.remove("wisch-hoch", "wisch-runter");
+  void buehne.offsetWidth;
+  buehne.classList.add(hoch ? "wisch-hoch" : "wisch-runter");
 }
 function playerSchliessen(){
   stopp(); tickerStopp();
+  document.removeEventListener("fullscreenchange", vollKnopf);
+  document.getElementById("player")?.classList.remove("voll", "gedreht");
   document.getElementById("player")?.remove();
   document.body.style.overflow = "";
   if (document.fullscreenElement) document.exitFullscreen().catch(()=>{});
   const ziel = PLAYER.zurueck || "#/"; PLAYER.zurueck = null;
   if (location.hash.startsWith("#/video")) location.hash = ziel;
 }
-const RUBRIK_FARBE = { "Deutschland":"#C41E2E", "Welt":"#1F7A9E", "Wirtschaft":"#B07A00", "Wissen & Klima":"#1D7A4C", "Sport":"#6A3FA0" };
 function laufbandFuellen(){
   const el = document.getElementById("player"); if (!el) return;
   const box = el.querySelector(".pl-lauf-inhalt"); if (!box) return;
@@ -1751,19 +2650,27 @@ function laufbandFuellen(){
 function zeigen(){
   const el = document.getElementById("player"); if (!el) return;
   const s = PLAYER.segs[PLAYER.si];
-  el.querySelector(".pl-buehne").style.setProperty("--akzent", RUBRIK_FARBE[s.rubrik] || "#16407A");
+  const buehne = el.querySelector(".pl-buehne");
+  buehne.style.setProperty("--akzent", PLAYER.format === "wissen" ? WISSEN_FARBE : (RUBRIK_FARBE[s.rubrik] || "#16407A"));
+  buehne.classList.toggle("wissen-format", PLAYER.format === "wissen");
   el.querySelector(".pl-uhr").textContent = berlin(new Date(), { hour:"2-digit", minute:"2-digit" }) + " Uhr";
-  el.querySelector(".pl-fortschritt").innerHTML = PLAYER.segs.map((_, i) => `<i class="${i < PLAYER.si ? "fertig" : i === PLAYER.si ? "jetzt" : ""}"></i>`).join("");
+  el.querySelector(".pl-fortschritt").innerHTML = PLAYER.segs.map((x, i) =>
+    `<i data-i="${i}" class="${i < PLAYER.si ? "fertig" : i === PLAYER.si ? "jetzt" : ""}" title="${esc(x.titel || "")}"></i>`).join("");
   if (!s.shots) s.shots = regie(s);
   const marke = el.querySelector(".pl-marke");
-  if (marke) marke.textContent = tonEintrag(s) ? "KI-Zusammenfassung · Sprecherstimme Thorsten (Piper)" : "KI-Zusammenfassung · Vorlesestimme des Geräts";
+  const nm = stimmeName(PLAYER.format);
+  if (marke) marke.textContent = tonEintrag(s)
+    ? `KI-Zusammenfassung · Computerstimme${nm ? " " + nm : ""}`
+    : "KI-Zusammenfassung · Vorlesestimme des Geräts";
   shotZeigen(true);
-  const kopfzeile = s.typ === "intro" || s.typ === "outro" ? `<div class="pl-logo${s.typ === "intro" ? " pl-logo-anim" : ""}">Nachrichten-Heft <span>· neutral</span><i class="pl-strich"></i></div>`
-    : `<div class="pl-rubrik">${s.eil && s.typ !== "unklar" ? '<b class="pl-eil">EILMELDUNG</b> ' : ""}${s.typ === "unklar" ? "⚠ Noch unklar" : esc(s.rubrik)}</div>`;
+  const kopfzeile = s.typ === "intro" || s.typ === "outro"
+    ? `<div class="pl-logo${s.typ === "intro" ? " pl-logo-anim" : ""}${s.kapitel ? " pl-logo-wissen" : ""}">${s.kapitel ? esc(s.kapitel) : "Nachrichten-Heft"} <span>${s.kapitel ? "· Nachrichten-Heft" : "· neutral"}</span><i class="pl-strich"></i></div>`
+    : `<div class="pl-rubrik">${s.eil && s.typ !== "unklar" ? '<b class="pl-eil">EILMELDUNG</b> ' : ""}${s.typ === "unklar" ? "⚠ Noch unklar" : s.typ === "vergleich" ? "Einig und offen" : esc(s.rubrik)}</div>`;
   const inhalt = el.querySelector(".pl-inhalt");
   inhalt.classList.remove("einblenden"); void inhalt.offsetWidth; inhalt.classList.add("einblenden");
   inhalt.innerHTML = `${kopfzeile}
     <div class="pl-titel">${esc(s.titel)}</div>
+    ${s.typ === "intro" && s.stimme ? `<div class="pl-sprecher">Es liest: <b>${esc(s.stimme)}</b> <span>· Computerstimme</span></div>` : ""}
     ${s.chips?.length && s.typ === "thema" ? `<div class="pl-chips">${s.chips.map(([k,v]) => `<span><b>${k}:</b> ${esc(v.length > 60 ? v.slice(0,57) + "…" : v)}</span>`).join("")}</div>` : ""}
     ${s.id && PLAYER.format !== "clip" ? `<a class="pl-link" href="#/n/${esc(s.id)}">Ganzen Artikel lesen →</a>` : ""}`;
   el.querySelector(".pl-inhalt .pl-link")?.addEventListener("click", () => { stopp(); document.getElementById("player")?.remove(); document.body.style.overflow = ""; PLAYER.zurueck = null; });
@@ -1779,6 +2686,7 @@ function tafelnBauen(s){
   if ((d.einig || []).length >= 1) t.push({ typ:"einig", punkte: d.einig.slice(0, 3), anzahl:(d.medien || []).length });
   if ((d.medien || []).length >= 2) t.push({ typ:"medien", medien: d.medien.slice(0, 6) });
   if ((s.chips || []).length >= 3) t.push({ typ:"w", chips: s.chips.slice(0, 4) });
+  (d.begriffe || []).slice(0, 3).forEach(([b, e]) => t.push({ typ:"begriff", titel:b, text:e, erster:false }));
   // Reihenfolge mischt Fotos und Grafiken gut durch: Zahlen früh, Vergleich spät
   return t;
 }
@@ -1788,28 +2696,34 @@ function regie(s){
   if (s.ort) bilder.push({ typ:"karte", ort:s.ort });
   if (s.typ === "intro" || s.typ === "outro") return Array.from({ length:n }, () => ({ typ:"logo" }));
   if (s.typ === "unklar") return (s.saetze || []).map(x => ({ typ:"unklar", text:x }));
+  if (s.typ === "vergleich") return (s.saetze || []).map(() => ({ typ:"vergleich",
+    einigText:s.einigText, offenText:s.offenText, medienZahl:s.medienZahl, medienNamen:s.medienNamen }));
   if (s.typ === "begriff") return (s.saetze || []).map((x, i) => ({ typ:"begriff", titel:s.titel, text:x, erster:i === 0 }));
   if (s.typ === "wetter") return (s.saetze || []).map((_, i) => ({ typ:"wetter", w:s.wetter, tag: i === 0 ? "heute" : "morgen" }));
   const tafeln = tafelnBauen(s);
   const shots = [];
+  // Lange Kapitel wie in einer Doku: überwiegend Bild mit ruhiger Kamerafahrt,
+  // dazwischen immer wieder eine Grafik. Kurze Meldungen wechseln schneller.
+  const rhythmus = n > 20 ? 4 : 2;
   let bi = 0, ti = 0;
   for (let i = 0; i < n; i++){
-    const bildDran = bilder.length && (i % 2 === 0 || ti >= tafeln.length);
-    if (bildDran) shots.push(bilder[bi++ % bilder.length]);
-    else if (ti < tafeln.length) shots.push(tafeln[ti++]);
+    if (s.kapitelKarte && i === 0){ shots.push({ typ:"titel", titel:s.titel, rubrik:s.rubrik }); continue; }
+    const tafelDran = tafeln.length && (i % rhythmus === rhythmus - 1 || !bilder.length);
+    if (tafelDran) shots.push(tafeln[ti++ % tafeln.length]);
+    else if (bilder.length) shots.push(bilder[bi++ % bilder.length]);
     else shots.push({ typ:"titel", titel:s.titel, rubrik:s.rubrik, eil:s.eil });
   }
   return shots;
 }
 
 /* ---------- Bildtafeln zeichnen ---------- */
-const GRAFIK = new Set(["zahl","zitat","zeit","einig","medien","w","unklar","begriff","titel","wetter"]);
+const GRAFIK = new Set(["zahl","zitat","zeit","einig","medien","w","unklar","vergleich","begriff","titel","wetter"]);
 function tafelHTML(sh, s){
   const band = s.titel ? `<div class="tf-band">${esc(s.titel)}</div>` : "";
   if (sh.typ === "zahl") return `<div class="tf auf"><div class="tf-kopf">Die Zahlen dazu</div>
     <div class="tf-zahlen">${sh.werte.map(([k, v]) => `<div><b class="${String(v).length > 11 ? "lang" : ""}">${esc(v)}</b><span>${esc(k)}</span></div>`).join("")}</div>${band}</div>`;
   if (sh.typ === "zitat") return `<div class="tf auf tf-zitat"><div class="tf-kopf">Was gesagt wurde</div>
-    <blockquote>${esc(sh.was)}</blockquote>
+    <blockquote>${esc(String(sh.was).length > 210 ? String(sh.was).slice(0, 205).replace(/\s+\S*$/, "") + " …" : sh.was)}</blockquote>
     <div class="tf-wer">${esc(sh.wer)}${sh.quelle ? `<span>berichtet von ${esc(sh.quelle)}</span>` : ""}</div>${band}</div>`;
   if (sh.typ === "zeit") return `<div class="tf auf"><div class="tf-kopf">So kam es dazu</div>
     <ol class="tf-zeit">${sh.eintraege.map(([d, e]) => `<li><b>${esc(d)}</b><span>${esc(e)}</span></li>`).join("")}</ol>${band}</div>`;
@@ -1821,11 +2735,16 @@ function tafelHTML(sh, s){
     <div class="tf-w">${sh.chips.map(([k, v]) => `<div><b>${esc(k)}</b><span>${esc(v)}</span></div>`).join("")}</div>${band}</div>`;
   if (sh.typ === "unklar") return `<div class="tf auf tf-warn"><div class="tf-kopf">Noch unklar</div>
     <p class="tf-gross">${esc(sh.text)}</p>${band}</div>`;
+  if (sh.typ === "vergleich") return `<div class="tf auf tf-vgl">
+    <div class="tf-kopf">${sh.medienZahl >= 2 ? esc(sh.medienZahl + " Medien verglichen") : "Die Berichte im Vergleich"}</div>
+    <div class="tf-vgl-gitter">
+      ${sh.einigText ? `<div class="vgl-teil einig"><b>Darin einig</b><span>${esc(sh.einigText)}</span></div>` : ""}
+      ${sh.offenText ? `<div class="vgl-teil offen"><b>Noch offen</b><span>${esc(sh.offenText)}</span></div>` : ""}
+    </div>
+    ${(sh.medienNamen || []).length ? `<div class="vgl-wer">${sh.medienNamen.slice(0,5).map(m => `<i>${esc(m)}</i>`).join("")}</div>` : ""}</div>`;
   if (sh.typ === "begriff") return `<div class="tf auf"><div class="tf-kopf">Begriff erklärt</div>
     <div class="tf-begriff">${esc(sh.titel)}</div>${sh.erster ? "" : `<p class="tf-gross">${esc(sh.text)}</p>`}</div>`;
-  if (sh.typ === "logo") return `<div class="tf tf-mitte"><div class="tf-logo">Nachrichten-Heft<span>· neutral</span><i></i></div></div>`;
-  return `<div class="tf auf"><div class="tf-kopf">${esc(sh.rubrik || "Thema")}</div>
-    <div class="tf-titel">${esc(sh.titel || "")}</div></div>`;
+  return "";   // Logo- und Themen-Tafel: die Kopfzeile unten trägt Rubrik und Titel
 }
 // Lädt ein Foto nicht, tritt an seine Stelle eine Grafiktafel – nie eine leere Fläche
 function fotoFehlt(img){
@@ -1837,6 +2756,31 @@ function fotoFehlt(img){
   bild.innerHTML = tafelHTML(ersatz, s);
   const inhalt = document.querySelector("#player .pl-inhalt");
   if (inhalt) inhalt.hidden = ersatz.typ !== "titel";
+}
+// Eigener Vorspann: Gitter, Globus, Ringe im Takt der Musik. Alles selbst gezeichnet.
+function openerHTML(art){
+  const w = art === "wissen";
+  const meridiane = [0.18, 0.45, 0.75, 1].map((f, i) =>
+    `<ellipse class="op-mer op-mer${i}" cx="0" cy="0" rx="${(f * 86).toFixed(0)}" ry="86"/>`).join("");
+  const breiten = [-58, -30, 0, 30, 58].map(y =>
+    `<ellipse cx="0" cy="${y}" rx="${Math.sqrt(Math.max(0, 86 * 86 - y * y)).toFixed(0)}" ry="${(Math.abs(y) / 5 + 4).toFixed(0)}"/>`).join("");
+  return `<div class="opener ${w ? "opener-w" : "opener-n"}" aria-hidden="true">
+    <div class="op-gitter"></div>
+    <svg class="op-svg" viewBox="-140 -140 280 280">
+      <g class="op-ringe">
+        ${[0, 1, 2, 3].map(i => `<circle class="op-ring op-ring${i}" cx="0" cy="0" r="86"/>`).join("")}
+      </g>
+      <g class="op-globus">
+        <circle class="op-kugel" cx="0" cy="0" r="86"/>
+        <g class="op-netz">${breiten}${meridiane}</g>
+      </g>
+      <g class="op-marken">
+        ${Array.from({ length: 24 }, (_, i) => `<rect class="op-marke" x="-1" y="-124" width="2" height="${i % 6 === 0 ? 14 : 7}"
+          transform="rotate(${i * 15})"/>`).join("")}
+      </g>
+    </svg>
+    <div class="op-blitz"></div>
+  </div>`;
 }
 function shotZeigen(neuesSegment){
   const el = document.getElementById("player"); if (!el) return;
@@ -1850,6 +2794,7 @@ function shotZeigen(neuesSegment){
   const grafik = GRAFIK.has(sh.typ) || sh.typ === "logo";
   const inhalt = el.querySelector(".pl-inhalt");
   if (inhalt) inhalt.hidden = (grafik && sh.typ !== "logo" && sh.typ !== "titel") || sh.typ === "wetter";
+  if (inhalt) inhalt.classList.toggle("gross", sh.typ === "logo" || sh.typ === "titel");
   bild.className = "pl-bild " + (sh.typ === "foto" ? "foto" : (sh.typ === "karte" || sh.typ === "wetter") ? "karte-hg" : "tafel-flaeche")
     + (sh.typ === "unklar" ? " gelb" : "") + (s.eil && s.typ === "thema" && sh.typ === "titel" ? " rot" : "");
   bild.classList.remove("wechsel"); void bild.offsetWidth; bild.classList.add("wechsel");
@@ -1862,13 +2807,17 @@ function shotZeigen(neuesSegment){
       ${b.bildunterschrift ? `<span class="pl-bu">${esc(b.bildunterschrift)}</span>` : ""}`;
   } else if (sh.typ === "wetter"){
     bild.innerHTML = wetterKarteSVG(sh.w, sh.tag)
-      + `<div class="tf auf tf-karte"><div class="tf-kopf">Das Wetter · ${sh.tag === "heute" ? "heute" : "morgen, " + esc(sh.w.morgenTag)}</div>
-         <div class="tf-band">Wetterdaten: ${esc(sh.w.quelle)} · Karte: GeoBasis-DE / BKG (dl-de/by-2-0)</div></div>`;
+      + `<div class="tf auf tf-karte"><div class="tf-kopf">Das Wetter · ${sh.tag === "heute" ? "heute" : "morgen, " + esc(sh.w.morgenTag)}</div></div>
+         <span class="w-quelle">Wetterdaten: ${esc(sh.w.quelle)} · Karte: GeoBasis-DE / BKG (dl-de/by-2-0) · Farbflächen zwischen den Messpunkten berechnet</span>`;
   } else if (sh.typ === "karte"){
     bild.innerHTML = karteSVG(sh.ort, 56, 31.5, true, 0.64, 0.42)
       + `<div class="tf auf tf-karte"><div class="tf-kopf">Wo ist das passiert?</div>
          <div class="tf-ortname">${esc(sh.ort.name)}</div>
          <div class="tf-band">Karte: eigene Darstellung, Daten von Natural Earth</div></div>`;
+  } else if (sh.typ === "logo"){
+    bild.innerHTML = openerHTML(PLAYER.format === "wissen" ? "wissen" : "nachrichten")
+      + (s.typ === "outro" ? "" : "");
+    if (s.typ === "outro") bild.querySelector(".opener")?.classList.add("opener-ende");
   } else {
     bild.innerHTML = tafelHTML(sh, s);
   }
@@ -1879,17 +2828,61 @@ function untertitel(){
   const ut = el.querySelector(".pl-ut");
   ut.textContent = PLAYER.untertitel ? ((s.saetze || [])[PLAYER.ti] || "") : "";
   ut.hidden = !PLAYER.untertitel || !ut.textContent;
+  const buehne = el.querySelector(".pl-buehne");
+  buehne?.classList.toggle("mit-ut", !ut.hidden);
+  // Wie hoch der Untertitel wirklich ist, hängt von der Satzlänge ab. Statt zu raten
+  // messen wir ihn und heben den Inhalt genau so weit an – sonst überlappt beides.
+  if (buehne){
+    requestAnimationFrame(() => {
+      const h = ut.hidden ? 0 : Math.round(ut.getBoundingClientRect().height);
+      buehne.style.setProperty("--ut-hoehe", h ? h + 8 + "px" : "0px");
+    });
+  }
 }
 function zeigenTeil(){ untertitel(); shotZeigen(); }
 function knoepfe(){
   const el = document.getElementById("player"); if (!el) return;
-  el.querySelector('[data-a="play"]').textContent = PLAYER.spielt ? "⏸" : "▶";
-  el.querySelector('[data-a="ton"]').textContent = PLAYER.stumm ? "🔇" : "🔊";
-  el.querySelector('[data-a="ut"]').style.opacity = PLAYER.untertitel ? 1 : .5;
-  const st = el.querySelector(".pl-start"); if (st) st.hidden = PLAYER.spielt || PLAYER.si > 0 || PLAYER.ti > 0;
+  const play = el.querySelector('[data-a="play"]');
+  play.innerHTML = PLAYER.spielt ? SYM.pause : (PLAYER.fertig ? SYM.neu : SYM.play);
+  play.setAttribute("aria-label", PLAYER.spielt ? "Pause" : PLAYER.fertig ? "Noch einmal abspielen" : "Abspielen");
+  const ton = el.querySelector('[data-a="ton"]');
+  ton.innerHTML = PLAYER.stumm ? SYM.stumm : SYM.ton;
+  ton.classList.toggle("aus", PLAYER.stumm);
+  ton.setAttribute("aria-label", PLAYER.stumm ? "Ton an" : "Ton aus");
+  const ut = el.querySelector('[data-a="ut"]');
+  ut.classList.toggle("an", PLAYER.untertitel);
+  ut.setAttribute("aria-label", PLAYER.untertitel ? "Untertitel aus" : "Untertitel an");
+  const st = el.querySelector(".pl-start");
+  if (st){
+    st.hidden = PLAYER.spielt;
+    st.innerHTML = PLAYER.fertig ? SYM.neu : SYM.play;
+    st.setAttribute("aria-label", PLAYER.fertig ? "Noch einmal abspielen" : "Video starten");
+  }
+  el.querySelector(".pl-fortschritt")?.querySelectorAll("i").forEach((k, i) => {
+    k.className = i < PLAYER.si ? "fertig" : i === PLAYER.si ? "jetzt" : "";
+  });
+  zeitAnzeigen();
 }
+const mmss = sek => `${Math.floor(sek / 60)}:${String(Math.max(0, Math.round(sek % 60))).padStart(2, "0")}`;
+function zeitAnzeigen(){
+  const el = document.getElementById("player"); if (!el) return;
+  const z = el.querySelector(".pl-zeit"); if (!z) return;
+  const dauern = PLAYER.segs.map(x => { const e = tonEintrag(x); return e ? e.l : Math.max(2, (x.saetze || []).join(" ").split(/\s+/).filter(Boolean).length / 2.5 + 1); });
+  const gesamt = dauern.reduce((a, b) => a + b, 0);
+  let bisher = dauern.slice(0, PLAYER.si).reduce((a, b) => a + b, 0);
+  const e = tonEintrag(PLAYER.segs[PLAYER.si]);
+  if (e && AUDIO && !AUDIO.paused) bisher += AUDIO.currentTime;
+  else if (PLAYER.ti) bisher += dauern[PLAYER.si] * (PLAYER.ti / Math.max(1, (PLAYER.segs[PLAYER.si].saetze || []).length));
+  z.textContent = `${mmss(Math.min(bisher, gesamt))} / ${mmss(gesamt)}`;
+}
+// Jeder Start bekommt eine Nummer. Alles, was später zurückkommt und eine alte Nummer trägt,
+// wird verworfen – sonst reden zwei Abschnitte gleichzeitig, wenn man schnell weiterspringt.
+const gueltig = lauf => PLAYER.spielt && PLAYER.lauf === lauf;
 function stopp(){
-  PLAYER.spielt = false; clearTimeout(PLAYER.timer); tickerStopp();
+  PLAYER.spielt = false; PLAYER.lauf++;
+  clearTimeout(PLAYER.timer); clearInterval(PLAYER.wache); tickerStopp();
+  wachHalten(false);
+  try { if ("mediaSession" in navigator) navigator.mediaSession.playbackState = "paused"; } catch {}
   try { speechSynthesis.cancel(); } catch {}
   tonAus();
   knoepfe();
@@ -1899,18 +2892,81 @@ function tonAus(){
   AUDIO.ontimeupdate = null; AUDIO.onended = null; AUDIO.onerror = null;
   try { AUDIO.pause(); } catch {}
 }
+// ---- Sperrbildschirm, Kopfhörer, Auto ----
+// Solange eine echte Aufnahme läuft, zeigt das Handy Titel und Tasten an,
+// auch wenn der Bildschirm aus ist. Ohne das ist die App im Hintergrund blind.
+function medienSitzung(){
+  if (!("mediaSession" in navigator)) return;
+  const s = PLAYER.segs[PLAYER.si]; if (!s) return;
+  const f = FORMATE[PLAYER.format] || {};
+  const bild = (s.bilder || []).find(b => b && b.url);
+  const symbol = new URL("icon-512.png", location.href).href;
+  // Beim Vorspann steht der Sendungsname oben, sonst die Schlagzeile.
+  const istRahmen = s.typ === "intro" || s.typ === "outro";
+  try {
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: istRahmen ? (f.name || "Nachrichten-Heft") : (s.titel || f.name || "Nachrichten-Heft"),
+      artist: istRahmen ? "Nachrichten-Heft · neutral" : (f.name || "Nachrichten-Heft"),
+      album: "Nachrichten-Heft · neutral",
+      artwork: [
+        ...(bild ? [{ src: bild.url, sizes: "512x512", type: "image/jpeg" }] : []),
+        { src: symbol, sizes: "512x512", type: "image/png" }
+      ]
+    });
+  } catch {}
+  try {
+    navigator.mediaSession.playbackState = PLAYER.spielt ? "playing" : "paused";
+    const setz = (a, fn) => { try { navigator.mediaSession.setActionHandler(a, fn); } catch {} };
+    setz("play",  () => { if (!PLAYER.spielt) abspielen(); });
+    setz("pause", () => { if (PLAYER.spielt) stopp(); });
+    setz("stop",  () => stopp());
+    setz("nexttrack",     () => springen(PLAYER.si + 1));
+    setz("previoustrack", () => springen(PLAYER.si - 1));
+    setz("seekforward",   () => springen(PLAYER.si + 1));
+    setz("seekbackward",  () => springen(PLAYER.si - 1));
+  } catch {}
+}
+// Der Bildschirm soll während einer Sendung nicht einschlafen.
+let WACH = null;
+async function wachHalten(an){
+  try {
+    if (an){
+      if (!WACH && navigator.wakeLock?.request) WACH = await navigator.wakeLock.request("screen");
+    } else if (WACH){ await WACH.release(); WACH = null; }
+  } catch { WACH = null; }
+}
+addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible" && PLAYER.spielt) wachHalten(true);
+});
 function abspielen(){
   if (!PLAYER.segs.length) return;
-  PLAYER.spielt = true; knoepfe();
+  PLAYER.spielt = true;
+  wachHalten(true); medienSitzung();
+  if (PLAYER.fertig){ PLAYER.fertig = false; PLAYER.si = 0; PLAYER.ti = 0; PLAYER.melodieGespielt = false; zeigen(); }
+  knoepfe();
   if (!PLAYER.stumm) tickerStart();
   const s = PLAYER.segs[PLAYER.si];
+  const lauf = ++PLAYER.lauf;
   let warten = 0;
-  if (!PLAYER.stumm && PLAYER.ti === 0 && !PLAYER.melodieGespielt && s.typ === "intro"){ warten = melodie(); PLAYER.melodieGespielt = true; }
+  if (!PLAYER.stumm && PLAYER.ti === 0 && !PLAYER.melodieGespielt && s.typ === "intro"){
+    warten = PLAYER.format === "wissen" ? wissenMelodie() : melodie();
+    PLAYER.melodieGespielt = true;
+  }
   else if (!PLAYER.stumm && PLAYER.ti === 0 && s.eil && s.typ === "thema" && PLAYER.letzteEil !== s.id){ warten = eilSignal(); PLAYER.letzteEil = s.id; }
-  if (warten > 0){ clearTimeout(PLAYER.timer); PLAYER.timer = setTimeout(() => { if (PLAYER.spielt) losSprechen(); }, warten * 1000); }
-  else losSprechen();
+  if (warten > 0){
+    clearTimeout(PLAYER.timer);
+    PLAYER.timer = setTimeout(() => { if (gueltig(lauf)) losSprechen(); }, warten * 1000);
+  } else losSprechen();
 }
-// nächstes Thema: kurze Atempause, Übergangsgeräusch, dann weiter
+function springen(ziel){
+  const lief = PLAYER.spielt;
+  stopp();
+  PLAYER.si = Math.max(0, Math.min(PLAYER.segs.length - 1, ziel));
+  PLAYER.ti = 0; PLAYER.fertig = false;
+  PLAYER.spielt = lief;
+  zeigen();
+  if (lief) losSprechen(); else knoepfe();
+}
 function naechstesSegment(){
   if (!PLAYER.spielt) return;
   tonAus();
@@ -1918,57 +2974,83 @@ function naechstesSegment(){
   if (PLAYER.si >= PLAYER.segs.length){
     PLAYER.si = PLAYER.segs.length - 1;
     PLAYER.ti = Math.max(0, (PLAYER.segs[PLAYER.si].saetze || []).length - 1);
-    stopp(); return;
+    PLAYER.fertig = true;
+    stopp();
+    return;
   }
   const n = PLAYER.segs[PLAYER.si];
   if (!PLAYER.stumm && n.eil && n.typ === "thema" && PLAYER.letzteEil !== n.id){ PLAYER.letzteEil = n.id; eilSignal(); }
-  uebergang();
+  if (!PLAYER.stumm && n.typ === "outro") schlussKlang(); else uebergang();
+  const lauf = ++PLAYER.lauf;
   clearTimeout(PLAYER.timer);
-  PLAYER.timer = setTimeout(() => { if (!PLAYER.spielt) return; zeigen(); losSprechen(); }, 820);
-}
-function naechsterSatz(){
-  if (!PLAYER.spielt) return;
-  const s = PLAYER.segs[PLAYER.si];
-  PLAYER.ti++;
-  if (PLAYER.ti >= (s.saetze || []).length) return naechstesSegment();
-  zeigenTeil();
-  geraetSprechen(s);
+  PLAYER.timer = setTimeout(() => { if (!gueltig(lauf)) return; zeigen(); losSprechen(); }, 820);
 }
 function losSprechen(){
   if (!PLAYER.spielt) return;
+  const lauf = ++PLAYER.lauf;
   const s = PLAYER.segs[PLAYER.si];
-  zeigenTeil();
-  if (!(s.saetze || []).length){   // stille Kapiteltafel
+  zeigenTeil(); knoepfe(); medienSitzung();
+  if (!(s.saetze || []).length){          // stille Kapiteltafel
     clearTimeout(PLAYER.timer);
-    PLAYER.timer = setTimeout(naechstesSegment, (s.standzeit || 2.6) * 1000);
+    PLAYER.timer = setTimeout(() => { if (gueltig(lauf)) naechstesSegment(); }, (s.standzeit || 2.6) * 1000);
     return;
   }
-  const e = tonEintrag(s);
-  if (e && AUDIO) tonSprechen(s, e); else geraetSprechen(s);
+  clearInterval(PLAYER.wache);
+  let e = null;
+  try { e = tonEintrag(s); } catch { e = null; }
+  try {
+    if (e && AUDIO) tonSprechen(s, e, lauf); else geraetSprechen(s, lauf);
+  } catch (err) {
+    // Letzte Sicherung: lieber stumm weiterlaufen als für immer stehen bleiben.
+    console.warn("Abschnitt konnte nicht gesprochen werden:", err && err.message);
+    clearTimeout(PLAYER.timer);
+    PLAYER.timer = setTimeout(() => { if (gueltig(lauf)) naechstesSegment(); },
+      Math.max(2500, ((s.saetze || []).join(" ").split(/\s+/).length) * 380));
+  }
 }
-// echte Sprecherstimme: eine Aufnahme je Abschnitt, Untertitel laufen mit
-function tonSprechen(s, e){
-  try { speechSynthesis.cancel(); } catch {}
-  const url = tonBasis() + e.d;
-  const start = (e.s && e.s[PLAYER.ti] != null) ? e.s[PLAYER.ti] : 0;
-  AUDIO.ontimeupdate = null; AUDIO.onended = null; AUDIO.onerror = null;
-  if (AUDIO.getAttribute("src") !== url){ AUDIO.setAttribute("src", url); AUDIO.load(); }
-  const anSeineStelle = () => { try { if (Math.abs(AUDIO.currentTime - start) > 0.3) AUDIO.currentTime = start; } catch {} };
-  if (AUDIO.readyState >= 1) anSeineStelle(); else AUDIO.addEventListener("loadedmetadata", anSeineStelle, { once:true });
-  AUDIO.muted = PLAYER.stumm;
-  AUDIO.ontimeupdate = () => {
-    if (!PLAYER.spielt || !e.s) return;
-    let i = 0;
-    while (i + 1 < e.s.length && AUDIO.currentTime >= e.s[i + 1] - 0.06) i++;
-    if (i !== PLAYER.ti){ PLAYER.ti = i; zeigenTeil(); }
-  };
-  AUDIO.onended = () => { if (PLAYER.spielt) naechstesSegment(); };
-  AUDIO.onerror = () => { if (PLAYER.spielt){ tonAus(); geraetSprechen(s); } };
-  const versuch = AUDIO.play();
-  if (versuch && versuch.catch) versuch.catch(() => { if (PLAYER.spielt){ tonAus(); geraetSprechen(s); } });
+// echte Sprecherstimme: eine Aufnahme je Abschnitt, Untertitel und Bilder laufen mit
+function tonSprechen(s, e, lauf){
+  const umschalten = () => { if (gueltig(lauf)) geraetSprechen(s, lauf); };
+  // Auch hier gilt: erst die Notbremse stellen, dann erst probieren.
   clearTimeout(PLAYER.timer);
-  PLAYER.timer = setTimeout(() => { if (PLAYER.spielt && AUDIO.paused){ tonAus(); geraetSprechen(s); } }, 6000);
-  tonVorladen(PLAYER.si + 1);
+  PLAYER.timer = setTimeout(() => { if (gueltig(lauf) && (!AUDIO || AUDIO.paused)) umschalten(); }, 5000);
+  try {
+    try { speechSynthesis.cancel(); } catch {}
+    const url = tonBasis() + e.d;
+    const start = (e.s && e.s[PLAYER.ti] != null) ? e.s[PLAYER.ti] : 0;
+    tonAus();
+    if (AUDIO.getAttribute("src") !== url){ AUDIO.setAttribute("src", url); AUDIO.load(); }
+    const anSeineStelle = () => { try { if (Math.abs(AUDIO.currentTime - start) > 0.3) AUDIO.currentTime = start; } catch {} };
+    if (AUDIO.readyState >= 1) anSeineStelle(); else AUDIO.addEventListener("loadedmetadata", anSeineStelle, { once:true });
+    AUDIO.muted = PLAYER.stumm;
+    // Wachhund: bleibt der Ton hängen (Funkloch, Datei bricht ab), geht es trotzdem weiter.
+    let zuletzt = -1, steht = 0;
+    clearInterval(PLAYER.wache);
+    PLAYER.wache = setInterval(() => {
+      if (!gueltig(lauf) || !AUDIO){ clearInterval(PLAYER.wache); return; }
+      if (AUDIO.paused){ steht = 0; zuletzt = -1; return; }
+      if (Math.abs(AUDIO.currentTime - zuletzt) < 0.05){
+        if (++steht >= 6){ clearInterval(PLAYER.wache); umschalten(); }
+      } else { steht = 0; }
+      zuletzt = AUDIO.currentTime;
+    }, 1000);
+    AUDIO.ontimeupdate = () => {
+      if (!gueltig(lauf) || !e.s) return;
+      let i = 0;
+      while (i + 1 < e.s.length && AUDIO.currentTime >= e.s[i + 1] - 0.06) i++;
+      if (i !== PLAYER.ti){ PLAYER.ti = i; zeigenTeil(); }
+      zeitAnzeigen();
+    };
+    AUDIO.onended = () => { clearInterval(PLAYER.wache); if (gueltig(lauf)) naechstesSegment(); };
+    AUDIO.onerror = umschalten;
+    AUDIO.onstalled = () => { if (gueltig(lauf) && AUDIO.readyState < 2) umschalten(); };
+    const versuch = AUDIO.play();
+    if (versuch && versuch.catch) versuch.catch(umschalten);
+    tonVorladen(PLAYER.si + 1);
+  } catch (err) {
+    console.warn("Tonaufnahme nicht abspielbar:", err && err.message);
+    umschalten();
+  }
 }
 function tonVorladen(i){
   const s = PLAYER.segs[i]; if (!s) return;
@@ -1976,51 +3058,126 @@ function tonVorladen(i){
   try { fetch(tonBasis() + e.d, { cache:"force-cache" }).catch(() => {}); } catch {}
 }
 // Rückfallebene: Vorlesestimme des Geräts, Satz für Satz
-function geraetSprechen(s){
-  if (!PLAYER.spielt) return;
+function geraetSprechen(s, lauf){
+  if (!gueltig(lauf)) return;
+  tonAus();
   const satz = (s.saetze || [])[PLAYER.ti] || "";
   const lesezeit = Math.max(1800, satz.split(/\s+/).length * 400);
-  if (PLAYER.stumm || !("speechSynthesis" in window)){
-    clearTimeout(PLAYER.timer); PLAYER.timer = setTimeout(naechsterSatz, lesezeit + 500); return;
-  }
-  const v = stimmeWaehlen();
-  const grundTempo = FORMATE[PLAYER.format]?.rate || 0.9;
-  const teile = sprechTeile(satz);
+  const weiter = () => {
+    if (!gueltig(lauf)) return;
+    PLAYER.ti++;
+    if (PLAYER.ti >= (s.saetze || []).length) return naechstesSegment();
+    zeigenTeil();
+    geraetSprechen(s, lauf);
+  };
   let fertig = false;
-  const ende = () => { if (fertig) return; fertig = true; clearTimeout(PLAYER.timer); PLAYER.timer = setTimeout(naechsterSatz, 420); };
-  speechSynthesis.cancel();
-  teile.forEach((teil, i) => {
-    const u = new SpeechSynthesisUtterance(teil);
-    u.lang = "de-DE"; if (v) u.voice = v;
-    u.rate = grundTempo + (i % 2 ? 0.03 : -0.02) + (PLAYER.ti % 3) * 0.01;
-    u.pitch = 0.94 + (i === teile.length - 1 ? -0.04 : 0.02);
-    u.volume = 1;
-    if (i === teile.length - 1){ u.onend = ende; u.onerror = ev => { if (ev.error !== "interrupted" && ev.error !== "canceled") ende(); } }
-    speechSynthesis.speak(u);
-  });
-  clearTimeout(PLAYER.timer); PLAYER.timer = setTimeout(ende, lesezeit * 2.6 + 3500);
+  const ende = () => {
+    if (fertig || !gueltig(lauf)) return;
+    fertig = true;
+    clearTimeout(PLAYER.timer);
+    PLAYER.timer = setTimeout(weiter, 420);
+  };
+  // Die Notbremse wird IMMER zuerst gestellt. Egal was beim Vorlesen schiefgeht –
+  // spätestens danach geht es weiter. Vorher stand das Video hier für immer still.
+  const nurLesen = PLAYER.stumm || !("speechSynthesis" in window) || typeof SpeechSynthesisUtterance !== "function";
+  clearTimeout(PLAYER.timer);
+  PLAYER.timer = setTimeout(nurLesen ? weiter : ende, nurLesen ? lesezeit + 500 : lesezeit * 2.6 + 3500);
+  if (nurLesen) return;
+
+  try {
+    const v = stimmeWaehlen();
+    const grundTempo = FORMATE[PLAYER.format]?.rate || 0.9;
+    const teile = sprechTeile(satz);
+    try { speechSynthesis.cancel(); } catch {}
+    teile.forEach((teil, i) => {
+      const u = new SpeechSynthesisUtterance(teil);
+      u.lang = "de-DE"; if (v) u.voice = v;
+      u.rate = grundTempo + (i % 2 ? 0.03 : -0.02) + (PLAYER.ti % 3) * 0.01;
+      u.pitch = 0.94 + (i === teile.length - 1 ? -0.04 : 0.02);
+      u.volume = 1;
+      if (i === teile.length - 1){ u.onend = ende; u.onerror = ev => { if (ev.error !== "interrupted" && ev.error !== "canceled") ende(); } }
+      speechSynthesis.speak(u);
+    });
+  } catch (e) {
+    // Vorlesen klappt auf diesem Gerät nicht – dann eben still weiterlaufen.
+    console.warn("Vorlesestimme nicht verfügbar:", e && e.message);
+    clearTimeout(PLAYER.timer);
+    PLAYER.timer = setTimeout(weiter, lesezeit + 500);
+  }
 }
 function steuern(a){
   const P = PLAYER;
   if (a === "play") return P.spielt ? stopp() : abspielen();
-  if (a === "weiter" || a === "zurueck"){
-    const lief = P.spielt; stopp();
-    P.si = Math.max(0, Math.min(P.segs.length - 1, P.si + (a === "weiter" ? 1 : -1))); P.ti = 0;
-    P.spielt = lief;
-    zeigen(); if (lief) losSprechen(); else knoepfe(); return;
+  if (a === "weiter") return springen(P.si + 1);
+  if (a === "zurueck"){
+    // wie bei jedem Abspielgerät: erst an den Anfang des Abschnitts, beim zweiten Tippen zurück
+    const weitDrin = P.ti > 0 || (AUDIO && !AUDIO.paused && AUDIO.currentTime > 3);
+    return springen(weitDrin ? P.si : P.si - 1);
   }
   if (a === "ton"){
     P.stumm = !P.stumm;
     if (AUDIO) AUDIO.muted = P.stumm;
-    if (P.stumm){ try { speechSynthesis.cancel(); } catch {} if (AUDIO && !AUDIO.paused){ knoepfe(); return; } }
-    const lief = P.spielt; stopp(); P.spielt = lief;
-    if (lief) losSprechen(); else knoepfe();
+    if (P.stumm){ try { speechSynthesis.cancel(); } catch {} tickerStopp(); }
+    else if (P.spielt) tickerStart();
+    // die Vorlesestimme kann man nicht stummschalten, also den Abschnitt neu starten
+    if (P.spielt && !(AUDIO && !AUDIO.paused)){ const i = P.si; springen(i); return; }
+    knoepfe();
     return;
   }
   if (a === "ut"){ P.untertitel = !P.untertitel; untertitel(); knoepfe(); return; }
-  if (a === "voll"){
-    const b = document.querySelector("#player .pl-buehne");
-    if (document.fullscreenElement) document.exitFullscreen(); else (b.requestFullscreen || b.webkitRequestFullscreen)?.call(b);
+  if (a === "voll") return vollbild();
+}
+function vollbild(){
+  const el = document.getElementById("player"); if (!el) return;
+  if (el.classList.contains("voll")) return vollbildBeenden();
+
+  // Das echte Vollbild gilt dem ganzen Spieler, nicht nur der Bühne – sonst wären
+  // die Bedienknöpfe weg. Klappt es nicht (Apple), reicht unser eigenes völlig.
+  const echt = el.requestFullscreen || el.webkitRequestFullscreen;
+  if (echt){
+    try { const p = echt.call(el); if (p && p.catch) p.catch(() => {}); } catch {}
+  }
+  // Auf Android lässt sich der Bildschirm wirklich drehen. Apple ignoriert das still.
+  try { screen.orientation?.lock?.("landscape")?.catch?.(() => {}); } catch {}
+  el.classList.add("voll");
+  drehungPruefen();
+  addEventListener("resize", drehungPruefen);
+  vollKnopf();
+}
+function vollbildBeenden(){
+  const el = document.getElementById("player");
+  removeEventListener("resize", drehungPruefen);
+  try { screen.orientation?.unlock?.(); } catch {}
+  if (document.fullscreenElement){ try { document.exitFullscreen().catch(() => {}); } catch {} }
+  if (el){ el.classList.remove("voll", "gedreht"); el.querySelector(".pl-drehhinweis")?.remove(); }
+  vollKnopf();
+}
+// Handy hochkant, Video im Querformat? Dann drehen wir das Bild, statt es zu quetschen.
+function drehungPruefen(){
+  const el = document.getElementById("player"); if (!el || !el.classList.contains("voll")) return;
+  const buehne = el.querySelector(".pl-buehne");
+  const querFormat = buehne && !buehne.classList.contains("hoch");
+  const hochGehalten = innerHeight > innerWidth * 1.08;
+  const drehen = !!(querFormat && hochGehalten);
+  if (drehen === el.classList.contains("gedreht")) return;
+  el.classList.toggle("gedreht", drehen);
+  el.querySelector(".pl-drehhinweis")?.remove();
+  if (drehen){
+    const h = document.createElement("div");
+    h.className = "pl-drehhinweis";
+    h.textContent = "Handy quer halten";
+    buehne.appendChild(h);
+  }
+  shotZeigen(true);
+}
+function vollKnopf(){
+  const el = document.getElementById("player"); if (!el) return;
+  const an = el.classList.contains("voll");
+  const k = el.querySelector('[data-a="voll"]');
+  if (k){
+    k.innerHTML = an ? SYM.vollAus : SYM.voll;
+    k.setAttribute("aria-label", an ? "Vollbild beenden" : "Vollbild");
+    k.classList.toggle("an", an);
   }
 }
 if ("speechSynthesis" in window) speechSynthesis.onvoiceschanged = () => {};
@@ -2033,10 +3190,20 @@ function sendungsLeiste(){
     <div class="vreihe">${heutige.map(a => `<a class="vkarte sendung" href="#/video/ausgabe/${esc(a.id)}">
       <span class="vk-text"><b>▶ ${esc(a.name)}</b><small>${esc(berlin(new Date(a.zeit), { hour:"2-digit", minute:"2-digit" }))} Uhr · ${a.anzahl} Themen</small></span></a>`).join("")}</div></section>`;
 }
+function kurzvideoLeiste(){
+  const segs = segmenteBauen("kurzvideo");
+  if (segs.length < 3) return "";
+  const b = segs.find(x => x.bilder?.length)?.bilder[0];
+  return `<a class="kurzvideo-band" href="#/video/kurzvideo">
+    <span class="kv-hoch">${b?.url ? `<img src="${esc(b.url)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : ""}
+      <i class="kv-play">▶</i></span>
+    <span class="kv-text"><b>Kurzvideos</b><small>${segs.length} Themen in einfacher Sprache · hochwischen fürs nächste</small></span>
+    <span class="kv-pfeil">›</span></a>`;
+}
 function videoLeiste(){
   const liste = [
     ["100s", "▶ Heft in 100 Sekunden"], ["haupt", "▶ Hauptausgabe"], ["einfach", "▶ Einfach erklärt"], ["kurzmeldungen", "▶ Kurzmeldungen"]
-  ].concat(WOCHE ? [["woche", "▶ Wochenrückblick"]] : []);
+  ].concat(wocheZeigen() ? [["woche", "▶ Wochenrückblick"]] : []);
   const karten = liste.map(([f, t]) => {
     const segs = segmenteBauen(f);
     if (segs.length < 3) return "";
@@ -2064,7 +3231,9 @@ function route(){
     else ladeJson(`data/ausgaben/${id}.json`).then(r => { AUSGABE_DATEN[id] = r.d; playerOeffnen("ausgabe", id); }).catch(() => playerOeffnen("ausgabe", id));
     return;
   }
-  if ((m = h.match(/^#\/video\/(100s|haupt|einfach|woche|kurzmeldungen|wetter)$/))) { if (!$app.innerHTML.trim() || $app.querySelector(".laden")) startseite("Alle"); playerOeffnen(m[1]); return; }
+  if ((m = h.match(/^#\/video\/(doku)\/(.+)$/))) { if (!$app.innerHTML.trim()) wissenSeite(); playerOeffnen("doku", m[2]); return; }
+  if ((m = h.match(/^#\/video\/(wissen)\/(.+)$/))) { if (!$app.innerHTML.trim()) wissenSeite(); playerOeffnen("wissen", m[2]); return; }
+  if ((m = h.match(/^#\/video\/(100s|haupt|einfach|woche|kurzmeldungen|wetter|kurzvideo)$/))) { if (!$app.innerHTML.trim() || $app.querySelector(".laden")) startseite("Alle"); playerOeffnen(m[1]); return; }
   if (document.getElementById("player")) { stopp(); document.getElementById("player").remove(); document.body.style.overflow = ""; }
   if ((m = h.match(/^#\/n\/(.+)$/))) detailSuchen(m[1]);
   else if ((m = h.match(/^#\/r\/(.+)$/))) startseite(RUBRIKEN.find(r => slug(r) === m[1]) || "Alle");
@@ -2073,10 +3242,14 @@ function route(){
   else if (h.startsWith("#/archiv")) archivSeite();
   else if (h.startsWith("#/eil")) eilSeite();
   else if ((m = h.match(/^#\/thema\/(.+)$/))) themenSeite(m[1]);
+  else if ((m = h.match(/^#\/doku\/(.+)$/))) dokuDetail(m[1]);
+  else if ((m = h.match(/^#\/wissen\/(.+)$/))) wissenDetail(m[1]);
+  else if (h.startsWith("#/wissen")) wissenSeite();
   else if (h.startsWith("#/medien")) medienSeite();
   else if (h.startsWith("#/merkliste")) merklisteSeite();
   else if (h.startsWith("#/story")) storySeite();
   else if (h.startsWith("#/videos")) videoSeite();
+  else if (h.startsWith("#/uneinig")) uneinigSeite();
   else if (h.startsWith("#/mehr")) mehrSeite();
   else startseite("Alle");
   window.scrollTo(0,0);
@@ -2087,6 +3260,7 @@ function tabsMarkieren(){
   const wo = h.startsWith("#/videos") || h.startsWith("#/video/") ? "videos"
     : h.startsWith("#/archiv") ? "archiv"
     : h.startsWith("#/merkliste") ? "merkliste"
+    : h.startsWith("#/wissen") || h.startsWith("#/doku") ? "wissen"
     : h.startsWith("#/mehr") || h.startsWith("#/eil") || h.startsWith("#/medien") ? "mehr" : "heft";
   document.querySelectorAll(".tableiste a").forEach(a => a.setAttribute("aria-current", a.dataset.t === wo ? "page" : "false"));
 }
@@ -2102,6 +3276,10 @@ $app.innerHTML = '<p class="laden">Nachrichten werden geladen …</p>';
 ladeJson("data/news.json").then(res => {
   datenUebernehmen(res); route(); introZeigen(false);
   ladeJson("data/woche.json").then(w => { WOCHE = w.d; if (!location.hash || location.hash === "#/") route(); }).catch(() => {});
+  ladeJson("data/doku.json").then(d => { DOKU = (d.d?.fertig || []).filter(x => x.kapitel?.length);
+    DOKU_ARBEIT = d.d?.inArbeit || null;
+    if (!location.hash || location.hash === "#/" || location.hash.startsWith("#/wissen") || location.hash.startsWith("#/doku") || location.hash.startsWith("#/video/doku")) route(); }).catch(() => {});
+  ladeJson("data/wissen.json").then(w => { WISSEN = w.d?.stuecke || []; if (!location.hash || location.hash === "#/" || location.hash.startsWith("#/wissen") || location.hash.startsWith("#/video/wissen")) route(); }).catch(() => {});
   ladeJson("data/ausgaben/index.json").then(a => { AUSGABEN = a.d || []; if (!location.hash || location.hash === "#/") route(); }).catch(() => {});
 }).catch(() => {
   $app.innerHTML = '<div class="empty"><strong>Die Nachrichten konnten nicht geladen werden.</strong><br>Bitte Internetverbindung prüfen und später erneut versuchen.</div>';
